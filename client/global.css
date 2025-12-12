@@ -1,0 +1,116 @@
+/** @import must precede all other statements */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Tailwind CSS theme
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+   * A different format will require also updating the theme in tailwind.config.ts.
+  */
+  :root {
+    /* BioBoxsys Dark Theme - Default */
+    --background: 220 13% 7%;
+    --foreground: 210 40% 98%;
+
+    --card: 220 13% 9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 220 13% 9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 144 61% 54%;
+    --primary-foreground: 220 13% 7%;
+
+    --secondary: 220 13% 12%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 220 13% 12%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 144 61% 54%;
+    --accent-foreground: 220 13% 7%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 13% 15%;
+    --input: 220 13% 15%;
+    --ring: 144 61% 54%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 220 13% 6%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 144 61% 54%;
+    --sidebar-primary-foreground: 220 13% 7%;
+    --sidebar-accent: 220 13% 12%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 220 13% 12%;
+    --sidebar-ring: 144 61% 54%;
+
+    /* BioBoxsys Brand Colors */
+    --biobox-green: 144 61% 54%;
+    --biobox-green-dark: 144 61% 45%;
+    --biobox-green-light: 144 61% 64%;
+    --biobox-dark: 220 13% 7%;
+    --biobox-dark-secondary: 220 13% 9%;
+    --biobox-dark-tertiary: 220 13% 12%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+
+  html {
+    @apply dark;
+  }
+}
