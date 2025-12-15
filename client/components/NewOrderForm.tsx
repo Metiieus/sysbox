@@ -187,7 +187,7 @@ export default function NewOrderForm({
     setOrderProducts(orderProducts.filter((_, i) => i !== index));
   };
 
-  const updateProduct = (index: number, field: string, value: any) => {
+  const updateProduct = (index: number, field: string, value: any, productData?: any) => {
     const updated = [...orderProducts];
     updated[index] = { ...updated[index], [field]: value };
 
@@ -195,7 +195,9 @@ export default function NewOrderForm({
     if (field === "productId") {
       console.log('🔄 updateProduct chamado para productId:', value);
       console.log('📋 Lista de produtos disponível:', products.length);
-      const product = products.find((p) => p.id === value);
+      
+      // Usar productData passado diretamente ou buscar na lista
+      const product = productData || products.find((p) => p.id === value);
       console.log('🎯 Produto encontrado:', product ? 'SIM' : 'NÃO');
       if (product) {
         console.log('📦 Estrutura do produto:', product);
@@ -665,10 +667,8 @@ export default function NewOrderForm({
                                     return prev;
                                   });
                                   
-                                  // Chamar updateProduct após adicionar à lista
-                                  setTimeout(() => {
-                                    updateProduct(index, "productId", productId);
-                                  }, 100);
+                                  // Passar productData diretamente para updateProduct
+                                  updateProduct(index, "productId", productId, productData);
                                 }}
                                 placeholder="Buscar produto..."
                                 className="w-full min-w-[250px]"
