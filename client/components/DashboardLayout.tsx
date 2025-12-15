@@ -182,7 +182,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         )}
 
         <main className="min-h-screen px-6 py-8 bg-gradient-to-b from-background to-muted/20 transition-all">
-          <div className="max-w-7xl mx-auto">{children}</div>
+          {children}
         </main>
       </div>
     </div>
