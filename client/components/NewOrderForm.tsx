@@ -605,23 +605,13 @@ export default function NewOrderForm({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-medium">Produtos do Pedido</h3>
-              <Button onClick={addProduct} disabled={products.length === 0}>
+              <Button onClick={addProduct}>
                 <Plus className="h-4 w-4 mr-2" />
                 Adicionar Produto
               </Button>
             </div>
 
-            {products.length === 0 ? (
-              <div className="text-center py-8">
-                <AlertCircle className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-50" />
-                <p className="text-muted-foreground">
-                  Nenhum produto cadastrado
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  Cadastre produtos antes de criar pedidos
-                </p>
-              </div>
-            ) : orderProducts.length === 0 ? (
+            {orderProducts.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <Package className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Nenhum produto adicionado</p>

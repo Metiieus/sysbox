@@ -32,6 +32,7 @@ interface Product {
   sku: string;
   basePrice?: number;
   base_price?: number;
+  models?: any[];
 }
 
 interface ProductSearchComboboxProps {
@@ -76,6 +77,8 @@ export default function ProductSearchCombobox({
           name: data.name || "",
           sku: data.sku || "",
           basePrice: data.basePrice || data.base_price || 0,
+          base_price: data.basePrice || data.base_price || 0,
+          models: data.models || [],
         });
       }
     } catch (error) {
@@ -121,6 +124,8 @@ export default function ProductSearchCombobox({
           name: data.name || "",
           sku: data.sku || "",
           basePrice: data.basePrice || data.base_price || 0,
+          base_price: data.basePrice || data.base_price || 0,
+          models: data.models || [],
         });
       });
 
