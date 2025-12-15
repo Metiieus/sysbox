@@ -193,8 +193,12 @@ export default function NewOrderForm({
 
     // Auto-fill product details when product is selected
     if (field === "productId") {
+      console.log('🔄 updateProduct chamado para productId:', value);
+      console.log('📋 Lista de produtos disponível:', products.length);
       const product = products.find((p) => p.id === value);
+      console.log('🎯 Produto encontrado:', product ? 'SIM' : 'NÃO');
       if (product) {
+        console.log('📦 Estrutura do produto:', product);
         // Obter o primeiro modelo disponível
         const firstModel =
           product.models && product.models.length > 0
@@ -647,15 +651,24 @@ export default function NewOrderForm({
                               <ProductSearchCombobox
                                 value={product.productId}
                                 onSelect={(productId, productData) => {
+                                  console.log('🔍 Produto selecionado:', productId);
+                                  console.log('📦 Dados do produto:', productData);
+                                  
                                   // Atualizar o produto na lista local para uso posterior
                                   setProducts(prev => {
                                     const exists = prev.find(p => p.id === productId);
                                     if (!exists) {
+                                      console.log('➕ Adicionando produto à lista local');
                                       return [...prev, { ...productData, id: productId }];
                                     }
+                                    console.log('✓ Produto já existe na lista');
                                     return prev;
                                   });
-                                  updateProduct(index, "productId", productId);
+                                  
+                                  // Chamar updateProduct após adicionar à lista
+                                  setTimeout(() => {
+                                    updateProduct(index, "productId", productId);
+                                  }, 100);
                                 }}
                                 placeholder="Buscar produto..."
                                 className="w-full min-w-[250px]"
