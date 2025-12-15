@@ -390,12 +390,6 @@ export default function CSVImporter({
                       </TableBody>
                     </Table>
                   </ScrollArea>
-
-                  {item.reason && (
-                    <p className="text-xs text-muted-foreground mt-2">
-                      {item.reason}
-                    </p>
-                  )}
                 </TabsContent>
               ))}
             </Tabs>
