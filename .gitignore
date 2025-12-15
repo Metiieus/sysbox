@@ -26,3 +26,7 @@ dist-ssr
 .config/
 !.env
 .env
+
+# Firebase Service Account
+service-account.json
+*.cjs
