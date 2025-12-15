@@ -71,7 +71,7 @@ export const useProducts = () => {
   // Converter Product para DbProduct
   const productToDb = (product: Partial<Product>) => {
     const now = Timestamp.now();
-    
+
     // Criar objeto base sem campos undefined
     const dbProduct: any = {
       name: product.name || '',
@@ -96,6 +96,11 @@ export const useProducts = () => {
     // Adicionar barcode apenas se existir
     if (product.barcode && product.barcode.trim() !== '') {
       dbProduct.barcode = product.barcode.trim();
+    }
+
+    // Adicionar customerPrices se existir
+    if (product.customerPrices && Object.keys(product.customerPrices).length > 0) {
+      dbProduct.customerPrices = product.customerPrices;
     }
 
     return dbProduct;
