@@ -111,7 +111,7 @@ export const useProducts = () => {
       return new Date(value);
     };
 
-    return {
+    const product: Product = {
       id: doc.id,
       name: data.name || '',
       category: data.category || 'bed',
@@ -128,6 +128,12 @@ export const useProducts = () => {
       createdAt: parseDate(data.createdAt || data.created_at),
       updatedAt: parseDate(data.updatedAt || data.updated_at),
     };
+
+    if (data.customerPrices && typeof data.customerPrices === 'object') {
+      product.customerPrices = data.customerPrices;
+    }
+
+    return product;
   };
 
   // Buscar todos os produtos
