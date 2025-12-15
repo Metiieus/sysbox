@@ -37,15 +37,28 @@ export interface ImportPreviewItem {
   reason?: string;
 }
 
+const detectDelimiter = (headerLine: string): string => {
+  const tabCount = (headerLine.match(/\t/g) || []).length;
+  const semicolonCount = (headerLine.match(/;/g) || []).length;
+
+  if (semicolonCount > tabCount) {
+    return ";";
+  }
+  return "\t";
+};
+
 const parseCSV = (csvText: string): CSVRow[] => {
   const lines = csvText.trim().split("\n");
   if (lines.length < 2) {
     throw new Error("CSV deve conter cabeçalho e pelo menos uma linha de dados");
   }
 
+  // Detect delimiter (tab or semicolon)
+  const delimiter = detectDelimiter(lines[0]);
+
   // Parse header
   const header = lines[0]
-    .split("\t")
+    .split(delimiter)
     .map((h) => h.trim().toLowerCase());
 
   // Required columns
@@ -62,7 +75,7 @@ const parseCSV = (csvText: string): CSVRow[] => {
 
   const rows: CSVRow[] = [];
   for (let i = 1; i < lines.length; i++) {
-    const values = lines[i].split("\t").map((v) => v.trim());
+    const values = lines[i].split(delimiter).map((v) => v.trim());
 
     const row: CSVRow = {
       sku: values[header.indexOf("sku")] || "",
