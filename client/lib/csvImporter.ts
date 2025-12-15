@@ -50,26 +50,24 @@ const detectDelimiter = (headerLine: string): string => {
 const parseCSV = (csvText: string): CSVRow[] => {
   const lines = csvText.trim().split("\n");
   if (lines.length < 2) {
-    throw new Error("CSV deve conter cabeçalho e pelo menos uma linha de dados");
+    throw new Error(
+      "CSV deve conter cabeçalho e pelo menos uma linha de dados",
+    );
   }
 
   // Detect delimiter (tab or semicolon)
   const delimiter = detectDelimiter(lines[0]);
 
   // Parse header
-  const header = lines[0]
-    .split(delimiter)
-    .map((h) => h.trim().toLowerCase());
+  const header = lines[0].split(delimiter).map((h) => h.trim().toLowerCase());
 
   // Required columns
   const requiredColumns = ["sku", "produto"];
-  const missingColumns = requiredColumns.filter((col) =>
-    !header.includes(col)
-  );
+  const missingColumns = requiredColumns.filter((col) => !header.includes(col));
 
   if (missingColumns.length > 0) {
     throw new Error(
-      `Colunas obrigatórias ausentes: ${missingColumns.join(", ")}`
+      `Colunas obrigatórias ausentes: ${missingColumns.join(", ")}`,
     );
   }
 
@@ -96,7 +94,7 @@ const parseCSV = (csvText: string): CSVRow[] => {
 export const processCSVImport = (
   csvText: string,
   existingProducts: Product[],
-  allCustomers: Customer[]
+  allCustomers: Customer[],
 ): CSVImportResult => {
   const rows = parseCSV(csvText);
   const productsToCreate: Partial<Product>[] = [];
@@ -140,11 +138,7 @@ export const processCSVImport = (
 
       // Update description with variants if provided
       if (row.tamanho || row.cor || row.tecido) {
-        const variants = [
-          row.tamanho,
-          row.cor,
-          row.tecido,
-        ]
+        const variants = [row.tamanho, row.cor, row.tecido]
           .filter((v) => v && v.trim() !== "")
           .join(" | ");
 
@@ -154,17 +148,21 @@ export const processCSVImport = (
       }
 
       // Handle customer price
-      if (row.cliente && row.cliente.trim() !== "" && row.preco && row.preco.trim() !== "") {
+      if (
+        row.cliente &&
+        row.cliente.trim() !== "" &&
+        row.preco &&
+        row.preco.trim() !== ""
+      ) {
         const customer = allCustomers.find(
-          (c) => c.name.toLowerCase() === row.cliente.toLowerCase()
+          (c) => c.name.toLowerCase() === row.cliente.toLowerCase(),
         );
 
         if (customer) {
           const price = parseFloat(row.preco.replace(",", "."));
           if (!isNaN(price) && price > 0) {
             if (!updateData.customerPrices) {
-              updateData.customerPrices =
-                existingProduct.customerPrices || {};
+              updateData.customerPrices = existingProduct.customerPrices || {};
             }
             updateData.customerPrices[customer.id] = price;
             customerPricesSet++;
@@ -227,11 +225,7 @@ export const processCSVImport = (
 
       // Add variant information to description
       if (row.tamanho || row.cor || row.tecido) {
-        const variants = [
-          row.tamanho,
-          row.cor,
-          row.tecido,
-        ]
+        const variants = [row.tamanho, row.cor, row.tecido]
           .filter((v) => v && v.trim() !== "")
           .join(" | ");
 
@@ -241,9 +235,14 @@ export const processCSVImport = (
       }
 
       // Handle customer price
-      if (row.cliente && row.cliente.trim() !== "" && row.preco && row.preco.trim() !== "") {
+      if (
+        row.cliente &&
+        row.cliente.trim() !== "" &&
+        row.preco &&
+        row.preco.trim() !== ""
+      ) {
         const customer = allCustomers.find(
-          (c) => c.name.toLowerCase() === row.cliente.toLowerCase()
+          (c) => c.name.toLowerCase() === row.cliente.toLowerCase(),
         );
 
         if (customer) {
@@ -286,7 +285,7 @@ export const processCSVImport = (
 
 export const generateImportPreview = (
   csvText: string,
-  existingProducts: Product[]
+  existingProducts: Product[],
 ): ImportPreviewItem[] => {
   const rows = parseCSV(csvText);
   const preview: ImportPreviewItem[] = [];
@@ -327,7 +326,7 @@ export const generateImportPreview = (
     }
 
     const existingProduct = existingProducts.find(
-      (p) => p.sku.toLowerCase() === row.sku.toLowerCase()
+      (p) => p.sku.toLowerCase() === row.sku.toLowerCase(),
     );
 
     if (existingProduct) {

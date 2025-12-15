@@ -60,7 +60,7 @@ export default function CSVImporter({
   const [step, setStep] = useState<ImportStep>("upload");
   const [csvContent, setCSVContent] = useState("");
   const [importResult, setImportResult] = useState<CSVImportResult | null>(
-    null
+    null,
   );
   const [preview, setPreview] = useState<ImportPreviewItem[]>([]);
   const [error, setError] = useState<string>("");
@@ -87,7 +87,8 @@ export default function CSVImporter({
         setPreview(previewData);
         setStep("preview");
       } catch (err) {
-        const message = err instanceof Error ? err.message : "Erro ao processar arquivo";
+        const message =
+          err instanceof Error ? err.message : "Erro ao processar arquivo";
         setError(message);
       }
     };
@@ -105,7 +106,8 @@ export default function CSVImporter({
       onImportComplete(result);
       setStep("complete");
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Erro ao processar importação";
+      const message =
+        err instanceof Error ? err.message : "Erro ao processar importação";
       setError(message);
       setStep("preview");
     }
@@ -130,7 +132,7 @@ export default function CSVImporter({
     const element = document.createElement("a");
     element.setAttribute(
       "href",
-      "data:text/csv;charset=utf-8," + encodeURIComponent(template)
+      "data:text/csv;charset=utf-8," + encodeURIComponent(template),
     );
     element.setAttribute("download", "template_produtos.csv");
     element.style.display = "none";
@@ -157,7 +159,8 @@ export default function CSVImporter({
                   <div>
                     <h3 className="font-medium mb-2">Formato Esperado</h3>
                     <p className="text-sm text-muted-foreground mb-3">
-                      A planilha deve estar em formato TSV (Tab-Separated Values) com as seguintes colunas:
+                      A planilha deve estar em formato TSV (Tab-Separated
+                      Values) com as seguintes colunas:
                     </p>
                     <div className="bg-background p-3 rounded border border-border text-xs font-mono overflow-x-auto">
                       SKU | PRODUTO | TAMANHO | COR | TECIDO | CLIENTE | PREÇO
@@ -165,13 +168,20 @@ export default function CSVImporter({
                   </div>
 
                   <div>
-                    <h4 className="text-sm font-medium mb-2">Observações importantes:</h4>
+                    <h4 className="text-sm font-medium mb-2">
+                      Observações importantes:
+                    </h4>
                     <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
                       <li>SKU e PRODUTO são obrigatórios</li>
-                      <li>TAMANHO, COR e TECIDO são opcionais (apenas para referência)</li>
+                      <li>
+                        TAMANHO, COR e TECIDO são opcionais (apenas para
+                        referência)
+                      </li>
                       <li>CLIENTE vazio = nenhum vínculo de preço criado</li>
                       <li>PREÇO vazio = nenhum vínculo de preço criado</li>
-                      <li>Se SKU já existe, apenas atualiza campos fornecidos</li>
+                      <li>
+                        Se SKU já existe, apenas atualiza campos fornecidos
+                      </li>
                       <li>Linhas inválidas são ignoradas silenciosamente</li>
                     </ul>
                   </div>
@@ -218,10 +228,7 @@ export default function CSVImporter({
             )}
 
             <div className="flex justify-between gap-3">
-              <Button
-                variant="outline"
-                onClick={downloadTemplate}
-              >
+              <Button variant="outline" onClick={downloadTemplate}>
                 <FileText className="h-4 w-4 mr-2" />
                 Baixar Template
               </Button>
@@ -236,7 +243,9 @@ export default function CSVImporter({
           <div className="space-y-6">
             <Card className="bg-muted/5">
               <CardHeader>
-                <CardTitle className="text-base">Resumo da Importação</CardTitle>
+                <CardTitle className="text-base">
+                  Resumo da Importação
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-4 sm:grid-cols-4">
@@ -244,9 +253,7 @@ export default function CSVImporter({
                     <p className="text-xs text-muted-foreground mb-1">
                       Total de Linhas
                     </p>
-                    <p className="text-2xl font-bold">
-                      {preview.length}
-                    </p>
+                    <p className="text-2xl font-bold">{preview.length}</p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">
@@ -278,14 +285,13 @@ export default function CSVImporter({
 
             <Tabs defaultValue="all" className="w-full">
               <TabsList className="grid w-full grid-cols-4">
-                <TabsTrigger value="all">
-                  Todos ({preview.length})
-                </TabsTrigger>
+                <TabsTrigger value="all">Todos ({preview.length})</TabsTrigger>
                 <TabsTrigger value="create">
                   Criar ({preview.filter((p) => p.action === "create").length})
                 </TabsTrigger>
                 <TabsTrigger value="update">
-                  Atualizar ({preview.filter((p) => p.action === "update").length})
+                  Atualizar (
+                  {preview.filter((p) => p.action === "update").length})
                 </TabsTrigger>
                 <TabsTrigger value="skip">
                   Ignorar ({preview.filter((p) => p.action === "skip").length})
@@ -312,7 +318,7 @@ export default function CSVImporter({
                       <TableBody>
                         {preview
                           .filter((item) =>
-                            filter === "all" ? true : item.action === filter
+                            filter === "all" ? true : item.action === filter,
                           )
                           .map((item) => (
                             <TableRow key={`${item.row}`}>
@@ -340,7 +346,9 @@ export default function CSVImporter({
                                     {item.cliente}
                                   </Badge>
                                 ) : (
-                                  <span className="text-muted-foreground">-</span>
+                                  <span className="text-muted-foreground">
+                                    -
+                                  </span>
                                 )}
                               </TableCell>
                               <TableCell className="text-sm font-medium">
@@ -349,7 +357,9 @@ export default function CSVImporter({
                                     R$ {item.preco}
                                   </span>
                                 ) : (
-                                  <span className="text-muted-foreground">-</span>
+                                  <span className="text-muted-foreground">
+                                    -
+                                  </span>
                                 )}
                               </TableCell>
                               <TableCell>
@@ -362,7 +372,7 @@ export default function CSVImporter({
                                     item.action === "update" &&
                                       "bg-blue-500/10 text-blue-600 border-blue-500/20",
                                     item.action === "skip" &&
-                                      "bg-orange-500/10 text-orange-600 border-orange-500/20"
+                                      "bg-orange-500/10 text-orange-600 border-orange-500/20",
                                   )}
                                 >
                                   {item.action === "create" && (
@@ -406,7 +416,9 @@ export default function CSVImporter({
                 onClick={handleConfirmImport}
                 disabled={isImporting}
               >
-                {isImporting && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
+                {isImporting && (
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                )}
                 Confirmar Importação
               </Button>
             </div>
@@ -509,7 +521,10 @@ export default function CSVImporter({
             )}
 
             <div className="flex justify-end gap-3">
-              <Button onClick={handleClose} className="bg-biobox-green hover:bg-biobox-green-dark">
+              <Button
+                onClick={handleClose}
+                className="bg-biobox-green hover:bg-biobox-green-dark"
+              >
                 Concluir
               </Button>
             </div>
