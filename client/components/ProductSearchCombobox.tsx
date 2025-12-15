@@ -103,15 +103,15 @@ export default function ProductSearchCombobox({
     try {
       setLoading(true);
       const productsRef = collection(db, "products");
-      const termLower = term.toLowerCase();
+      const termUpper = term.toUpperCase(); // SKUs são em maiúsculas
 
-      // Buscar por SKU
+      // Buscar por SKU que começa com o termo
       const qSku = query(
         productsRef,
         orderBy("sku"),
-        where("sku", ">=", termLower),
-        where("sku", "<=", termLower + "\uf8ff"),
-        limit(50)
+        where("sku", ">=", termUpper),
+        where("sku", "<=", termUpper + "\uf8ff"),
+        limit(100)
       );
 
       const snapshot = await getDocs(qSku);
@@ -119,24 +119,34 @@ export default function ProductSearchCombobox({
 
       snapshot.forEach((doc) => {
         const data = doc.data();
-        results.push({
+        const product = {
           id: doc.id,
           name: data.name || "",
           sku: data.sku || "",
           basePrice: data.basePrice || data.base_price || 0,
           base_price: data.basePrice || data.base_price || 0,
           models: data.models || [],
-        });
+        };
+        
+        // Filtrar por SKU ou nome (busca em qualquer parte)
+        if (
+          product.sku.toUpperCase().includes(termUpper) ||
+          product.name.toUpperCase().includes(termUpper)
+        ) {
+          results.push(product);
+        }
+      });
+      
+      // Ordenar por relevância (SKU que começa com o termo primeiro)
+      const sorted = results.sort((a, b) => {
+        const aStartsWith = a.sku.toUpperCase().startsWith(termUpper);
+        const bStartsWith = b.sku.toUpperCase().startsWith(termUpper);
+        if (aStartsWith && !bStartsWith) return -1;
+        if (!aStartsWith && bStartsWith) return 1;
+        return a.sku.localeCompare(b.sku);
       });
 
-      // Filtrar também por nome (client-side)
-      const filtered = results.filter(
-        (p) =>
-          p.name.toLowerCase().includes(termLower) ||
-          p.sku.toLowerCase().includes(termLower)
-      );
-
-      setProducts(filtered);
+      setProducts(sorted.slice(0, 50)); // Limitar a 50 resultados
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
       setProducts([]);
