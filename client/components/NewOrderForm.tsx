@@ -37,6 +37,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { useFirebase } from "@/hooks/useFirebase";
 import { useToast } from "@/components/ui/use-toast";
+import ProductSearchCombobox from "@/components/ProductSearchCombobox";
 
 interface OrderProduct {
   id: string;
@@ -135,10 +136,10 @@ export default function NewOrderForm({
       console.log("👥 Clientes carregados:", customersData?.length || 0);
       setCustomers(customersData || []);
 
-      // Carregar produtos
-      const productsData = await getProducts();
-      console.log("📦 Produtos carregados:", productsData?.length || 0);
-      setProducts(productsData || []);
+      // Não carregar todos os produtos - usar busca sob demanda
+      // const productsData = await getProducts();
+      // console.log("📦 Produtos carregados:", productsData?.length || 0);
+      // setProducts(productsData || []);
     } catch (error) {
       console.error("❌ Erro ao carregar dados:", error);
       toast({
@@ -653,23 +654,22 @@ export default function NewOrderForm({
                         return (
                           <TableRow key={product.id}>
                             <TableCell>
-                              <Select
+                              <ProductSearchCombobox
                                 value={product.productId}
-                                onValueChange={(value) =>
-                                  updateProduct(index, "productId", value)
-                                }
-                              >
-                                <SelectTrigger className="w-40">
-                                  <SelectValue placeholder="Selecionar" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {products.map((p) => (
-                                    <SelectItem key={p.id} value={p.id}>
-                                      {p.name}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
+                                onSelect={(productId, productData) => {
+                                  // Atualizar o produto na lista local para uso posterior
+                                  setProducts(prev => {
+                                    const exists = prev.find(p => p.id === productId);
+                                    if (!exists) {
+                                      return [...prev, { ...productData, id: productId }];
+                                    }
+                                    return prev;
+                                  });
+                                  updateProduct(index, "productId", productId);
+                                }}
+                                placeholder="Buscar produto..."
+                                className="w-full min-w-[250px]"
+                              />
                             </TableCell>
                             <TableCell>
                               <Select
