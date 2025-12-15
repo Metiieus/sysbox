@@ -1010,7 +1010,7 @@ export default function Orders() {
                       <TableHead>Status</TableHead>
                       <TableHead>Prioridade</TableHead>
                       <TableHead>Valor</TableHead>
-                      <TableHead>A��ões</TableHead>
+                      <TableHead>Ações</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -1225,7 +1225,7 @@ export default function Orders() {
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <span className="text-sm text-muted-foreground">
-                      P��gina {currentPage} de {pageCount}
+                      Página {currentPage} de {pageCount}
                     </span>
                     <Button
                       variant="outline"
