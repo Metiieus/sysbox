@@ -24,8 +24,11 @@ import {
 import ProductForm, { ProductFormValues } from "@/components/ProductForm";
 import BarcodeGenerator from "@/components/BarcodeGenerator";
 import ThermalPrintManager from "@/components/ThermalPrintManager";
+import CSVImporter from "@/components/CSVImporter";
 import { useProducts } from "@/hooks/useProducts";
 import { useToast } from "@/components/ui/use-toast";
+import { CSVImportResult } from "@/lib/csvImporter";
+import { mockCustomers } from "@/types/customer";
 import {
   Package,
   Plus,
@@ -39,6 +42,7 @@ import {
   Trash2,
   X,
   Loader2,
+  Upload,
 } from "lucide-react";
 import {
   Product,
@@ -72,7 +76,9 @@ export default function Products() {
   const [showProductForm, setShowProductForm] = useState(false);
   const [showBarcode, setShowBarcode] = useState(false);
   const [showLabels, setShowLabels] = useState(false);
+  const [showCSVImporter, setShowCSVImporter] = useState(false);
   const [savingProduct, setSavingProduct] = useState(false);
+  const [importingCSV, setImportingCSV] = useState(false);
   const [deletingProductId, setDeletingProductId] = useState<string | null>(
     null,
   );
@@ -208,6 +214,45 @@ export default function Products() {
       });
     } finally {
       setSavingProduct(false);
+    }
+  };
+
+  const handleCSVImportComplete = async (result: CSVImportResult) => {
+    try {
+      setImportingCSV(true);
+
+      for (const productData of result.productsToCreate) {
+        try {
+          await createProduct(productData);
+        } catch (error) {
+          console.error("Erro ao criar produto:", error);
+        }
+      }
+
+      for (const { id, data } of result.productsToUpdate) {
+        try {
+          await updateProduct(id, data);
+        } catch (error) {
+          console.error("Erro ao atualizar produto:", error);
+        }
+      }
+
+      toast({
+        title: "Importação concluída",
+        description: `${result.summary.created} produtos criados, ${result.summary.updated} atualizados.`,
+      });
+
+      setShowCSVImporter(false);
+    } catch (error) {
+      console.error("Erro na importação CSV:", error);
+      toast({
+        title: "Erro na importação",
+        description:
+          (error as Error).message || "Não foi possível completar a importação",
+        variant: "destructive",
+      });
+    } finally {
+      setImportingCSV(false);
     }
   };
 
@@ -465,6 +510,10 @@ export default function Products() {
             </p>
           </div>
           <div className="flex flex-wrap gap-2 sm:justify-end">
+            <Button variant="outline" onClick={() => setShowCSVImporter(true)}>
+              <Upload className="h-4 w-4 mr-2" />
+              Importar CSV
+            </Button>
             <Button variant="outline" onClick={() => setShowBarcode(true)}>
               <QrCode className="h-4 w-4 mr-2" />
               Gerar Etiquetas
@@ -830,6 +879,15 @@ export default function Products() {
             <ThermalPrintManager />
           </DialogContent>
         </Dialog>
+
+        <CSVImporter
+          open={showCSVImporter}
+          onOpenChange={setShowCSVImporter}
+          products={products}
+          customers={mockCustomers}
+          onImportComplete={handleCSVImportComplete}
+          isImporting={importingCSV}
+        />
       </div>
     </DashboardLayout>
   );
