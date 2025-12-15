@@ -12,6 +12,7 @@ export interface Product {
   models: ProductModel[];
   specifications: ProductSpecification[];
   images: string[];
+  customerPrices?: Record<string, number>;
   createdAt: Date;
   updatedAt: Date;
 }
