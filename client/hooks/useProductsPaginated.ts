@@ -259,33 +259,42 @@ export const useProductsPaginated = () => {
       setSearchTerm(term);
       
       const productsRef = collection(db, "products");
-      const termLower = term.toLowerCase();
+      const termUpper = term.toUpperCase(); // SKUs são em maiúsculas
       
-      // Buscar por SKU
+      // Buscar por SKU que começa com o termo
       const qSku = query(
         productsRef,
         orderBy("sku"),
-        where("sku", ">=", termLower),
-        where("sku", "<=", termLower + "\uf8ff"),
-        limit(100)
+        where("sku", ">=", termUpper),
+        where("sku", "<=", termUpper + "\uf8ff"),
+        limit(200)
       );
       
       const snapshotSku = await getDocs(qSku);
       const productsBySku = snapshotSku.docs.map(dbToProduct);
       
-      // Filtrar também por nome (client-side)
+      // Filtrar por SKU, nome ou descrição (busca em qualquer parte)
       const filtered = productsBySku.filter(p => 
-        p.name.toLowerCase().includes(termLower) ||
-        p.sku.toLowerCase().includes(termLower) ||
-        p.description?.toLowerCase().includes(termLower)
+        p.name.toUpperCase().includes(termUpper) ||
+        p.sku.toUpperCase().includes(termUpper) ||
+        p.description?.toUpperCase().includes(termUpper)
       );
       
-      setProducts(filtered);
+      // Ordenar por relevância (SKU que começa com o termo primeiro)
+      const sorted = filtered.sort((a, b) => {
+        const aStartsWith = a.sku.toUpperCase().startsWith(termUpper);
+        const bStartsWith = b.sku.toUpperCase().startsWith(termUpper);
+        if (aStartsWith && !bStartsWith) return -1;
+        if (!aStartsWith && bStartsWith) return 1;
+        return a.sku.localeCompare(b.sku);
+      });
+      
+      setProducts(sorted);
       setHasMore(false); // Desabilitar paginação durante busca
       setCurrentPage(1);
       
-      console.log(`🔍 ${filtered.length} produtos encontrados para "${term}"`);
-      return filtered;
+      console.log(`🔍 ${sorted.length} produtos encontrados para "${term}"`);
+      return sorted;
     } catch (error) {
       console.error("❌ Erro ao buscar produtos:", error);
       setProducts([]);
