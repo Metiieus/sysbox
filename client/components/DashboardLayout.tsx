@@ -43,7 +43,7 @@ const getInitials = (name?: string) => {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarHovered, setSidebarHovered] = useState(false);
   const location = useLocation();
   const { user, checkPermission, logout } = useAuth();
 
@@ -74,22 +74,29 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Sidebar */}
       {filteredNavigation.length > 0 && (
         <div
+          onMouseEnter={() => setSidebarHovered(true)}
+          onMouseLeave={() => setSidebarHovered(false)}
           className={cn(
             "fixed inset-y-0 left-0 z-40 flex flex-col border-r border-border/40 bg-sidebar/60 backdrop-blur-2xl transition-all duration-300 ease-in-out shadow-lg",
             sidebarOpen
               ? "translate-x-0 w-64"
               : "-translate-x-full lg:translate-x-0",
-            sidebarCollapsed && "lg:w-64",
-            !sidebarCollapsed && "lg:w-64"
+            sidebarHovered ? "lg:w-64" : "lg:w-20"
           )}
         >
           {/* Logo */}
           <div className="flex items-center justify-center h-16 border-b border-border/40">
-            <img
-              src="/logobio.png"
-              alt="BioBox"
-              className="h-10 w-auto object-contain transition-transform duration-300 hover:scale-105"
-            />
+            {sidebarHovered ? (
+              <img
+                src="/logobio.png"
+                alt="BioBox"
+                className="h-10 w-auto object-contain transition-all duration-300"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                <span className="text-primary font-bold text-lg">B</span>
+              </div>
+            )}
           </div>
 
           {/* Navegação */}
@@ -115,12 +122,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                         isActive && "text-primary"
                       )}
                     />
-                    <span className={cn(
-                      "text-sm font-medium transition-colors",
-                      isActive && "text-primary"
-                    )}>
-                      {item.name}
-                    </span>
+                    {sidebarHovered && (
+                      <span className={cn(
+                        "text-sm font-medium transition-colors whitespace-nowrap",
+                        isActive && "text-primary"
+                      )}>
+                        {item.name}
+                      </span>
+                    )}
                     {isActive && (
                       <span className="absolute right-[-6px] top-1/2 -translate-y-1/2 h-6 w-[3px] rounded-full bg-primary" />
                     )}
@@ -155,7 +164,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div
         className={cn(
           "flex-1 transition-all duration-300",
-          filteredNavigation.length > 0 && "lg:ml-64"
+          filteredNavigation.length > 0 && "lg:ml-20"
         )}
       >
         {/* Botão menu mobile */}
