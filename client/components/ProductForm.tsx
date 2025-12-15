@@ -53,7 +53,7 @@ export default function ProductForm({
   saving,
 }: ProductFormProps) {
   const [formData, setFormData] = useState<ProductFormValues>({
-    name: product?.name || "",
+    name: product?.sku || product?.name || "",
     sku: product?.sku || "",
     category: product?.category || "bed",
     description: product?.description || "",
@@ -64,7 +64,7 @@ export default function ProductForm({
     modelName: product?.models?.[0]?.name || "Standard",
     stockQuantity: product?.models?.[0]?.stockQuantity || 0,
     minimumStock: product?.models?.[0]?.minimumStock || 0,
-    barcode: product?.barcode || "",
+    barcode: "",
     sizes: product?.models?.[0]?.sizes || [],
     colors: product?.models?.[0]?.colors || [],
     fabrics: product?.models?.[0]?.fabrics || [],
