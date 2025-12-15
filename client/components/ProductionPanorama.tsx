@@ -103,10 +103,8 @@ export default function ProductionPanorama({
     `);
 
     printWindow.document.close();
-    setTimeout(() => {
-      printWindow.print();
-      printWindow.close();
-    }, 250);
+    // Não chamar print() automaticamente
+    // O usuário pode visualizar e imprimir quando quiser (Ctrl+P)
   };
 
   // Agrupar pedidos por data
@@ -154,7 +152,7 @@ export default function ProductionPanorama({
         <h2 className="text-2xl font-bold">Panorama de Produção</h2>
         <Button onClick={handlePrint}>
           <Printer className="h-4 w-4 mr-2" />
-          Imprimir
+          Visualizar Impressão
         </Button>
       </div>
 
