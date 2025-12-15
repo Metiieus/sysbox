@@ -201,16 +201,27 @@ export default function NewOrderForm({
       console.log('🎯 Produto encontrado:', product ? 'SIM' : 'NÃO');
       if (product) {
         console.log('📦 Estrutura do produto:', product);
+        console.log('📋 Tem models?', product.models ? 'SIM' : 'NÃO');
+        console.log('📋 Quantidade de models:', product.models?.length);
+        
         // Obter o primeiro modelo disponível
         const firstModel =
           product.models && product.models.length > 0
             ? product.models[0]
             : null;
+        
+        console.log('🎯 Primeiro modelo:', firstModel);
 
         // Obter primeira opção de tamanho, cor e tecido do modelo
         const firstSize = firstModel?.sizes?.[0]?.name || "";
         const firstColor = firstModel?.colors?.[0]?.name || "";
         const firstFabric = firstModel?.fabrics?.[0]?.name || "";
+        
+        console.log('📊 Valores extraídos:');
+        console.log('  - Tamanho:', firstSize);
+        console.log('  - Cor:', firstColor);
+        console.log('  - Tecido:', firstFabric);
+        console.log('  - Preço:', product.base_price || product.basePrice || 0);
 
         updated[index] = {
           ...updated[index],
@@ -224,6 +235,8 @@ export default function NewOrderForm({
             (product.base_price || product.basePrice || 0) *
             updated[index].quantity,
         };
+        
+        console.log('✅ Produto atualizado:', updated[index]);
       }
     }
 
@@ -1010,7 +1023,7 @@ export default function NewOrderForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-7xl w-[95vw] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
             <Package className="h-5 w-5" />
