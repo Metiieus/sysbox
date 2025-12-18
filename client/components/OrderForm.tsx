@@ -34,6 +34,9 @@ export default function OrderForm({
   const [formData, setFormData] = useState({
     customerId: order?.customerId || '',
     customerName: order?.customerName || '',
+    customerTradeName: order?.customerTradeName || '',
+    paymentCondition: order?.paymentCondition || '',
+    representative: order?.representative || '',
     status: order?.status || 'pending' as Order['status'],
     priority: order?.priority || 'medium' as Order['priority'],
     scheduledDate: order?.scheduledDate || new Date(),
@@ -134,7 +137,10 @@ export default function OrderForm({
     setFormData(prev => ({
       ...prev,
       customerId,
-      customerName: customer?.name || ''
+      customerName: customer?.name || '',
+      customerTradeName: customer?.tradeName || '',
+      paymentCondition: customer?.paymentCondition || '',
+      representative: customer?.representative || ''
     }));
   };
 
