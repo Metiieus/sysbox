@@ -105,7 +105,9 @@ export default function OrderPrintTemplate({ order }: OrderPrintTemplateProps) {
             >
               <strong>CLIENTE:</strong> {order.customer_name}
               {order.customer_trade_name && (
-                <span style={{ marginLeft: "10px", fontSize: "8pt", color: "#666" }}>
+                <span
+                  style={{ marginLeft: "10px", fontSize: "8pt", color: "#666" }}
+                >
                   ({order.customer_trade_name})
                 </span>
               )}
@@ -125,7 +127,8 @@ export default function OrderPrintTemplate({ order }: OrderPrintTemplateProps) {
                 border: "1px solid black",
               }}
             >
-              <strong>REPRESENTANTE:</strong> {order.representative || order.seller_name}
+              <strong>REPRESENTANTE:</strong>{" "}
+              {order.representative || order.seller_name}
             </td>
           </tr>
           <tr>

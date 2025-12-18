@@ -190,41 +190,46 @@ export default function NewOrderForm({
     setOrderProducts(orderProducts.filter((_, i) => i !== index));
   };
 
-  const updateProduct = (index: number, field: string, value: any, productData?: any) => {
+  const updateProduct = (
+    index: number,
+    field: string,
+    value: any,
+    productData?: any,
+  ) => {
     const updated = [...orderProducts];
     updated[index] = { ...updated[index], [field]: value };
 
     // Auto-fill product details when product is selected
     if (field === "productId") {
-      console.log('🔄 updateProduct chamado para productId:', value);
-      console.log('📋 Lista de produtos disponível:', products.length);
-      
+      console.log("🔄 updateProduct chamado para productId:", value);
+      console.log("📋 Lista de produtos disponível:", products.length);
+
       // Usar productData passado diretamente ou buscar na lista
       const product = productData || products.find((p) => p.id === value);
-      console.log('🎯 Produto encontrado:', product ? 'SIM' : 'NÃO');
+      console.log("🎯 Produto encontrado:", product ? "SIM" : "NÃO");
       if (product) {
-        console.log('📦 Estrutura do produto:', product);
-        console.log('📋 Tem models?', product.models ? 'SIM' : 'NÃO');
-        console.log('📋 Quantidade de models:', product.models?.length);
-        
+        console.log("📦 Estrutura do produto:", product);
+        console.log("📋 Tem models?", product.models ? "SIM" : "NÃO");
+        console.log("📋 Quantidade de models:", product.models?.length);
+
         // Obter o primeiro modelo disponível
         const firstModel =
           product.models && product.models.length > 0
             ? product.models[0]
             : null;
-        
-        console.log('🎯 Primeiro modelo:', firstModel);
+
+        console.log("🎯 Primeiro modelo:", firstModel);
 
         // Obter primeira opção de tamanho, cor e tecido do modelo
         const firstSize = firstModel?.sizes?.[0]?.name || "";
         const firstColor = firstModel?.colors?.[0]?.name || "";
         const firstFabric = firstModel?.fabrics?.[0]?.name || "";
-        
-        console.log('📊 Valores extraídos:');
-        console.log('  - Tamanho:', firstSize);
-        console.log('  - Cor:', firstColor);
-        console.log('  - Tecido:', firstFabric);
-        console.log('  - Preço:', product.base_price || product.basePrice || 0);
+
+        console.log("📊 Valores extraídos:");
+        console.log("  - Tamanho:", firstSize);
+        console.log("  - Cor:", firstColor);
+        console.log("  - Tecido:", firstFabric);
+        console.log("  - Preço:", product.base_price || product.basePrice || 0);
 
         updated[index] = {
           ...updated[index],
@@ -238,8 +243,8 @@ export default function NewOrderForm({
             (product.base_price || product.basePrice || 0) *
             updated[index].quantity,
         };
-        
-        console.log('✅ Produto atualizado:', updated[index]);
+
+        console.log("✅ Produto atualizado:", updated[index]);
       }
     }
 
@@ -358,7 +363,8 @@ export default function NewOrderForm({
         customer_id: customer.id,
         customer_name: customer.name,
         customer_trade_name: customer.tradeName || customer.trade_name || "",
-        payment_condition: customer.paymentCondition || customer.payment_condition || "",
+        payment_condition:
+          customer.paymentCondition || customer.payment_condition || "",
         representative: customer.representative || "",
         customer_phone: customer.phone,
         customer_email: customer.email || "",
@@ -552,7 +558,9 @@ export default function NewOrderForm({
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="paymentCondition">Condição de Pagamento</Label>
+                      <Label htmlFor="paymentCondition">
+                        Condição de Pagamento
+                      </Label>
                       <Input
                         id="paymentCondition"
                         value={newCustomer.paymentCondition}
@@ -718,22 +726,40 @@ export default function NewOrderForm({
                               <ProductSearchCombobox
                                 value={product.productId}
                                 onSelect={(productId, productData) => {
-                                  console.log('🔍 Produto selecionado:', productId);
-                                  console.log('📦 Dados do produto:', productData);
-                                  
+                                  console.log(
+                                    "🔍 Produto selecionado:",
+                                    productId,
+                                  );
+                                  console.log(
+                                    "📦 Dados do produto:",
+                                    productData,
+                                  );
+
                                   // Atualizar o produto na lista local para uso posterior
-                                  setProducts(prev => {
-                                    const exists = prev.find(p => p.id === productId);
+                                  setProducts((prev) => {
+                                    const exists = prev.find(
+                                      (p) => p.id === productId,
+                                    );
                                     if (!exists) {
-                                      console.log('➕ Adicionando produto à lista local');
-                                      return [...prev, { ...productData, id: productId }];
+                                      console.log(
+                                        "➕ Adicionando produto à lista local",
+                                      );
+                                      return [
+                                        ...prev,
+                                        { ...productData, id: productId },
+                                      ];
                                     }
-                                    console.log('✓ Produto já existe na lista');
+                                    console.log("✓ Produto já existe na lista");
                                     return prev;
                                   });
-                                  
+
                                   // Passar productData diretamente para updateProduct
-                                  updateProduct(index, "productId", productId, productData);
+                                  updateProduct(
+                                    index,
+                                    "productId",
+                                    productId,
+                                    productData,
+                                  );
                                 }}
                                 placeholder="Buscar produto..."
                                 className="w-full min-w-[250px]"
@@ -1028,24 +1054,29 @@ export default function NewOrderForm({
                     </span>
                     {(selectedCustomer?.tradeName || newCustomer.tradeName) && (
                       <span className="text-xs text-muted-foreground block">
-                        Fantasia: {selectedCustomer?.tradeName || newCustomer.tradeName}
+                        Fantasia:{" "}
+                        {selectedCustomer?.tradeName || newCustomer.tradeName}
                       </span>
                     )}
                   </div>
                 </div>
-                {(selectedCustomer?.paymentCondition || newCustomer.paymentCondition) && (
+                {(selectedCustomer?.paymentCondition ||
+                  newCustomer.paymentCondition) && (
                   <div className="flex justify-between text-sm">
                     <span>Cond. Pagamento:</span>
                     <span className="font-medium">
-                      {selectedCustomer?.paymentCondition || newCustomer.paymentCondition}
+                      {selectedCustomer?.paymentCondition ||
+                        newCustomer.paymentCondition}
                     </span>
                   </div>
                 )}
-                {(selectedCustomer?.representative || newCustomer.representative) && (
+                {(selectedCustomer?.representative ||
+                  newCustomer.representative) && (
                   <div className="flex justify-between text-sm">
                     <span>Representante:</span>
                     <span className="font-medium">
-                      {selectedCustomer?.representative || newCustomer.representative}
+                      {selectedCustomer?.representative ||
+                        newCustomer.representative}
                     </span>
                   </div>
                 )}

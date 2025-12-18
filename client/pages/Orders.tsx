@@ -1360,26 +1360,30 @@ export default function Orders() {
                         <User className="h-4 w-4 text-muted-foreground mt-0.5" />
                         <div>
                           <p className="font-medium">
-                            {selectedOrder.representative || selectedOrder.seller_name}
+                            {selectedOrder.representative ||
+                              selectedOrder.seller_name}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            {selectedOrder.representative ? "Representante" : "Vendedor"}
+                            {selectedOrder.representative
+                              ? "Representante"
+                              : "Vendedor"}
                           </p>
                         </div>
                       </div>
-                      {selectedOrder.representative && selectedOrder.seller_name && (
-                        <div className="flex items-start gap-2">
-                          <User className="h-4 w-4 text-muted-foreground mt-0.5" />
-                          <div>
-                            <p className="font-medium text-sm">
-                              {selectedOrder.seller_name}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              Vendedor (Digitador)
-                            </p>
+                      {selectedOrder.representative &&
+                        selectedOrder.seller_name && (
+                          <div className="flex items-start gap-2">
+                            <User className="h-4 w-4 text-muted-foreground mt-0.5" />
+                            <div>
+                              <p className="font-medium text-sm">
+                                {selectedOrder.seller_name}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                Vendedor (Digitador)
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
                       {selectedOrder.assigned_operator && (
                         <div className="flex items-start gap-2">
                           <User className="h-4 w-4 text-muted-foreground mt-0.5" />
