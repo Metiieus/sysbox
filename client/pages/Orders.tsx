@@ -1296,6 +1296,11 @@ export default function Orders() {
                           <p className="font-medium">
                             {selectedOrder.customer_name}
                           </p>
+                          {selectedOrder.customer_trade_name && (
+                            <p className="text-sm text-biobox-green">
+                              {selectedOrder.customer_trade_name}
+                            </p>
+                          )}
                           <p className="text-sm text-muted-foreground">
                             Cliente
                           </p>
@@ -1325,6 +1330,19 @@ export default function Orders() {
                           </div>
                         </div>
                       )}
+                      {selectedOrder.payment_condition && (
+                        <div className="flex items-start gap-2">
+                          <DollarSign className="h-4 w-4 text-muted-foreground mt-0.5" />
+                          <div>
+                            <p className="font-medium">
+                              {selectedOrder.payment_condition}
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Condição de Pagamento
+                            </p>
+                          </div>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
 
@@ -1339,13 +1357,26 @@ export default function Orders() {
                         <User className="h-4 w-4 text-muted-foreground mt-0.5" />
                         <div>
                           <p className="font-medium">
-                            {selectedOrder.seller_name}
+                            {selectedOrder.representative || selectedOrder.seller_name}
                           </p>
                           <p className="text-sm text-muted-foreground">
-                            Vendedor
+                            {selectedOrder.representative ? "Representante" : "Vendedor"}
                           </p>
                         </div>
                       </div>
+                      {selectedOrder.representative && selectedOrder.seller_name && (
+                        <div className="flex items-start gap-2">
+                          <User className="h-4 w-4 text-muted-foreground mt-0.5" />
+                          <div>
+                            <p className="font-medium text-sm">
+                              {selectedOrder.seller_name}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              Vendedor (Digitador)
+                            </p>
+                          </div>
+                        </div>
+                      )}
                       {selectedOrder.assigned_operator && (
                         <div className="flex items-start gap-2">
                           <User className="h-4 w-4 text-muted-foreground mt-0.5" />
