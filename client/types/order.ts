@@ -3,6 +3,9 @@ export interface Order {
   orderNumber: string;
   customerId: string;
   customerName: string;
+  customerTradeName?: string;
+  paymentCondition?: string;
+  representative?: string;
   sellerId: string;
   sellerName: string;
   products: OrderProduct[];

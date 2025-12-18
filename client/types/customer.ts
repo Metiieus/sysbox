@@ -5,6 +5,9 @@ export interface Customer {
   phone: string;
   cpf?: string;
   cnpj?: string;
+  tradeName?: string;
+  paymentCondition?: string;
+  representative?: string;
   type: 'individual' | 'business';
   address: {
     street: string;

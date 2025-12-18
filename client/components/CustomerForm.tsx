@@ -20,6 +20,9 @@ export default function CustomerForm({ customer, onSave, onCancel }: CustomerFor
     name: customer?.name || '',
     email: customer?.email || '',
     phone: customer?.phone || '',
+    tradeName: customer?.tradeName || '',
+    paymentCondition: customer?.paymentCondition || '',
+    representative: customer?.representative || '',
     cpf: customer?.cpf || '',
     cnpj: customer?.cnpj || '',
     type: customer?.type || 'individual' as 'individual' | 'business',
@@ -121,6 +124,15 @@ export default function CustomerForm({ customer, onSave, onCancel }: CustomerFor
                     />
                   </div>
                   <div>
+                    <Label htmlFor="tradeName">Nome Fantasia</Label>
+                    <Input
+                      id="tradeName"
+                      value={formData.tradeName}
+                      onChange={(e) => handleInputChange('tradeName', e.target.value)}
+                      placeholder="Nome da Loja"
+                    />
+                  </div>
+                  <div>
                     <Label htmlFor="cnpj">CNPJ</Label>
                     <Input
                       id="cnpj"
@@ -153,6 +165,27 @@ export default function CustomerForm({ customer, onSave, onCancel }: CustomerFor
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder="(11) 99999-9999"
                   required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="paymentCondition">Condição de Pagamento</Label>
+                <Input
+                  id="paymentCondition"
+                  value={formData.paymentCondition}
+                  onChange={(e) => handleInputChange('paymentCondition', e.target.value)}
+                  placeholder="Ex: 30/60/90 dias"
+                />
+              </div>
+              <div>
+                <Label htmlFor="representative">Representante</Label>
+                <Input
+                  id="representative"
+                  value={formData.representative}
+                  onChange={(e) => handleInputChange('representative', e.target.value)}
+                  placeholder="Nome do Representante"
                 />
               </div>
             </div>

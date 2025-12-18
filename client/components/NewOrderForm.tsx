@@ -104,8 +104,11 @@ export default function NewOrderForm({
   };
   const [newCustomer, setNewCustomer] = useState({
     name: "",
+    tradeName: "",
     phone: "",
     email: "",
+    paymentCondition: "",
+    representative: "",
     type: "individual" as "individual" | "business",
   });
   const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([]);
@@ -354,6 +357,9 @@ export default function NewOrderForm({
         order_number: generateOrderNumber(),
         customer_id: customer.id,
         customer_name: customer.name,
+        customer_trade_name: customer.tradeName || customer.trade_name || "",
+        payment_condition: customer.paymentCondition || customer.payment_condition || "",
+        representative: customer.representative || "",
         customer_phone: customer.phone,
         customer_email: customer.email || "",
         seller_id: user?.id || "",
@@ -499,6 +505,22 @@ export default function NewOrderForm({
                       />
                     </div>
                     <div>
+                      <Label htmlFor="customerTradeName">Nome Fantasia</Label>
+                      <Input
+                        id="customerTradeName"
+                        value={newCustomer.tradeName}
+                        onChange={(e) =>
+                          setNewCustomer({
+                            ...newCustomer,
+                            tradeName: e.target.value,
+                          })
+                        }
+                        placeholder="Nome Fantasia"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
                       <Label htmlFor="customerPhone">Telefone *</Label>
                       <Input
                         id="customerPhone"
@@ -512,8 +534,53 @@ export default function NewOrderForm({
                         placeholder="(99) 99999-9999"
                       />
                     </div>
+                    <div>
+                      <Label htmlFor="customerEmail">Email</Label>
+                      <Input
+                        id="customerEmail"
+                        type="email"
+                        value={newCustomer.email}
+                        onChange={(e) =>
+                          setNewCustomer({
+                            ...newCustomer,
+                            email: e.target.value,
+                          })
+                        }
+                        placeholder="cliente@email.com"
+                      />
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="paymentCondition">Condição de Pagamento</Label>
+                      <Input
+                        id="paymentCondition"
+                        value={newCustomer.paymentCondition}
+                        onChange={(e) =>
+                          setNewCustomer({
+                            ...newCustomer,
+                            paymentCondition: e.target.value,
+                          })
+                        }
+                        placeholder="Ex: 30/60/90 dias"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="representative">Representante</Label>
+                      <Input
+                        id="representative"
+                        value={newCustomer.representative}
+                        onChange={(e) =>
+                          setNewCustomer({
+                            ...newCustomer,
+                            representative: e.target.value,
+                          })
+                        }
+                        placeholder="Nome do Representante"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1">
                     <div>
                       <Label htmlFor="customerType">Tipo de Cliente</Label>
                       <Select
@@ -537,21 +604,6 @@ export default function NewOrderForm({
                           </SelectItem>
                         </SelectContent>
                       </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="customerEmail">Email</Label>
-                      <Input
-                        id="customerEmail"
-                        type="email"
-                        value={newCustomer.email}
-                        onChange={(e) =>
-                          setNewCustomer({
-                            ...newCustomer,
-                            email: e.target.value,
-                          })
-                        }
-                        placeholder="cliente@email.com"
-                      />
                     </div>
                   </div>
                 </CardContent>
@@ -970,10 +1022,33 @@ export default function NewOrderForm({
               <CardContent className="space-y-2">
                 <div className="flex justify-between">
                   <span>Cliente:</span>
-                  <span className="font-medium">
-                    {selectedCustomer?.name || newCustomer.name}
-                  </span>
+                  <div className="text-right">
+                    <span className="font-medium block">
+                      {selectedCustomer?.name || newCustomer.name}
+                    </span>
+                    {(selectedCustomer?.tradeName || newCustomer.tradeName) && (
+                      <span className="text-xs text-muted-foreground block">
+                        Fantasia: {selectedCustomer?.tradeName || newCustomer.tradeName}
+                      </span>
+                    )}
+                  </div>
                 </div>
+                {(selectedCustomer?.paymentCondition || newCustomer.paymentCondition) && (
+                  <div className="flex justify-between text-sm">
+                    <span>Cond. Pagamento:</span>
+                    <span className="font-medium">
+                      {selectedCustomer?.paymentCondition || newCustomer.paymentCondition}
+                    </span>
+                  </div>
+                )}
+                {(selectedCustomer?.representative || newCustomer.representative) && (
+                  <div className="flex justify-between text-sm">
+                    <span>Representante:</span>
+                    <span className="font-medium">
+                      {selectedCustomer?.representative || newCustomer.representative}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span>Vendedor:</span>
                   <span className="font-medium text-biobox-green">
