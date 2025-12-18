@@ -514,6 +514,9 @@ export default function Orders() {
 
       const updated = await updateOrder(updatedOrder.id, {
         customer_name: updatedOrder.customer_name,
+        customer_trade_name: updatedOrder.customer_trade_name || "",
+        payment_condition: updatedOrder.payment_condition || "",
+        representative: updatedOrder.representative || "",
         customer_phone: updatedOrder.customer_phone,
         customer_email: updatedOrder.customer_email,
         seller_name: updatedOrder.seller_name,
