@@ -560,11 +560,11 @@ export default function Customers() {
                         <div className="flex items-center space-x-3">
                           <Avatar>
                             <AvatarFallback className="bg-biobox-green/10 text-biobox-green">
-                              {customer.name
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")
-                                .toUpperCase()}
+                              {customer.type === "individual" ? (
+                                <User className="h-5 w-5" />
+                              ) : (
+                                <Building className="h-5 w-5" />
+                              )}
                             </AvatarFallback>
                           </Avatar>
                           <div>
