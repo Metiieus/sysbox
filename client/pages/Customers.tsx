@@ -59,7 +59,7 @@ export default function Customers() {
     updateCustomer: updateCustomerFn,
     deleteCustomer: deleteCustomerFn,
   } = useFirebase();
-  
+
   const { user, checkPermission } = useAuth();
   const isAdmin = user?.role === "admin";
   const { toast } = useToast();
