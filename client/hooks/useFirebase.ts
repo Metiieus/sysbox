@@ -38,6 +38,9 @@ export interface Customer {
   city?: string;
   state?: string;
   zip_code?: string;
+  trade_name?: string;
+  payment_condition?: string;
+  representative?: string;
   default_discount?: number; // Desconto padrão em porcentagem (0-100)
   created_at: string;
   updated_at: string;
@@ -100,6 +103,9 @@ export interface Order {
   customer_name?: string;
   customer_phone?: string;
   customer_email?: string;
+  customer_trade_name?: string;
+  payment_condition?: string;
+  representative?: string;
   seller_name?: string;
   products?: OrderProduct[];
   is_fragmented?: boolean;
@@ -537,6 +543,9 @@ export function useFirebase() {
       customer_name: orderData.customer_name,
       customer_phone: orderData.customer_phone,
       customer_email: orderData.customer_email,
+      customer_trade_name: orderData.customer_trade_name,
+      payment_condition: orderData.payment_condition,
+      representative: orderData.representative,
       seller_name: user?.name,
       products: orderData.products || [],
       production_stages: [

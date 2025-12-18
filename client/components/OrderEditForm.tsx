@@ -62,6 +62,9 @@ interface Order {
   id: string;
   order_number: string;
   customer_name: string;
+  customer_trade_name?: string;
+  payment_condition?: string;
+  representative?: string;
   customer_phone: string;
   customer_email?: string;
   seller_name: string;
@@ -301,6 +304,42 @@ export default function OrderEditForm({
                     handleChange("customer_phone", e.target.value)
                   }
                   required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="customer_trade_name">Nome Fantasia</Label>
+                <Input
+                  id="customer_trade_name"
+                  value={formData.customer_trade_name || ""}
+                  onChange={(e) =>
+                    handleChange("customer_trade_name", e.target.value)
+                  }
+                />
+              </div>
+              <div>
+                <Label htmlFor="representative">Representante</Label>
+                <Input
+                  id="representative"
+                  value={formData.representative || ""}
+                  onChange={(e) =>
+                    handleChange("representative", e.target.value)
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <Label htmlFor="payment_condition">Condição de Pagamento</Label>
+                <Input
+                  id="payment_condition"
+                  value={formData.payment_condition || ""}
+                  onChange={(e) =>
+                    handleChange("payment_condition", e.target.value)
+                  }
                 />
               </div>
             </div>
