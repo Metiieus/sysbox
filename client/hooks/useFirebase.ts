@@ -1005,16 +1005,20 @@ export function useFirebase() {
     if (updates.phone !== undefined) updateData.phone = updates.phone;
     if (updates.cpf !== undefined) updateData.cpf = updates.cpf;
     if (updates.cnpj !== undefined) updateData.cnpj = updates.cnpj;
-    if (updates.tradeName !== undefined) updateData.trade_name = updates.tradeName;
-    if (updates.paymentCondition !== undefined) updateData.payment_condition = updates.paymentCondition;
-    if (updates.representative !== undefined) updateData.representative = updates.representative;
+    if (updates.tradeName !== undefined)
+      updateData.trade_name = updates.tradeName;
+    if (updates.paymentCondition !== undefined)
+      updateData.payment_condition = updates.paymentCondition;
+    if (updates.representative !== undefined)
+      updateData.representative = updates.representative;
     if (updates.type !== undefined) updateData.type = updates.type;
     if (updates.address !== undefined) updateData.address = updates.address;
     if (updates.city !== undefined) updateData.city = updates.city;
     if (updates.state !== undefined) updateData.state = updates.state;
     if (updates.zip_code !== undefined) updateData.zip_code = updates.zip_code;
     if (updates.status !== undefined) updateData.status = updates.status;
-    if (updates.default_discount !== undefined) updateData.default_discount = updates.default_discount;
+    if (updates.default_discount !== undefined)
+      updateData.default_discount = updates.default_discount;
 
     // Sempre tentar ler do Firestore se o objeto DB existe, ignorando o estado isConnected
     if (db) {
