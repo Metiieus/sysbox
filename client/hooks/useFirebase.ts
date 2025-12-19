@@ -939,6 +939,11 @@ export function useFirebase() {
       name: customerData.name || "Cliente",
       email: customerData.email || "",
       phone: customerData.phone || "",
+      cpf: customerData.cpf,
+      cnpj: customerData.cnpj,
+      tradeName: customerData.tradeName,
+      paymentCondition: customerData.paymentCondition,
+      representative: customerData.representative,
       type: customerData.type || "individual",
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -946,6 +951,7 @@ export function useFirebase() {
       city: customerData.city,
       state: customerData.state,
       zip_code: customerData.zip_code,
+      default_discount: customerData.default_discount,
     } as Customer;
 
     // Sempre tentar ler do Firestore se o objeto DB existe, ignorando o estado isConnected
