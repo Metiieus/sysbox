@@ -92,6 +92,9 @@ export default function Customers() {
           phone: customer.phone || "",
           cpf: (customer.cpf as string) || "",
           cnpj: (customer.cnpj as string) || "",
+          tradeName: customer.tradeName || customer.trade_name || "",
+          paymentCondition: customer.paymentCondition || customer.payment_condition || "",
+          representative: customer.representative || "",
           type:
             customer.type === "company" || customer.type === "business"
               ? "business"
