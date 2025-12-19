@@ -322,10 +322,16 @@ export function useFirebase() {
     if (db) {
       try {
         const snap = await getDocs(collection(db, "customers"));
-        const customers = snap.docs.map((d) => ({
-          id: d.id,
-          ...(d.data() as any),
-        }));
+        const customers = snap.docs.map((d) => {
+          const data = d.data() as any;
+          return {
+            id: d.id,
+            ...data,
+            tradeName: data.trade_name || data.tradeName,
+            paymentCondition: data.payment_condition || data.paymentCondition,
+            zipCode: data.zip_code || data.zipCode,
+          };
+        });
         console.log("✅ [getCustomers] Firestore:", customers.length);
         return customers;
       } catch (err) {
