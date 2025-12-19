@@ -92,6 +92,10 @@ export default function Customers() {
           phone: customer.phone || "",
           cpf: (customer.cpf as string) || "",
           cnpj: (customer.cnpj as string) || "",
+          tradeName: customer.tradeName || customer.trade_name || "",
+          paymentCondition:
+            customer.paymentCondition || customer.payment_condition || "",
+          representative: customer.representative || "",
           type:
             customer.type === "company" || customer.type === "business"
               ? "business"
@@ -229,6 +233,9 @@ export default function Customers() {
             phone: customerData.phone,
             cpf: customerData.cpf,
             cnpj: customerData.cnpj,
+            tradeName: customerData.tradeName,
+            paymentCondition: customerData.paymentCondition,
+            representative: customerData.representative,
             type: customerData.type,
             address: customerData.address,
             status: customerData.status,
@@ -263,7 +270,16 @@ export default function Customers() {
         // Criar novo cliente usando função do hook
         try {
           const created = await createCustomerFn({
-            ...customerData,
+            name: customerData.name,
+            email: customerData.email,
+            phone: customerData.phone,
+            cpf: customerData.cpf,
+            cnpj: customerData.cnpj,
+            tradeName: customerData.tradeName,
+            paymentCondition: customerData.paymentCondition,
+            representative: customerData.representative,
+            type: customerData.type,
+            address: customerData.address,
             status: customerData.status || "active",
           });
 

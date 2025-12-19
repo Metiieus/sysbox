@@ -322,10 +322,16 @@ export function useFirebase() {
     if (db) {
       try {
         const snap = await getDocs(collection(db, "customers"));
-        const customers = snap.docs.map((d) => ({
-          id: d.id,
-          ...(d.data() as any),
-        }));
+        const customers = snap.docs.map((d) => {
+          const data = d.data() as any;
+          return {
+            id: d.id,
+            ...data,
+            tradeName: data.trade_name || data.tradeName,
+            paymentCondition: data.payment_condition || data.paymentCondition,
+            zipCode: data.zip_code || data.zipCode,
+          };
+        });
         console.log("✅ [getCustomers] Firestore:", customers.length);
         return customers;
       } catch (err) {
@@ -939,6 +945,11 @@ export function useFirebase() {
       name: customerData.name || "Cliente",
       email: customerData.email || "",
       phone: customerData.phone || "",
+      cpf: customerData.cpf,
+      cnpj: customerData.cnpj,
+      tradeName: customerData.tradeName,
+      paymentCondition: customerData.paymentCondition,
+      representative: customerData.representative,
       type: customerData.type || "individual",
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
@@ -946,6 +957,7 @@ export function useFirebase() {
       city: customerData.city,
       state: customerData.state,
       zip_code: customerData.zip_code,
+      default_discount: customerData.default_discount,
     } as Customer;
 
     // Sempre tentar ler do Firestore se o objeto DB existe, ignorando o estado isConnected
@@ -986,13 +998,35 @@ export function useFirebase() {
     });
 
     const now = new Date().toISOString();
+
+    const updateData: any = {};
+    if (updates.name !== undefined) updateData.name = updates.name;
+    if (updates.email !== undefined) updateData.email = updates.email;
+    if (updates.phone !== undefined) updateData.phone = updates.phone;
+    if (updates.cpf !== undefined) updateData.cpf = updates.cpf;
+    if (updates.cnpj !== undefined) updateData.cnpj = updates.cnpj;
+    if (updates.tradeName !== undefined)
+      updateData.trade_name = updates.tradeName;
+    if (updates.paymentCondition !== undefined)
+      updateData.payment_condition = updates.paymentCondition;
+    if (updates.representative !== undefined)
+      updateData.representative = updates.representative;
+    if (updates.type !== undefined) updateData.type = updates.type;
+    if (updates.address !== undefined) updateData.address = updates.address;
+    if (updates.city !== undefined) updateData.city = updates.city;
+    if (updates.state !== undefined) updateData.state = updates.state;
+    if (updates.zip_code !== undefined) updateData.zip_code = updates.zip_code;
+    if (updates.status !== undefined) updateData.status = updates.status;
+    if (updates.default_discount !== undefined)
+      updateData.default_discount = updates.default_discount;
+
     // Sempre tentar ler do Firestore se o objeto DB existe, ignorando o estado isConnected
     if (db) {
       try {
         await updateDoc(
           doc(db, "customers", customerId),
           sanitizeForFirestore({
-            ...updates,
+            ...updateData,
             updated_at: serverTimestamp(),
           }) as any,
         );
@@ -1006,6 +1040,9 @@ export function useFirebase() {
         return {
           id: snap.id,
           ...data,
+          tradeName: data.trade_name || data.tradeName,
+          paymentCondition: data.payment_condition || data.paymentCondition,
+          zipCode: data.zip_code || data.zipCode,
           created_at: created.toISOString(),
           updated_at: updated.toISOString(),
         } as Customer;
