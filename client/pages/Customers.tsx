@@ -51,6 +51,10 @@ export default function Customers() {
   >("all");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [orderHistoryOpen, setOrderHistoryOpen] = useState(false);
+  const [selectedCustomerForHistory, setSelectedCustomerForHistory] = useState<
+    Customer | undefined
+  >();
   const PAGE_SIZE = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
