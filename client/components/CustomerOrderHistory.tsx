@@ -88,14 +88,27 @@ export default function CustomerOrderHistory({
       try {
         setLoading(true);
         setError(null);
-        const allOrders = await getOrders();
+
+        // Add timeout to prevent infinite loading
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Timeout ao carregar pedidos")), 15000)
+        );
+
+        const allOrdersPromise = getOrders();
+        const allOrders = await Promise.race([allOrdersPromise, timeoutPromise]) as any[];
+
+        console.log("Pedidos carregados:", allOrders.length, "Cliente ID:", customerId);
+
         const customerOrders = allOrders.filter(
           (order) => order.customer_id === customerId
         );
+
+        console.log("Pedidos do cliente:", customerOrders.length);
         setOrders(customerOrders);
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : "Erro ao carregar pedidos";
+        console.error("Erro ao carregar pedidos:", errorMessage);
         setError(errorMessage);
         toast({
           title: "Erro ao carregar pedidos",
