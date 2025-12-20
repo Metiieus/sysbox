@@ -633,9 +633,16 @@ export default function Customers() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className="font-medium">
+                        <button
+                          onClick={() => {
+                            setSelectedCustomerForHistory(customer);
+                            setOrderHistoryOpen(true);
+                          }}
+                          className="font-medium text-biobox-green hover:text-biobox-green-dark hover:underline cursor-pointer transition-colors"
+                          title="Ver histórico de pedidos"
+                        >
                           {customer.totalOrders}
-                        </span>
+                        </button>
                       </TableCell>
                       {isAdmin && (
                         <TableCell>
