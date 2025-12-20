@@ -89,32 +89,44 @@ export default function CustomerOrderHistory({
         setLoading(true);
         setError(null);
 
-        // Add timeout to prevent infinite loading
+        // Try to load from localStorage first for faster response
+        const cachedOrders = localStorage.getItem("biobox_orders");
+        if (cachedOrders) {
+          try {
+            const parsed = JSON.parse(cachedOrders);
+            const customerOrders = parsed.filter(
+              (order: any) => order.customer_id === customerId
+            );
+            setOrders(customerOrders);
+            console.log("Pedidos carregados do cache:", customerOrders.length);
+          } catch (e) {
+            console.warn("Erro ao parsear cache:", e);
+          }
+        }
+
+        // Try to get fresh data from Firebase with timeout
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Timeout ao carregar pedidos")), 15000)
+          setTimeout(() => reject(new Error("Timeout ao carregar pedidos do servidor")), 10000)
         );
 
         const allOrdersPromise = getOrders();
         const allOrders = await Promise.race([allOrdersPromise, timeoutPromise]) as any[];
 
-        console.log("Pedidos carregados:", allOrders.length, "Cliente ID:", customerId);
-
         const customerOrders = allOrders.filter(
-          (order) => order.customer_id === customerId
+          (order: any) => order.customer_id === customerId
         );
 
-        console.log("Pedidos do cliente:", customerOrders.length);
+        console.log("Pedidos carregados do servidor:", customerOrders.length);
         setOrders(customerOrders);
       } catch (err) {
-        const errorMessage =
-          err instanceof Error ? err.message : "Erro ao carregar pedidos";
-        console.error("Erro ao carregar pedidos:", errorMessage);
-        setError(errorMessage);
-        toast({
-          title: "Erro ao carregar pedidos",
-          description: errorMessage,
-          variant: "destructive",
-        });
+        // If we already loaded from cache, don't show error
+        const cachedOrders = localStorage.getItem("biobox_orders");
+        if (!cachedOrders) {
+          const errorMessage =
+            err instanceof Error ? err.message : "Erro ao carregar pedidos";
+          console.error("Erro ao carregar pedidos:", errorMessage);
+          setError(errorMessage);
+        }
       } finally {
         setLoading(false);
       }
