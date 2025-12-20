@@ -143,17 +143,19 @@ export default function CustomerOrderHistory({
   };
 
   // Group orders by status for summary
-  const ordersByStatus = orders.reduce(
-    (acc, order) => {
-      const status = order.status || "pending";
-      if (!acc[status]) {
-        acc[status] = [];
-      }
-      acc[status].push(order);
-      return acc;
-    },
-    {} as Record<string, Order[]>
-  );
+  const ordersByStatus = useMemo(() => {
+    return orders.reduce(
+      (acc, order) => {
+        const status = order.status || "pending";
+        if (!acc[status]) {
+          acc[status] = [];
+        }
+        acc[status].push(order);
+        return acc;
+      },
+      {} as Record<string, Order[]>
+    );
+  }, [orders]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
