@@ -228,7 +228,12 @@ export default function CustomerOrderHistory({
                     Status Predominante
                   </p>
                   <p className="text-2xl font-bold text-foreground">
-                    {Object.entries(ordersByStatus).sort((a, b) => b[1].length - a[1].length)[0]?.[1].length || 0 > 0 ? getStatusLabel(Object.entries(ordersByStatus).sort((a, b) => b[1].length - a[1].length)[0][0]) : "-"}
+                    {useMemo(() => {
+                      const entries = Object.entries(ordersByStatus);
+                      if (entries.length === 0) return "-";
+                      const [topStatus] = entries.sort((a, b) => b[1].length - a[1].length)[0];
+                      return getStatusLabel(topStatus);
+                    }, [ordersByStatus])}
                   </p>
                 </CardContent>
               </Card>
