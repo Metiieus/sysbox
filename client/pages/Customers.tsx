@@ -754,6 +754,18 @@ export default function Customers() {
             }}
           />
         )}
+
+        {selectedCustomerForHistory && (
+          <CustomerOrderHistory
+            isOpen={orderHistoryOpen}
+            onClose={() => {
+              setOrderHistoryOpen(false);
+              setSelectedCustomerForHistory(undefined);
+            }}
+            customerId={selectedCustomerForHistory.id}
+            customerName={selectedCustomerForHistory.name}
+          />
+        )}
       </div>
     </DashboardLayout>
   );
