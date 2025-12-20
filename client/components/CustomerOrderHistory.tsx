@@ -157,6 +157,14 @@ export default function CustomerOrderHistory({
     );
   }, [orders]);
 
+  // Calculate predominant status
+  const predominantStatus = useMemo(() => {
+    const entries = Object.entries(ordersByStatus);
+    if (entries.length === 0) return "-";
+    const [topStatus] = entries.sort((a, b) => b[1].length - a[1].length)[0];
+    return getStatusLabel(topStatus);
+  }, [ordersByStatus]);
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
