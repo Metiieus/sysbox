@@ -19,7 +19,7 @@ import { ChevronRight, Package, AlertCircle, Printer } from "lucide-react";
 
 interface GenerateProductionProps {
   orders: Order[];
-  onSelectOrder: (order: Order) => void;
+  onSelectOrder: (order: Order, selectedProducts?: OrderProduct[]) => void;
 }
 
 const statusLabels = {
