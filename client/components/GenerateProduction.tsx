@@ -106,19 +106,48 @@ export default function GenerateProduction({
     }
   };
 
-  const handleStartProduction = () => {
+  const handleStartProduction = async () => {
     if (!selectedOrder) return;
+
+    let productsToSend: OrderProduct[] = [];
 
     if (selectedProducts.size === 0) {
       // Se nenhum item selecionado, enviar todos
-      onSelectOrder(selectedOrder, selectedOrder.products);
+      productsToSend = selectedOrder.products || [];
     } else {
       // Enviar apenas itens selecionados
-      const productsToSend = selectedOrder.products?.filter((_, idx) =>
+      productsToSend = selectedOrder.products?.filter((_, idx) =>
         selectedProducts.has(String(idx))
-      );
-      onSelectOrder(selectedOrder, productsToSend);
+      ) || [];
     }
+
+    // Decrementar a quantidade dos produtos selecionados
+    if (updateOrder && productsToSend.length > 0) {
+      const updatedProducts = (selectedOrder.products || []).map((product, idx) => {
+        const isSending = productsToSend.some(
+          (p) => p.product_id === product.product_id && p.id === product.id
+        );
+
+        if (isSending) {
+          // Removemos completamente o produto (quantidade vai para 0)
+          return null;
+        }
+        return product;
+      }).filter(Boolean) as OrderProduct[];
+
+      // Atualizar o pedido com os produtos restantes
+      await updateOrder(selectedOrder.id, {
+        products: updatedProducts,
+        updated_at: new Date().toISOString(),
+      });
+
+      // Chamar callback para recarregar os pedidos
+      if (onStartProduction) {
+        await onStartProduction();
+      }
+    }
+
+    onSelectOrder(selectedOrder, productsToSend);
     setSelectedOrder(null);
     setSelectedProducts(new Set());
   };
