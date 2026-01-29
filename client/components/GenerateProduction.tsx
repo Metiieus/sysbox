@@ -668,7 +668,7 @@ export default function GenerateProduction({
                               selectedOrder.products.length &&
                             selectedOrder.products.length > 0
                           }
-                          onChange={toggleSelectAll}
+                          onCheckedChange={toggleSelectAll}
                           title="Selecionar tudo"
                         />
                       </TableHead>
