@@ -170,7 +170,7 @@ export default function Production() {
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-sm">
-              {orders.length} pedidos em produção
+              {productionOrders.length} pedidos em produção
             </Badge>
           </div>
         </div>
