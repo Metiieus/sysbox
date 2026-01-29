@@ -124,6 +124,8 @@ export default function GenerateProduction({
       ) || [];
     }
 
+    const quantidadeEnviada = productsToSend.reduce((sum, p) => sum + p.quantity, 0);
+
     // Decrementar a quantidade dos produtos selecionados
     if (updateOrder && productsToSend.length > 0) {
       const updatedProducts = (selectedOrder.products || []).map((product, idx) => {
@@ -143,6 +145,14 @@ export default function GenerateProduction({
         products: updatedProducts,
         updated_at: new Date().toISOString(),
       });
+
+      // Mostrar mensagem de sucesso
+      setSuccessMessage(
+        `✅ ${quantidadeEnviada} unidade(s) de ${productsToSend.length} item(ns) enviada(s) para produção!`
+      );
+
+      // Limpar mensagem após 3 segundos
+      setTimeout(() => setSuccessMessage(""), 3000);
 
       // Chamar callback para recarregar os pedidos
       if (onStartProduction) {
