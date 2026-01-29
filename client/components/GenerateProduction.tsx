@@ -76,7 +76,128 @@ export default function GenerateProduction({
 
   const handleSelectOrder = (order: Order) => {
     setSelectedOrder(order);
-    onSelectOrder(order);
+    setSelectedProducts(new Set());
+  };
+
+  const toggleProductSelection = (productId: string) => {
+    const newSelected = new Set(selectedProducts);
+    if (newSelected.has(productId)) {
+      newSelected.delete(productId);
+    } else {
+      newSelected.add(productId);
+    }
+    setSelectedProducts(newSelected);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedOrder?.products) {
+      if (selectedProducts.size === selectedOrder.products.length) {
+        setSelectedProducts(new Set());
+      } else {
+        const allIds = new Set(
+          selectedOrder.products.map((_, idx) => String(idx))
+        );
+        setSelectedProducts(allIds);
+      }
+    }
+  };
+
+  const handleStartProduction = () => {
+    if (!selectedOrder) return;
+
+    if (selectedProducts.size === 0) {
+      // Se nenhum item selecionado, enviar todos
+      onSelectOrder(selectedOrder, selectedOrder.products);
+      setSelectedOrder(null);
+      setSelectedProducts(new Set());
+    } else {
+      // Enviar apenas itens selecionados
+      const productsToSend = selectedOrder.products?.filter((_, idx) =>
+        selectedProducts.has(String(idx))
+      );
+      onSelectOrder(selectedOrder, productsToSend);
+      setSelectedOrder(null);
+      setSelectedProducts(new Set());
+    }
+  };
+
+  const handlePrint = () => {
+    const printContent = printRef.current;
+    if (!printContent) return;
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Panorama de Produção - ${selectedOrder?.order_number}</title>
+          <style>
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            body {
+              font-family: Arial, sans-serif;
+              padding: 20px;
+              background: white;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 20px;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 10px;
+              text-align: left;
+              font-size: 12px;
+            }
+            th {
+              background-color: #10B981;
+              color: white;
+              font-weight: bold;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 20px;
+            }
+            .title {
+              font-size: 18px;
+              font-weight: bold;
+              margin-bottom: 10px;
+            }
+            .order-info {
+              font-size: 13px;
+              margin-bottom: 15px;
+            }
+            .info-row {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 5px;
+            }
+            .info-label {
+              font-weight: bold;
+            }
+            .total-row {
+              font-weight: bold;
+              background-color: #f3f4f6;
+            }
+            @media print {
+              body { padding: 10px; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent.innerHTML}
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
   };
 
   if (!selectedOrder) {
