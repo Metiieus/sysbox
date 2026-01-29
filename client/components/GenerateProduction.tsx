@@ -92,15 +92,15 @@ export default function GenerateProduction({
     console.log("Toggled product:", productId, "New selected:", newSelected);
   };
 
-  const toggleSelectAll = () => {
+  const toggleSelectAll = (checked: boolean) => {
     if (selectedOrder?.products) {
-      if (selectedProducts.size === selectedOrder.products.length) {
-        setSelectedProducts(new Set());
-      } else {
+      if (checked) {
         const allIds = new Set(
           selectedOrder.products.map((_, idx) => String(idx))
         );
         setSelectedProducts(allIds);
+      } else {
+        setSelectedProducts(new Set());
       }
     }
   };
