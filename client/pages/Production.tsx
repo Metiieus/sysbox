@@ -175,8 +175,8 @@ export default function Production() {
           </div>
         </div>
 
-        <Tabs defaultValue="cutting_sewing" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+        <Tabs defaultValue="generate" className="w-full">
+          <TabsList className="grid w-full grid-cols-7">
             {productionStages.map((stage) => {
               const Icon = stageIcons[stage.id as keyof typeof stageIcons];
               const ordersCount = getOrdersByStage(stage.id).length;
