@@ -763,6 +763,42 @@ export default function GenerateProduction({
                 </Table>
               </div>
 
+              {/* Resumo de Seleção */}
+              {selectedProducts.size > 0 && (
+                <div className="mt-6 p-4 bg-biobox-green/5 border border-biobox-green/20 rounded-lg">
+                  <h3 className="font-bold text-biobox-green mb-3">
+                    Resumo da Seleção
+                  </h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Itens selecionados:</span>
+                      <span className="font-bold">{selectedProducts.size}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Total de itens:</span>
+                      <span className="font-bold">{selectedOrder.products?.length || 0}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Itens restantes:</span>
+                      <span className="font-bold">
+                        {(selectedOrder.products?.length || 0) - selectedProducts.size}
+                      </span>
+                    </div>
+                    <div className="flex justify-between pt-2 border-t">
+                      <span className="text-muted-foreground">
+                        Quantidade a enviar:
+                      </span>
+                      <span className="font-bold">
+                        {selectedOrder.products
+                          ?.filter((_, idx) => selectedProducts.has(String(idx)))
+                          .reduce((sum, p) => sum + p.quantity, 0) || 0}{" "}
+                        unidades
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Totalizadores */}
               <div className="mt-6 flex justify-end">
                 <div className="w-full md:w-1/3 space-y-2 border-t pt-4">
