@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Table,
   TableBody,
@@ -10,11 +11,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Order } from "@/hooks/useFirebase";
+import { Order, OrderProduct } from "@/hooks/useFirebase";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { ChevronRight, Package, AlertCircle } from "lucide-react";
+import { ChevronRight, Package, AlertCircle, Printer } from "lucide-react";
 
 interface GenerateProductionProps {
   orders: Order[];
