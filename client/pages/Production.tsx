@@ -177,6 +177,27 @@ export default function Production() {
 
         <Tabs defaultValue="generate" className="w-full">
           <TabsList className="grid w-full grid-cols-7">
+            <TabsTrigger value="generate" className="flex items-center gap-2">
+              <Factory className="h-4 w-4" />
+              <span className="hidden md:inline">Gerar Produção</span>
+              {allOrders.filter(
+                (o) =>
+                  o.status === "pending" ||
+                  o.status === "awaiting_approval" ||
+                  o.status === "confirmed",
+              ).length > 0 && (
+                <Badge variant="secondary" className="ml-1">
+                  {
+                    allOrders.filter(
+                      (o) =>
+                        o.status === "pending" ||
+                        o.status === "awaiting_approval" ||
+                        o.status === "confirmed",
+                    ).length
+                  }
+                </Badge>
+              )}
+            </TabsTrigger>
             {productionStages.map((stage) => {
               const Icon = stageIcons[stage.id as keyof typeof stageIcons];
               const ordersCount = getOrdersByStage(stage.id).length;
