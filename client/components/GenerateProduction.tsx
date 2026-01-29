@@ -693,8 +693,8 @@ export default function GenerateProduction({
                         <TableCell>
                           <Checkbox
                             checked={selectedProducts.has(String(index))}
-                            onChange={() =>
-                              toggleProductSelection(String(index))
+                            onCheckedChange={(checked) =>
+                              toggleProductSelection(String(index), checked as boolean)
                             }
                           />
                         </TableCell>
