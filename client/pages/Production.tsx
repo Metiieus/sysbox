@@ -41,7 +41,8 @@ const stageIcons = {
 };
 
 export default function Production() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
+  const [productionOrders, setProductionOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showStagesDialog, setShowStagesDialog] = useState(false);
   const [currentPages, setCurrentPages] = useState<Record<string, number>>({
@@ -60,12 +61,14 @@ export default function Production() {
   }, []);
 
   const loadOrders = async () => {
-    const allOrders = await getOrders();
+    const orders = await getOrders();
+    setAllOrders(orders);
+
     // Filtrar apenas pedidos em produção
-    const productionOrders = allOrders.filter(
+    const inProduction = orders.filter(
       (o) => o.status === "in_production" || o.status === "quality_check",
     );
-    setOrders(productionOrders);
+    setProductionOrders(inProduction);
   };
 
   const getOrdersByStage = (stageId: string) => {
