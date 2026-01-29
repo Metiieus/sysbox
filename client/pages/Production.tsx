@@ -15,6 +15,7 @@ import {
   User,
   Clock,
   AlertCircle,
+  Factory,
 } from "lucide-react";
 import { useFirebase, Order } from "@/hooks/useFirebase";
 import { productionStages } from "@/types/production";
@@ -22,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import ProductionStagesTracker from "@/components/ProductionStagesTracker";
+import GenerateProduction from "@/components/GenerateProduction";
 import {
   Dialog,
   DialogContent,
