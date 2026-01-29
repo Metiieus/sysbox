@@ -323,12 +323,22 @@ export default function GenerateProduction({
                           </p>
                         </div>
                         <div>
-                          <p className="text-muted-foreground">Itens</p>
-                          <p className="font-medium">
+                          <p className="text-muted-foreground">Itens Restantes</p>
+                          <p className="font-bold">
                             {order.products?.length || 0}
                           </p>
                         </div>
                       </div>
+
+                      {/* Barra de progresso */}
+                      {order.products && order.products.length > 0 && (
+                        <div className="mb-3">
+                          <p className="text-xs text-muted-foreground mb-1">
+                            Quantidade de unidades: {" "}
+                            {order.products.reduce((sum, p) => sum + p.quantity, 0)}
+                          </p>
+                        </div>
+                      )}
 
                       {order.notes && (
                         <div className="text-xs text-muted-foreground bg-muted/30 p-2 rounded">
