@@ -81,15 +81,14 @@ export default function GenerateProduction({
     setSelectedProducts(new Set());
   };
 
-  const toggleProductSelection = (productId: string) => {
+  const toggleProductSelection = (productId: string, checked: boolean) => {
     const newSelected = new Set(selectedProducts);
-    if (newSelected.has(productId)) {
-      newSelected.delete(productId);
-    } else {
+    if (checked) {
       newSelected.add(productId);
+    } else {
+      newSelected.delete(productId);
     }
     setSelectedProducts(newSelected);
-    console.log("Toggled product:", productId, "New selected:", newSelected);
   };
 
   const toggleSelectAll = (checked: boolean) => {
