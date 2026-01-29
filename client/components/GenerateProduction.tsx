@@ -758,6 +758,17 @@ export default function GenerateProduction({
                         <TableCell className="text-right font-bold text-biobox-green">
                           R$ {product.total_price.toFixed(2)}
                         </TableCell>
+                        <TableCell className="text-center">
+                          {selectedProducts.has(String(index)) ? (
+                            <Badge className="bg-biobox-green text-white">
+                              Selecionado
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-muted-foreground">
+                              Aguardando
+                            </Badge>
+                          )}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
