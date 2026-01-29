@@ -63,6 +63,8 @@ export default function GenerateProduction({
   onSelectOrder,
 }: GenerateProductionProps) {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
+  const printRef = useRef<HTMLDivElement>(null);
 
   // Filtrar pedidos disponíveis para produção
   const availableOrders = orders.filter(
