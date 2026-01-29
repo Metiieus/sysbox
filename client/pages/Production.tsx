@@ -224,6 +224,10 @@ export default function Production() {
             <GenerateProduction
               orders={allOrders}
               onSelectOrder={(order) => setSelectedOrder(order)}
+              onStartProduction={async () => {
+                await loadOrders();
+              }}
+              updateOrder={updateOrder}
             />
           </TabsContent>
 
