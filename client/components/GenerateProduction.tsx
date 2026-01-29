@@ -63,11 +63,14 @@ const priorityColors = {
 export default function GenerateProduction({
   orders,
   onSelectOrder,
+  onStartProduction,
+  updateOrder,
 }: GenerateProductionProps) {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
     new Set()
   );
+  const [successMessage, setSuccessMessage] = useState<string>("");
   const printRef = useRef<HTMLDivElement>(null);
 
   // Filtrar pedidos disponíveis para produção
