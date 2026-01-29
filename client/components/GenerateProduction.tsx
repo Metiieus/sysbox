@@ -710,6 +710,7 @@ export default function GenerateProduction({
                       <TableHead className="text-right">Quantidade</TableHead>
                       <TableHead className="text-right">Preço Unit.</TableHead>
                       <TableHead className="text-right">Preço Total</TableHead>
+                      <TableHead className="text-center">Status</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
