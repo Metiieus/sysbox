@@ -72,7 +72,7 @@ export default function Production() {
   };
 
   const getOrdersByStage = (stageId: string) => {
-    return orders.filter((order) => {
+    return productionOrders.filter((order) => {
       const stages = order.production_stages || [];
       const currentStage = stages.find((s) => s.stage === stageId);
 
