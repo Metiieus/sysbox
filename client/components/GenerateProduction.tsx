@@ -247,6 +247,12 @@ export default function GenerateProduction({
   if (!selectedOrder) {
     return (
       <div className="space-y-4">
+        {successMessage && (
+          <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
+            {successMessage}
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-foreground">
             Pedidos Disponíveis para Produção
