@@ -89,6 +89,7 @@ export default function GenerateProduction({
       newSelected.add(productId);
     }
     setSelectedProducts(newSelected);
+    console.log("Toggled product:", productId, "New selected:", newSelected);
   };
 
   const toggleSelectAll = () => {
