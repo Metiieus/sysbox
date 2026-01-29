@@ -220,6 +220,13 @@ export default function Production() {
             })}
           </TabsList>
 
+          <TabsContent value="generate" className="space-y-4">
+            <GenerateProduction
+              orders={allOrders}
+              onSelectOrder={(order) => setSelectedOrder(order)}
+            />
+          </TabsContent>
+
           {productionStages.map((stage) => {
             const Icon = stageIcons[stage.id as keyof typeof stageIcons];
             const ordersInStage = getOrdersByStage(stage.id);
