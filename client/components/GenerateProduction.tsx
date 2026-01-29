@@ -63,7 +63,9 @@ export default function GenerateProduction({
   onSelectOrder,
 }: GenerateProductionProps) {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(new Set());
+  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
+    new Set()
+  );
   const printRef = useRef<HTMLDivElement>(null);
 
   // Filtrar pedidos disponíveis para produção
@@ -71,7 +73,7 @@ export default function GenerateProduction({
     (order) =>
       order.status === "pending" ||
       order.status === "awaiting_approval" ||
-      order.status === "confirmed",
+      order.status === "confirmed"
   );
 
   const handleSelectOrder = (order: Order) => {
@@ -108,17 +110,15 @@ export default function GenerateProduction({
     if (selectedProducts.size === 0) {
       // Se nenhum item selecionado, enviar todos
       onSelectOrder(selectedOrder, selectedOrder.products);
-      setSelectedOrder(null);
-      setSelectedProducts(new Set());
     } else {
       // Enviar apenas itens selecionados
       const productsToSend = selectedOrder.products?.filter((_, idx) =>
         selectedProducts.has(String(idx))
       );
       onSelectOrder(selectedOrder, productsToSend);
-      setSelectedOrder(null);
-      setSelectedProducts(new Set());
     }
+    setSelectedOrder(null);
+    setSelectedProducts(new Set());
   };
 
   const handlePrint = () => {
@@ -242,7 +242,7 @@ export default function GenerateProduction({
                             "border",
                             statusColors[
                               order.status as keyof typeof statusColors
-                            ],
+                            ]
                           )}
                         >
                           {
@@ -256,7 +256,7 @@ export default function GenerateProduction({
                             "w-2 h-2 rounded-full ml-2",
                             priorityColors[
                               order.priority as keyof typeof priorityColors
-                            ],
+                            ]
                           )}
                         />
                         <span className="text-xs text-muted-foreground ml-1">
@@ -287,7 +287,7 @@ export default function GenerateProduction({
                             {format(
                               new Date(order.scheduled_date),
                               "dd/MM/yyyy",
-                              { locale: ptBR },
+                              { locale: ptBR }
                             )}
                           </p>
                         </div>
@@ -338,7 +338,10 @@ export default function GenerateProduction({
         </div>
         <Button
           variant="outline"
-          onClick={() => setSelectedOrder(null)}
+          onClick={() => {
+            setSelectedOrder(null);
+            setSelectedProducts(new Set());
+          }}
           className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
         >
           Voltar para Lista
@@ -356,7 +359,7 @@ export default function GenerateProduction({
                 "border",
                 statusColors[
                   selectedOrder.status as keyof typeof statusColors
-                ],
+                ]
               )}
             >
               {
@@ -406,8 +409,26 @@ export default function GenerateProduction({
 
       {/* Tabela de Itens */}
       <Card>
-        <CardHeader>
-          <CardTitle>Itens para Produção</CardTitle>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <div>
+            <CardTitle>Itens para Produção</CardTitle>
+            {selectedProducts.size > 0 && (
+              <p className="text-sm text-muted-foreground mt-1">
+                {selectedProducts.size} de {selectedOrder.products?.length || 0}{" "}
+                selecionado(s)
+              </p>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <Button
+              onClick={handlePrint}
+              variant="outline"
+              className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
+            >
+              <Printer className="h-4 w-4 mr-2" />
+              Imprimir Panorama
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {!selectedOrder.products || selectedOrder.products.length === 0 ? (
@@ -416,55 +437,300 @@ export default function GenerateProduction({
               <p className="text-muted-foreground">Nenhum item neste pedido</p>
             </div>
           ) : (
-            <div className="w-full overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Produto</TableHead>
-                    <TableHead>Modelo</TableHead>
-                    <TableHead>Cor</TableHead>
-                    <TableHead>Tamanho</TableHead>
-                    <TableHead>Tecido</TableHead>
-                    <TableHead className="text-right">Quantidade</TableHead>
-                    <TableHead className="text-right">Preço Unit.</TableHead>
-                    <TableHead className="text-right">Preço Total</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {selectedOrder.products.map((product, index) => (
-                    <TableRow key={product.id || index}>
-                      <TableCell className="font-medium">
-                        {product.product_name}
-                      </TableCell>
-                      <TableCell>{product.model || "-"}</TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="w-4 h-4 rounded border"
-                            style={{
-                              backgroundColor:
-                                getColorHex(product.color) || "#e5e7eb",
-                            }}
-                            title={product.color}
-                          />
-                          <span>{product.color}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>{product.size || "-"}</TableCell>
-                      <TableCell>{product.fabric || "-"}</TableCell>
-                      <TableCell className="text-right font-medium">
-                        {product.quantity}
-                      </TableCell>
-                      <TableCell className="text-right">
-                        R$ {product.unit_price.toFixed(2)}
-                      </TableCell>
-                      <TableCell className="text-right font-bold text-biobox-green">
-                        R$ {product.total_price.toFixed(2)}
-                      </TableCell>
+            <div className="space-y-4">
+              {/* Conteúdo para impressão */}
+              <div ref={printRef} className="hidden">
+                <div
+                  style={{
+                    textAlign: "center",
+                    marginBottom: "20px",
+                    pageBreakInside: "avoid",
+                  }}
+                >
+                  <h1
+                    style={{
+                      fontSize: "18px",
+                      fontWeight: "bold",
+                      marginBottom: "10px",
+                    }}
+                  >
+                    PANORAMA DE PRODUÇÃO
+                  </h1>
+                  <p style={{ fontSize: "13px", marginBottom: "5px" }}>
+                    <strong>Pedido:</strong> {selectedOrder.order_number}
+                  </p>
+                  <p style={{ fontSize: "13px", marginBottom: "5px" }}>
+                    <strong>Cliente:</strong> {selectedOrder.customer_name}
+                  </p>
+                  <p style={{ fontSize: "13px", marginBottom: "5px" }}>
+                    <strong>Data Agendada:</strong>{" "}
+                    {format(new Date(selectedOrder.scheduled_date), "dd/MM/yyyy", {
+                      locale: ptBR,
+                    })}
+                  </p>
+                  <p style={{ fontSize: "12px", color: "#666", marginTop: "10px" }}>
+                    Gerado em:{" "}
+                    {format(new Date(), "dd/MM/yyyy 'às' HH:mm", {
+                      locale: ptBR,
+                    })}
+                  </p>
+                </div>
+
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    marginBottom: "20px",
+                  }}
+                >
+                  <thead>
+                    <tr style={{ backgroundColor: "#10B981", color: "white" }}>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "left",
+                        }}
+                      >
+                        Produto
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "left",
+                        }}
+                      >
+                        Modelo
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "left",
+                        }}
+                      >
+                        Cor
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "left",
+                        }}
+                      >
+                        Tamanho
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "left",
+                        }}
+                      >
+                        Tecido
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                        }}
+                      >
+                        Quantidade
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "right",
+                        }}
+                      >
+                        Preço Unit.
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "right",
+                        }}
+                      >
+                        Total
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selectedOrder.products.map((product, index) => (
+                      <tr key={product.id || index}>
+                        <td
+                          style={{ border: "1px solid #ddd", padding: "10px" }}
+                        >
+                          {product.product_name}
+                        </td>
+                        <td
+                          style={{ border: "1px solid #ddd", padding: "10px" }}
+                        >
+                          {product.model || "-"}
+                        </td>
+                        <td
+                          style={{ border: "1px solid #ddd", padding: "10px" }}
+                        >
+                          {product.color || "-"}
+                        </td>
+                        <td
+                          style={{ border: "1px solid #ddd", padding: "10px" }}
+                        >
+                          {product.size || "-"}
+                        </td>
+                        <td
+                          style={{ border: "1px solid #ddd", padding: "10px" }}
+                        >
+                          {product.fabric || "-"}
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "10px",
+                            textAlign: "center",
+                          }}
+                        >
+                          {product.quantity}
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "10px",
+                            textAlign: "right",
+                          }}
+                        >
+                          R$ {product.unit_price.toFixed(2)}
+                        </td>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "10px",
+                            textAlign: "right",
+                          }}
+                        >
+                          R$ {product.total_price.toFixed(2)}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr
+                      style={{
+                        fontWeight: "bold",
+                        backgroundColor: "#f3f4f6",
+                      }}
+                    >
+                      <td
+                        colSpan={5}
+                        style={{ border: "1px solid #ddd", padding: "10px" }}
+                      >
+                        TOTAL GERAL
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "center",
+                        }}
+                      >
+                        {selectedOrder.products.reduce(
+                          (sum, p) => sum + p.quantity,
+                          0
+                        )}
+                      </td>
+                      <td
+                        colSpan={2}
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "10px",
+                          textAlign: "right",
+                        }}
+                      >
+                        R$ {selectedOrder.total_amount.toFixed(2)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Tabela interativa */}
+              <div className="w-full overflow-x-auto border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-10">
+                        <Checkbox
+                          checked={
+                            selectedProducts.size ===
+                              selectedOrder.products.length &&
+                            selectedOrder.products.length > 0
+                          }
+                          onChange={toggleSelectAll}
+                          title="Selecionar tudo"
+                        />
+                      </TableHead>
+                      <TableHead>Produto</TableHead>
+                      <TableHead>Modelo</TableHead>
+                      <TableHead>Cor</TableHead>
+                      <TableHead>Tamanho</TableHead>
+                      <TableHead>Tecido</TableHead>
+                      <TableHead className="text-right">Quantidade</TableHead>
+                      <TableHead className="text-right">Preço Unit.</TableHead>
+                      <TableHead className="text-right">Preço Total</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {selectedOrder.products.map((product, index) => (
+                      <TableRow
+                        key={product.id || index}
+                        className={cn(
+                          selectedProducts.has(String(index)) &&
+                            "bg-biobox-green/5"
+                        )}
+                      >
+                        <TableCell>
+                          <Checkbox
+                            checked={selectedProducts.has(String(index))}
+                            onChange={() =>
+                              toggleProductSelection(String(index))
+                            }
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {product.product_name}
+                        </TableCell>
+                        <TableCell>{product.model || "-"}</TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <div
+                              className="w-4 h-4 rounded border"
+                              style={{
+                                backgroundColor:
+                                  getColorHex(product.color) || "#e5e7eb",
+                              }}
+                              title={product.color}
+                            />
+                            <span>{product.color}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell>{product.size || "-"}</TableCell>
+                        <TableCell>{product.fabric || "-"}</TableCell>
+                        <TableCell className="text-right font-medium">
+                          {product.quantity}
+                        </TableCell>
+                        <TableCell className="text-right">
+                          R$ {product.unit_price.toFixed(2)}
+                        </TableCell>
+                        <TableCell className="text-right font-bold text-biobox-green">
+                          R$ {product.total_price.toFixed(2)}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
 
               {/* Totalizadores */}
               <div className="mt-6 flex justify-end">
@@ -494,6 +760,29 @@ export default function GenerateProduction({
                   </div>
                 </div>
               </div>
+
+              {/* Botão para enviar itens selecionados para produção */}
+              <div className="mt-6 flex justify-end gap-3 pt-4 border-t">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSelectedOrder(null);
+                    setSelectedProducts(new Set());
+                  }}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  onClick={handleStartProduction}
+                  className="bg-biobox-green hover:bg-biobox-green-dark"
+                >
+                  Enviar{" "}
+                  {selectedProducts.size > 0
+                    ? `${selectedProducts.size} Item(ns)`
+                    : "Todos os Itens"}{" "}
+                  para Produção
+                </Button>
+              </div>
             </div>
           )}
         </CardContent>
@@ -508,9 +797,14 @@ export default function GenerateProduction({
           <CardContent>
             <div className="space-y-6">
               {selectedOrder.products
-                .filter((p) => p.specifications && Object.keys(p.specifications).length > 0)
+                .filter(
+                  (p) => p.specifications && Object.keys(p.specifications).length > 0
+                )
                 .map((product, index) => (
-                  <div key={product.id || index} className="border-b pb-4 last:border-b-0">
+                  <div
+                    key={product.id || index}
+                    className="border-b pb-4 last:border-b-0"
+                  >
                     <h4 className="font-bold mb-3">
                       {product.product_name} - {product.color} {product.size}
                     </h4>
@@ -522,10 +816,12 @@ export default function GenerateProduction({
                               {key}
                             </p>
                             <p className="text-sm font-medium">
-                              {typeof value === "string" ? value : JSON.stringify(value)}
+                              {typeof value === "string"
+                                ? value
+                                : JSON.stringify(value)}
                             </p>
                           </div>
-                        ),
+                        )
                       )}
                     </div>
                   </div>
