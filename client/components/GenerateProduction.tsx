@@ -843,12 +843,38 @@ export default function GenerateProduction({
                     </div>
                     <div className="flex justify-between pt-2 border-t">
                       <span className="text-muted-foreground">
-                        Quantidade a enviar:
+                        Quantidade total disponível:
                       </span>
                       <span className="font-bold">
                         {selectedOrder.products
                           ?.filter((_, idx) => selectedProducts.has(String(idx)))
                           .reduce((sum, p) => sum + p.quantity, 0) || 0}{" "}
+                        unidades
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">
+                        Quantidade a enviar:
+                      </span>
+                      <span className="font-bold text-biobox-green">
+                        {Array.from(selectedProducts).reduce((sum, idx) => {
+                          return sum + (quantidadesEnvio[idx] || 0);
+                        }, 0)}{" "}
+                        unidades
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">
+                        Saldo após envio:
+                      </span>
+                      <span className="font-bold">
+                        {selectedOrder.products
+                          ?.filter((_, idx) => selectedProducts.has(String(idx)))
+                          .reduce((sum, p, _, arr) => {
+                            const idx = selectedOrder.products?.indexOf(p) || 0;
+                            const qtdEnvio = quantidadesEnvio[String(idx)] || 0;
+                            return sum + (p.quantity - qtdEnvio);
+                          }, 0) || 0}{" "}
                         unidades
                       </span>
                     </div>
