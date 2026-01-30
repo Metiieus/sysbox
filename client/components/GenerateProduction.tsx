@@ -426,14 +426,7 @@ export default function GenerateProduction({
           </div>
 
           {/* Agrupar por cliente */}
-          {Array.from(
-            new Map(
-              availableOrders.map((order) => [order.customer_name, order])
-            ).entries()
-          ).map(([clientName, _]) => {
-            const clientOrders = availableOrders.filter(
-              (order) => order.customer_name === clientName
-            );
+          {Array.from(getOrdersByClient().entries()).map(([clientName, clientOrders]) => {
             const clientTotalQty = clientOrders.reduce(
               (sum, order) =>
                 sum + (order.products?.reduce((s, p) => s + p.quantity, 0) || 0),
