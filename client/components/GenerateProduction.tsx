@@ -770,8 +770,27 @@ export default function GenerateProduction({
                            (product as any).length ||
                            "-"}
                         </TableCell>
-                        <TableCell className="text-right font-medium">
+                        <TableCell className="text-center font-medium">
                           {product.quantity}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {selectedProducts.has(String(index)) ? (
+                            <input
+                              type="number"
+                              min="0"
+                              max={product.quantity}
+                              value={quantidadesEnvio[String(index)] || product.quantity}
+                              onChange={(e) =>
+                                updateQuantidadeEnvio(
+                                  String(index),
+                                  parseInt(e.target.value) || 0
+                                )
+                              }
+                              className="w-16 px-2 py-1 border border-biobox-green/50 rounded text-center text-sm"
+                            />
+                          ) : (
+                            <span className="text-muted-foreground">-</span>
+                          )}
                         </TableCell>
                         <TableCell className="text-right">
                           R$ {product.unit_price.toFixed(2)}
@@ -781,9 +800,14 @@ export default function GenerateProduction({
                         </TableCell>
                         <TableCell className="text-center">
                           {selectedProducts.has(String(index)) ? (
-                            <Badge className="bg-biobox-green text-white">
-                              Selecionado
-                            </Badge>
+                            <div className="flex flex-col items-center gap-1">
+                              <Badge className="bg-biobox-green text-white">
+                                Selecionado
+                              </Badge>
+                              <span className="text-xs text-muted-foreground">
+                                Saldo: {product.quantity - (quantidadesEnvio[String(index)] || 0)}
+                              </span>
+                            </div>
                           ) : (
                             <Badge variant="outline" className="text-muted-foreground">
                               Aguardando
