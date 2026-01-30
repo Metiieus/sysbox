@@ -503,37 +503,41 @@ export default function GenerateProduction({
                 <div
                   style={{
                     textAlign: "center",
-                    marginBottom: "20px",
+                    marginBottom: "15px",
                     pageBreakInside: "avoid",
                   }}
                 >
                   <h1
                     style={{
-                      fontSize: "18px",
+                      fontSize: "16px",
                       fontWeight: "bold",
                       marginBottom: "10px",
+                      textTransform: "uppercase",
                     }}
                   >
                     PANORAMA DE PRODUÇÃO
                   </h1>
-                  <p style={{ fontSize: "13px", marginBottom: "5px" }}>
-                    <strong>Pedido:</strong> {selectedOrder.order_number}
-                  </p>
-                  <p style={{ fontSize: "13px", marginBottom: "5px" }}>
-                    <strong>Cliente:</strong> {selectedOrder.customer_name}
-                  </p>
-                  <p style={{ fontSize: "13px", marginBottom: "5px" }}>
-                    <strong>Data Agendada:</strong>{" "}
-                    {format(new Date(selectedOrder.scheduled_date), "dd/MM/yyyy", {
-                      locale: ptBR,
-                    })}
-                  </p>
-                  <p style={{ fontSize: "12px", color: "#666", marginTop: "10px" }}>
-                    Gerado em:{" "}
-                    {format(new Date(), "dd/MM/yyyy 'às' HH:mm", {
-                      locale: ptBR,
-                    })}
-                  </p>
+
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", marginBottom: "10px", flexWrap: "wrap" }}>
+                    <div>
+                      <strong>OP:</strong> {selectedOrder.order_number}
+                    </div>
+                    <div>
+                      <strong>Cliente:</strong> {selectedOrder.customer_name}
+                    </div>
+                    <div>
+                      <strong>Agendado:</strong> {format(new Date(selectedOrder.scheduled_date), "dd/MM/yyyy", { locale: ptBR })}
+                    </div>
+                    <div>
+                      <strong>Prazo:</strong> {selectedOrder.delivery_date ? format(new Date(selectedOrder.delivery_date), "dd/MM/yyyy", { locale: ptBR }) : "A vista"}
+                    </div>
+                  </div>
+
+                  {selectedOrder.notes && (
+                    <div style={{ fontSize: "11px", backgroundColor: "#f5f5f5", padding: "5px", marginBottom: "10px", textAlign: "left" }}>
+                      <strong>Observações:</strong> {selectedOrder.notes}
+                    </div>
+                  )}
                 </div>
 
                 <table
