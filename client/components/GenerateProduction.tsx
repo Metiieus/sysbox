@@ -302,6 +302,73 @@ export default function GenerateProduction({
     printWindow.document.close();
   };
 
+  const handlePrintAll = () => {
+    const printContent = printAllRef.current;
+    if (!printContent) return;
+
+    const printWindow = window.open("", "_blank");
+    if (!printWindow) return;
+
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Panorama Geral - Pedidos Disponíveis</title>
+          <style>
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            body {
+              font-family: Arial, sans-serif;
+              padding: 20px;
+              background: white;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-bottom: 20px;
+            }
+            th, td {
+              border: 1px solid #ddd;
+              padding: 8px;
+              text-align: left;
+              font-size: 11px;
+            }
+            th {
+              background-color: #10B981;
+              color: white;
+              font-weight: bold;
+            }
+            .header {
+              text-align: center;
+              margin-bottom: 20px;
+            }
+            .title {
+              font-size: 18px;
+              font-weight: bold;
+              margin-bottom: 10px;
+            }
+            .total-row {
+              font-weight: bold;
+              background-color: #f3f4f6;
+            }
+            @media print {
+              body { padding: 10px; }
+              .no-print { display: none; }
+            }
+          </style>
+        </head>
+        <body>
+          ${printContent.innerHTML}
+        </body>
+      </html>
+    `);
+
+    printWindow.document.close();
+  };
+
   if (!selectedOrder) {
     return (
       <div className="space-y-4">
