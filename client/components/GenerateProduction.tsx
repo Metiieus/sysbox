@@ -91,10 +91,38 @@ export default function GenerateProduction({
     const newSelected = new Set(selectedProducts);
     if (checked) {
       newSelected.add(productId);
+      // Inicializar quantidade com o valor total
+      const product = selectedOrder?.products?.[parseInt(productId)];
+      if (product) {
+        setQuantidadesEnvio(prev => ({
+          ...prev,
+          [productId]: product.quantity
+        }));
+      }
     } else {
       newSelected.delete(productId);
+      // Remover quantidade quando desselecionar
+      setQuantidadesEnvio(prev => {
+        const novo = { ...prev };
+        delete novo[productId];
+        return novo;
+      });
     }
     setSelectedProducts(newSelected);
+  };
+
+  const updateQuantidadeEnvio = (productId: string, quantidade: number) => {
+    const product = selectedOrder?.products?.[parseInt(productId)];
+    if (!product) return;
+
+    // Validar quantidade
+    if (quantidade < 0) quantidade = 0;
+    if (quantidade > product.quantity) quantidade = product.quantity;
+
+    setQuantidadesEnvio(prev => ({
+      ...prev,
+      [productId]: quantidade
+    }));
   };
 
   const toggleSelectAll = (checked: boolean) => {
