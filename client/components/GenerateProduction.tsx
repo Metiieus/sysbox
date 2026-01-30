@@ -83,6 +83,19 @@ export default function GenerateProduction({
       order.status === "confirmed"
   );
 
+  // Agrupar pedidos por cliente
+  const getOrdersByClient = () => {
+    const clientMap = new Map<string, Order[]>();
+    availableOrders.forEach((order) => {
+      const client = order.customer_name || "Sem Cliente";
+      if (!clientMap.has(client)) {
+        clientMap.set(client, []);
+      }
+      clientMap.get(client)!.push(order);
+    });
+    return clientMap;
+  };
+
   const handleSelectOrder = (order: Order) => {
     setSelectedOrder(order);
     setSelectedProducts(new Set());
