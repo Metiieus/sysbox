@@ -412,88 +412,354 @@ export default function GenerateProduction({
             </p>
           </div>
 
-          <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px", fontSize: "11px" }}>
-            <thead>
-              <tr style={{ backgroundColor: "#10B981", color: "white" }}>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>OP</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Cliente</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Produto</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Tipo</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Cor</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Tecido</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Qtde</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Agendado</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Prazo</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "10px" }}>R$ Unit.</th>
-                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "10px" }}>R$ Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              {availableOrders.flatMap((order) =>
-                (order.products || []).map((product, idx) => (
-                  <tr key={`${order.id}-${idx}`}>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
-                      {order.order_number}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
-                      {order.customer_name}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
-                      {product.product_name}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
-                      {product.model || "-"}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
-                      {product.color || "-"}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
-                      {product.fabric || "-"}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
-                      {product.quantity}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
-                      {format(new Date(order.scheduled_date), "dd/MM/yyyy", { locale: ptBR })}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
-                      {order.delivery_date ? format(new Date(order.delivery_date), "dd/MM/yyyy", { locale: ptBR }) : "A vista"}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
-                      R$ {product.unit_price.toFixed(2)}
-                    </td>
-                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
-                      R$ {product.total_price.toFixed(2)}
-                    </td>
-                  </tr>
-                ))
-              )}
-              <tr style={{ fontWeight: "bold", backgroundColor: "#f3f4f6" }}>
-                <td colSpan={6} style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
-                  TOTAL GERAL
-                </td>
-                <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontWeight: "bold", fontSize: "11px" }}>
-                  {availableOrders.reduce((sum, order) =>
-                    sum + (order.products?.reduce((s, p) => s + p.quantity, 0) || 0), 0
-                  )}
-                </td>
-                <td colSpan={3} style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold", fontSize: "11px" }}>
-                  R$ {availableOrders.reduce((sum, order) =>
-                    sum + (order.total_amount || 0), 0
-                  ).toFixed(2)}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          {/* Agrupar por cliente */}
+          {Array.from(
+            new Map(
+              availableOrders.map((order) => [order.customer_name, order])
+            ).entries()
+          ).map(([clientName, _]) => {
+            const clientOrders = availableOrders.filter(
+              (order) => order.customer_name === clientName
+            );
+            const clientTotalQty = clientOrders.reduce(
+              (sum, order) =>
+                sum + (order.products?.reduce((s, p) => s + p.quantity, 0) || 0),
+              0
+            );
+            const clientTotalValue = clientOrders.reduce(
+              (sum, order) => sum + (order.total_amount || 0),
+              0
+            );
 
-          <div style={{ fontSize: "11px", marginTop: "15px", paddingTop: "15px", borderTop: "2px solid #10B981" }}>
-            <p><strong>Total de Pedidos:</strong> {availableOrders.length}</p>
-            <p><strong>Total de Unidades:</strong> {availableOrders.reduce((sum, order) =>
-              sum + (order.products?.reduce((s, p) => s + p.quantity, 0) || 0), 0
-            )}</p>
-            <p><strong>Valor Total:</strong> R$ {availableOrders.reduce((sum, order) =>
-              sum + (order.total_amount || 0), 0
-            ).toFixed(2)}</p>
+            return (
+              <div key={clientName} style={{ marginBottom: "30px", pageBreakInside: "avoid" }}>
+                {/* Header do Cliente */}
+                <div
+                  style={{
+                    backgroundColor: "#10B981",
+                    color: "white",
+                    padding: "10px",
+                    marginBottom: "10px",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {clientName.toUpperCase()}
+                </div>
+
+                {/* Tabela do Cliente */}
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    marginBottom: "15px",
+                    fontSize: "11px",
+                  }}
+                >
+                  <thead>
+                    <tr
+                      style={{
+                        backgroundColor: "#E0F2F1",
+                        borderBottom: "2px solid #10B981",
+                      }}
+                    >
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontSize: "10px",
+                        }}
+                      >
+                        OP
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Produto
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Tipo
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Cor
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Tecido
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Qtde
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Agendado
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Prazo
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "right",
+                          fontSize: "10px",
+                        }}
+                      >
+                        R$ Unit.
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "right",
+                          fontSize: "10px",
+                        }}
+                      >
+                        R$ Total
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {clientOrders.flatMap((order) =>
+                      (order.products || []).map((product, idx) => (
+                        <tr key={`${order.id}-${idx}`}>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              textAlign: "center",
+                              fontSize: "11px",
+                            }}
+                          >
+                            {order.order_number}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              fontSize: "11px",
+                            }}
+                          >
+                            {product.product_name}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              fontSize: "11px",
+                            }}
+                          >
+                            {product.model || "-"}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              fontSize: "11px",
+                            }}
+                          >
+                            {product.color || "-"}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              fontSize: "11px",
+                            }}
+                          >
+                            {product.fabric || "-"}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              textAlign: "center",
+                              fontSize: "11px",
+                            }}
+                          >
+                            {product.quantity}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              textAlign: "center",
+                              fontSize: "11px",
+                            }}
+                          >
+                            {format(
+                              new Date(order.scheduled_date),
+                              "dd/MM/yyyy",
+                              { locale: ptBR }
+                            )}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              textAlign: "center",
+                              fontSize: "11px",
+                            }}
+                          >
+                            {order.delivery_date
+                              ? format(
+                                  new Date(order.delivery_date),
+                                  "dd/MM/yyyy",
+                                  { locale: ptBR }
+                                )
+                              : "A vista"}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              textAlign: "right",
+                              fontSize: "11px",
+                            }}
+                          >
+                            R$ {product.unit_price.toFixed(2)}
+                          </td>
+                          <td
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              textAlign: "right",
+                              fontSize: "11px",
+                            }}
+                          >
+                            R$ {product.total_price.toFixed(2)}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                    <tr
+                      style={{
+                        fontWeight: "bold",
+                        backgroundColor: "#f3f4f6",
+                      }}
+                    >
+                      <td
+                        colSpan={5}
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "right",
+                          fontSize: "11px",
+                        }}
+                      >
+                        SUBTOTAL
+                      </td>
+                      <td
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          fontSize: "11px",
+                        }}
+                      >
+                        {clientTotalQty}
+                      </td>
+                      <td
+                        colSpan={3}
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "right",
+                          fontWeight: "bold",
+                          fontSize: "11px",
+                        }}
+                      >
+                        R$ {clientTotalValue.toFixed(2)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            );
+          })}
+
+          {/* Resumo Geral */}
+          <div
+            style={{
+              fontSize: "12px",
+              marginTop: "20px",
+              paddingTop: "20px",
+              borderTop: "3px solid #10B981",
+              fontWeight: "bold",
+            }}
+          >
+            <h3 style={{ marginBottom: "10px", fontSize: "13px" }}>RESUMO GERAL</h3>
+            <p style={{ marginBottom: "5px" }}>
+              Total de Clientes: {Array.from(
+                new Map(
+                  availableOrders.map((order) => [order.customer_name, order])
+                ).entries()
+              ).length}
+            </p>
+            <p style={{ marginBottom: "5px" }}>
+              Total de Pedidos: {availableOrders.length}
+            </p>
+            <p style={{ marginBottom: "5px" }}>
+              Total de Unidades:{" "}
+              {availableOrders.reduce(
+                (sum, order) =>
+                  sum + (order.products?.reduce((s, p) => s + p.quantity, 0) || 0),
+                0
+              )}
+            </p>
+            <p style={{ marginBottom: "0" }}>
+              Valor Total: R${" "}
+              {availableOrders
+                .reduce((sum, order) => sum + (order.total_amount || 0), 0)
+                .toFixed(2)}
+            </p>
           </div>
         </div>
 
