@@ -147,10 +147,24 @@ export default function GenerateProduction({
       // Se nenhum item selecionado, enviar todos
       productsToSend = selectedOrder.products || [];
     } else {
-      // Enviar apenas itens selecionados
-      productsToSend = selectedOrder.products?.filter((_, idx) =>
-        selectedProducts.has(String(idx))
-      ) || [];
+      // Enviar apenas itens selecionados com as quantidades especificadas
+      productsToSend = (selectedOrder.products || [])
+        .map((product, idx) => {
+          if (selectedProducts.has(String(idx))) {
+            const qtdEnvio = quantidadesEnvio[String(idx)] || product.quantity;
+
+            // Se a quantidade a enviar é maior que 0, incluir na lista
+            if (qtdEnvio > 0) {
+              return {
+                ...product,
+                quantity: qtdEnvio, // Modificar a quantidade apenas para envio
+                total_price: (product.unit_price * qtdEnvio) // Recalcular preço total
+              };
+            }
+          }
+          return null;
+        })
+        .filter(Boolean) as OrderProduct[];
     }
 
     const quantidadeEnviada = productsToSend.reduce((sum, p) => sum + p.quantity, 0);
@@ -158,13 +172,25 @@ export default function GenerateProduction({
     // Decrementar a quantidade dos produtos selecionados
     if (updateOrder && productsToSend.length > 0) {
       const updatedProducts = (selectedOrder.products || []).map((product, idx) => {
-        const isSending = productsToSend.some(
+        const produtoEnviado = productsToSend.find(
           (p) => p.product_id === product.product_id && p.id === product.id
         );
 
-        if (isSending) {
-          // Removemos completamente o produto (quantidade vai para 0)
-          return null;
+        if (produtoEnviado) {
+          // Subtrair a quantidade enviada
+          const novaQuantidade = product.quantity - produtoEnviado.quantity;
+
+          if (novaQuantidade <= 0) {
+            // Se a quantidade fica 0 ou negativa, remover o produto
+            return null;
+          }
+
+          // Atualizar o produto com a quantidade restante
+          return {
+            ...product,
+            quantity: novaQuantidade,
+            total_price: product.unit_price * novaQuantidade
+          };
         }
         return product;
       }).filter(Boolean) as OrderProduct[];
@@ -192,6 +218,7 @@ export default function GenerateProduction({
     onSelectOrder(selectedOrder, productsToSend);
     setSelectedOrder(null);
     setSelectedProducts(new Set());
+    setQuantidadesEnvio({});
   };
 
   const handlePrint = () => {
