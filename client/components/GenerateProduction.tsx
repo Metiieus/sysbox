@@ -458,6 +458,7 @@ export default function GenerateProduction({
           onClick={() => {
             setSelectedOrder(null);
             setSelectedProducts(new Set());
+            setQuantidadesEnvio({});
           }}
           className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
         >
