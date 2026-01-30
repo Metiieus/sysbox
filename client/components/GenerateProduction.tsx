@@ -584,10 +584,16 @@ export default function GenerateProduction({
                           {product.color || "-"}
                         </td>
                         <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
-                          {(product as any).width || "-"}
+                          {product.specifications?.Largura ||
+                           product.specifications?.largura ||
+                           (product as any).width ||
+                           "-"}
                         </td>
                         <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
-                          {(product as any).length || "-"}
+                          {product.specifications?.Comprimento ||
+                           product.specifications?.comprimento ||
+                           (product as any).length ||
+                           "-"}
                         </td>
                         <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
                           {product.quantity}
