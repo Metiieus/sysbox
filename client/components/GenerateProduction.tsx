@@ -673,6 +673,9 @@ export default function GenerateProduction({
                             }
                           />
                         </TableCell>
+                        <TableCell className="font-bold text-biobox-green">
+                          {selectedOrder.order_number}
+                        </TableCell>
                         <TableCell className="font-medium">
                           {product.product_name}
                         </TableCell>
@@ -692,6 +695,18 @@ export default function GenerateProduction({
                         </TableCell>
                         <TableCell>{product.size || "-"}</TableCell>
                         <TableCell>{product.fabric || "-"}</TableCell>
+                        <TableCell className="text-center">
+                          {product.specifications?.Largura ||
+                           product.specifications?.largura ||
+                           (product as any).width ||
+                           "-"}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {product.specifications?.Comprimento ||
+                           product.specifications?.comprimento ||
+                           (product as any).length ||
+                           "-"}
+                        </TableCell>
                         <TableCell className="text-right font-medium">
                           {product.quantity}
                         </TableCell>
