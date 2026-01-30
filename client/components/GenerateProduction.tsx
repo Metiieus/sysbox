@@ -920,6 +920,7 @@ export default function GenerateProduction({
                   onClick={() => {
                     setSelectedOrder(null);
                     setSelectedProducts(new Set());
+                    setQuantidadesEnvio({});
                   }}
                 >
                   Cancelar
