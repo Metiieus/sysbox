@@ -73,6 +73,7 @@ export default function GenerateProduction({
   const [quantidadesEnvio, setQuantidadesEnvio] = useState<Record<string, number>>({});
   const [successMessage, setSuccessMessage] = useState<string>("");
   const printRef = useRef<HTMLDivElement>(null);
+  const printAllRef = useRef<HTMLDivElement>(null);
 
   // Filtrar pedidos disponíveis para produção
   const availableOrders = orders.filter(
