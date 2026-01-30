@@ -379,12 +379,122 @@ export default function GenerateProduction({
         )}
 
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-foreground">
-            Pedidos Disponíveis para Produção
-          </h2>
-          <Badge variant="outline" className="text-sm">
-            {availableOrders.length} pedidos
-          </Badge>
+          <div>
+            <h2 className="text-xl font-bold text-foreground">
+              Pedidos Disponíveis para Produção
+            </h2>
+          </div>
+          <div className="flex items-center gap-4">
+            <Badge variant="outline" className="text-sm">
+              {availableOrders.length} pedidos
+            </Badge>
+            {availableOrders.length > 0 && (
+              <Button
+                onClick={handlePrintAll}
+                variant="outline"
+                className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
+              >
+                <Printer className="h-4 w-4 mr-2" />
+                Imprimir Panorama Geral
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Conteúdo para impressão de todos os pedidos */}
+        <div ref={printAllRef} className="hidden">
+          <div style={{ textAlign: "center", marginBottom: "15px", pageBreakInside: "avoid" }}>
+            <h1 style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "10px", textTransform: "uppercase" }}>
+              PANORAMA GERAL - PEDIDOS DISPONÍVEIS PARA PRODUÇÃO
+            </h1>
+            <p style={{ fontSize: "11px", color: "#666" }}>
+              Gerado em: {format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+            </p>
+          </div>
+
+          <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: "20px", fontSize: "11px" }}>
+            <thead>
+              <tr style={{ backgroundColor: "#10B981", color: "white" }}>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>OP</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Cliente</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Produto</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Tipo</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Cor</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Tecido</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Qtde</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Agendado</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Prazo</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "10px" }}>R$ Unit.</th>
+                <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "10px" }}>R$ Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {availableOrders.flatMap((order) =>
+                (order.products || []).map((product, idx) => (
+                  <tr key={`${order.id}-${idx}`}>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                      {order.order_number}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                      {order.customer_name}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                      {product.product_name}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                      {product.model || "-"}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                      {product.color || "-"}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                      {product.fabric || "-"}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                      {product.quantity}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                      {format(new Date(order.scheduled_date), "dd/MM/yyyy", { locale: ptBR })}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                      {order.delivery_date ? format(new Date(order.delivery_date), "dd/MM/yyyy", { locale: ptBR }) : "A vista"}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
+                      R$ {product.unit_price.toFixed(2)}
+                    </td>
+                    <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
+                      R$ {product.total_price.toFixed(2)}
+                    </td>
+                  </tr>
+                ))
+              )}
+              <tr style={{ fontWeight: "bold", backgroundColor: "#f3f4f6" }}>
+                <td colSpan={6} style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
+                  TOTAL GERAL
+                </td>
+                <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontWeight: "bold", fontSize: "11px" }}>
+                  {availableOrders.reduce((sum, order) =>
+                    sum + (order.products?.reduce((s, p) => s + p.quantity, 0) || 0), 0
+                  )}
+                </td>
+                <td colSpan={3} style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold", fontSize: "11px" }}>
+                  R$ {availableOrders.reduce((sum, order) =>
+                    sum + (order.total_amount || 0), 0
+                  ).toFixed(2)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style={{ fontSize: "11px", marginTop: "15px", paddingTop: "15px", borderTop: "2px solid #10B981" }}>
+            <p><strong>Total de Pedidos:</strong> {availableOrders.length}</p>
+            <p><strong>Total de Unidades:</strong> {availableOrders.reduce((sum, order) =>
+              sum + (order.products?.reduce((s, p) => s + p.quantity, 0) || 0), 0
+            )}</p>
+            <p><strong>Valor Total:</strong> R$ {availableOrders.reduce((sum, order) =>
+              sum + (order.total_amount || 0), 0
+            ).toFixed(2)}</p>
+          </div>
         </div>
 
         {availableOrders.length === 0 ? (
