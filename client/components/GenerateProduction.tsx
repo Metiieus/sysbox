@@ -70,6 +70,7 @@ export default function GenerateProduction({
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
     new Set()
   );
+  const [quantidadesEnvio, setQuantidadesEnvio] = useState<Record<string, number>>({});
   const [successMessage, setSuccessMessage] = useState<string>("");
   const printRef = useRef<HTMLDivElement>(null);
 
