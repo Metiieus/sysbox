@@ -712,7 +712,8 @@ export default function GenerateProduction({
                       <TableHead>Tecido</TableHead>
                       <TableHead className="text-center">Largura</TableHead>
                       <TableHead className="text-center">Comprimento</TableHead>
-                      <TableHead className="text-right">Quantidade</TableHead>
+                      <TableHead className="text-center">Quantidade</TableHead>
+                      <TableHead className="text-center">Enviar</TableHead>
                       <TableHead className="text-right">Preço Unit.</TableHead>
                       <TableHead className="text-right">Preço Total</TableHead>
                       <TableHead className="text-center">Status</TableHead>
