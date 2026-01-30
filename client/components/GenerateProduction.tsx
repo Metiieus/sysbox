@@ -85,6 +85,7 @@ export default function GenerateProduction({
   const handleSelectOrder = (order: Order) => {
     setSelectedOrder(order);
     setSelectedProducts(new Set());
+    setQuantidadesEnvio({});
   };
 
   const toggleProductSelection = (productId: string, checked: boolean) => {
