@@ -642,11 +642,14 @@ export default function GenerateProduction({
                           title="Selecionar tudo"
                         />
                       </TableHead>
+                      <TableHead>OP</TableHead>
                       <TableHead>Produto</TableHead>
                       <TableHead>Modelo</TableHead>
                       <TableHead>Cor</TableHead>
                       <TableHead>Tamanho</TableHead>
                       <TableHead>Tecido</TableHead>
+                      <TableHead className="text-center">Largura</TableHead>
+                      <TableHead className="text-center">Comprimento</TableHead>
                       <TableHead className="text-right">Quantidade</TableHead>
                       <TableHead className="text-right">Preço Unit.</TableHead>
                       <TableHead className="text-right">Preço Total</TableHead>
