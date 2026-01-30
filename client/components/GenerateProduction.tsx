@@ -743,11 +743,7 @@ export default function GenerateProduction({
           >
             <h3 style={{ marginBottom: "10px", fontSize: "13px" }}>RESUMO GERAL</h3>
             <p style={{ marginBottom: "5px" }}>
-              Total de Clientes: {Array.from(
-                new Map(
-                  availableOrders.map((order) => [order.customer_name, order])
-                ).entries()
-              ).length}
+              Total de Clientes: {getOrdersByClient().size}
             </p>
             <p style={{ marginBottom: "5px" }}>
               Total de Pedidos: {availableOrders.length}
