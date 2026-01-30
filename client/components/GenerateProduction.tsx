@@ -541,173 +541,80 @@ export default function GenerateProduction({
                     width: "100%",
                     borderCollapse: "collapse",
                     marginBottom: "20px",
+                    fontSize: "11px",
                   }}
                 >
                   <thead>
                     <tr style={{ backgroundColor: "#10B981", color: "white" }}>
-                      <th
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "left",
-                        }}
-                      >
-                        Produto
-                      </th>
-                      <th
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "left",
-                        }}
-                      >
-                        Modelo
-                      </th>
-                      <th
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "left",
-                        }}
-                      >
-                        Cor
-                      </th>
-                      <th
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "left",
-                        }}
-                      >
-                        Tamanho
-                      </th>
-                      <th
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "left",
-                        }}
-                      >
-                        Tecido
-                      </th>
-                      <th
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "center",
-                        }}
-                      >
-                        Quantidade
-                      </th>
-                      <th
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "right",
-                        }}
-                      >
-                        Preço Unit.
-                      </th>
-                      <th
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "right",
-                        }}
-                      >
-                        Total
-                      </th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>OP</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Produto</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Tipo</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Tecido</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Cor</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Largura</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Comprimento</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Qtde</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Observações</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Pedido</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Prazo</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "10px" }}>R$ Unit.</th>
+                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "10px" }}>R$ Total</th>
                     </tr>
                   </thead>
                   <tbody>
                     {selectedOrder.products.map((product, index) => (
                       <tr key={product.id || index}>
-                        <td
-                          style={{ border: "1px solid #ddd", padding: "10px" }}
-                        >
+                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                          {selectedOrder.order_number}
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
                           {product.product_name}
                         </td>
-                        <td
-                          style={{ border: "1px solid #ddd", padding: "10px" }}
-                        >
+                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
                           {product.model || "-"}
                         </td>
-                        <td
-                          style={{ border: "1px solid #ddd", padding: "10px" }}
-                        >
-                          {product.color || "-"}
-                        </td>
-                        <td
-                          style={{ border: "1px solid #ddd", padding: "10px" }}
-                        >
-                          {product.size || "-"}
-                        </td>
-                        <td
-                          style={{ border: "1px solid #ddd", padding: "10px" }}
-                        >
+                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
                           {product.fabric || "-"}
                         </td>
-                        <td
-                          style={{
-                            border: "1px solid #ddd",
-                            padding: "10px",
-                            textAlign: "center",
-                          }}
-                        >
+                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                          {product.color || "-"}
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                          {(product as any).width || "-"}
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                          {(product as any).length || "-"}
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
                           {product.quantity}
                         </td>
-                        <td
-                          style={{
-                            border: "1px solid #ddd",
-                            padding: "10px",
-                            textAlign: "right",
-                          }}
-                        >
+                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                          {selectedOrder.notes || "-"}
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                          {selectedOrder.customer_name || "-"}
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                          {selectedOrder.delivery_date
+                            ? format(new Date(selectedOrder.delivery_date), "dd/MM/yyyy", { locale: ptBR })
+                            : "A vista"}
+                        </td>
+                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
                           R$ {product.unit_price.toFixed(2)}
                         </td>
-                        <td
-                          style={{
-                            border: "1px solid #ddd",
-                            padding: "10px",
-                            textAlign: "right",
-                          }}
-                        >
+                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
                           R$ {product.total_price.toFixed(2)}
                         </td>
                       </tr>
                     ))}
-                    <tr
-                      style={{
-                        fontWeight: "bold",
-                        backgroundColor: "#f3f4f6",
-                      }}
-                    >
-                      <td
-                        colSpan={5}
-                        style={{ border: "1px solid #ddd", padding: "10px" }}
-                      >
+                    <tr style={{ fontWeight: "bold", backgroundColor: "#f3f4f6" }}>
+                      <td colSpan={7} style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
                         TOTAL GERAL
                       </td>
-                      <td
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "center",
-                        }}
-                      >
-                        {selectedOrder.products.reduce(
-                          (sum, p) => sum + p.quantity,
-                          0
-                        )}
+                      <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontWeight: "bold", fontSize: "11px" }}>
+                        {selectedOrder.products.reduce((sum, p) => sum + p.quantity, 0)}
                       </td>
-                      <td
-                        colSpan={2}
-                        style={{
-                          border: "1px solid #ddd",
-                          padding: "10px",
-                          textAlign: "right",
-                        }}
-                      >
+                      <td colSpan={4} style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold", fontSize: "11px" }}>
                         R$ {selectedOrder.total_amount.toFixed(2)}
                       </td>
                     </tr>
