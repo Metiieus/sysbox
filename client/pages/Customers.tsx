@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import DashboardLayout from "@/components/DashboardLayout";
 import CustomerForm from "@/components/CustomerForm";
+import CustomerOrderHistory from "@/components/CustomerOrderHistory";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,6 +51,10 @@ export default function Customers() {
   >("all");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [orderHistoryOpen, setOrderHistoryOpen] = useState(false);
+  const [selectedCustomerForHistory, setSelectedCustomerForHistory] = useState<
+    Customer | undefined
+  >();
   const PAGE_SIZE = 10;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -628,9 +633,16 @@ export default function Customers() {
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className="font-medium">
+                        <button
+                          onClick={() => {
+                            setSelectedCustomerForHistory(customer);
+                            setOrderHistoryOpen(true);
+                          }}
+                          className="font-medium text-biobox-green hover:text-biobox-green-dark hover:underline cursor-pointer transition-colors"
+                          title="Ver histórico de pedidos"
+                        >
                           {customer.totalOrders}
-                        </span>
+                        </button>
                       </TableCell>
                       {isAdmin && (
                         <TableCell>
@@ -740,6 +752,18 @@ export default function Customers() {
               setShowForm(false);
               setSelectedCustomer(undefined);
             }}
+          />
+        )}
+
+        {selectedCustomerForHistory && (
+          <CustomerOrderHistory
+            isOpen={orderHistoryOpen}
+            onClose={() => {
+              setOrderHistoryOpen(false);
+              setSelectedCustomerForHistory(undefined);
+            }}
+            customerId={selectedCustomerForHistory.id}
+            customerName={selectedCustomerForHistory.name}
           />
         )}
       </div>

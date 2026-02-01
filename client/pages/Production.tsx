@@ -15,6 +15,7 @@ import {
   User,
   Clock,
   AlertCircle,
+  Factory,
 } from "lucide-react";
 import { useFirebase, Order } from "@/hooks/useFirebase";
 import { productionStages } from "@/types/production";
@@ -22,6 +23,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import ProductionStagesTracker from "@/components/ProductionStagesTracker";
+import GenerateProduction from "@/components/GenerateProduction";
 import {
   Dialog,
   DialogContent,
@@ -39,7 +41,8 @@ const stageIcons = {
 };
 
 export default function Production() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
+  const [productionOrders, setProductionOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [showStagesDialog, setShowStagesDialog] = useState(false);
   const [currentPages, setCurrentPages] = useState<Record<string, number>>({
@@ -58,16 +61,18 @@ export default function Production() {
   }, []);
 
   const loadOrders = async () => {
-    const allOrders = await getOrders();
+    const orders = await getOrders();
+    setAllOrders(orders);
+
     // Filtrar apenas pedidos em produção
-    const productionOrders = allOrders.filter(
+    const inProduction = orders.filter(
       (o) => o.status === "in_production" || o.status === "quality_check",
     );
-    setOrders(productionOrders);
+    setProductionOrders(inProduction);
   };
 
   const getOrdersByStage = (stageId: string) => {
-    return orders.filter((order) => {
+    return productionOrders.filter((order) => {
       const stages = order.production_stages || [];
       const currentStage = stages.find((s) => s.stage === stageId);
 
@@ -165,13 +170,34 @@ export default function Production() {
           </div>
           <div className="flex items-center gap-2">
             <Badge variant="outline" className="text-sm">
-              {orders.length} pedidos em produção
+              {productionOrders.length} pedidos em produção
             </Badge>
           </div>
         </div>
 
-        <Tabs defaultValue="cutting_sewing" className="w-full">
-          <TabsList className="grid w-full grid-cols-6">
+        <Tabs defaultValue="generate" className="w-full">
+          <TabsList className="grid w-full grid-cols-7">
+            <TabsTrigger value="generate" className="flex items-center gap-2">
+              <Factory className="h-4 w-4" />
+              <span className="hidden md:inline">Gerar Produção</span>
+              {allOrders.filter(
+                (o) =>
+                  o.status === "pending" ||
+                  o.status === "awaiting_approval" ||
+                  o.status === "confirmed",
+              ).length > 0 && (
+                <Badge variant="secondary" className="ml-1">
+                  {
+                    allOrders.filter(
+                      (o) =>
+                        o.status === "pending" ||
+                        o.status === "awaiting_approval" ||
+                        o.status === "confirmed",
+                    ).length
+                  }
+                </Badge>
+              )}
+            </TabsTrigger>
             {productionStages.map((stage) => {
               const Icon = stageIcons[stage.id as keyof typeof stageIcons];
               const ordersCount = getOrdersByStage(stage.id).length;
@@ -193,6 +219,17 @@ export default function Production() {
               );
             })}
           </TabsList>
+
+          <TabsContent value="generate" className="space-y-4">
+            <GenerateProduction
+              orders={allOrders}
+              onSelectOrder={(order) => setSelectedOrder(order)}
+              onStartProduction={async () => {
+                await loadOrders();
+              }}
+              updateOrder={updateOrder}
+            />
+          </TabsContent>
 
           {productionStages.map((stage) => {
             const Icon = stageIcons[stage.id as keyof typeof stageIcons];
