@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import { Order, OrderProduct } from "@/hooks/useFirebase";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -1230,7 +1231,7 @@ export default function GenerateProduction({
                         </TableCell>
                         <TableCell className="text-center">
                           {selectedProducts.has(String(index)) ? (
-                            <input
+                            <Input
                               type="number"
                               min="0"
                               max={product.quantity}
@@ -1241,7 +1242,7 @@ export default function GenerateProduction({
                                   parseInt(e.target.value) || 0
                                 )
                               }
-                              className="w-16 px-2 py-1 border border-biobox-green/50 rounded text-center text-sm"
+                              className="w-16 h-8 px-2 py-1 border-biobox-green/50 text-center text-sm"
                             />
                           ) : (
                             <span className="text-muted-foreground">-</span>
