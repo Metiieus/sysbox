@@ -118,6 +118,9 @@ export default function NewOrderForm({
     deliveryDate: "",
     notes: "",
     discount_percentage: 0,
+    discount_volume: 0,
+    shipping_value: 0,
+    shipping_discount: 0,
   });
   const [showNewCustomerForm, setShowNewCustomerForm] = useState(false);
   const [customerSearch, setCustomerSearch] = useState("");
@@ -261,17 +264,29 @@ export default function NewOrderForm({
     return orderProducts.reduce((sum, product) => sum + product.totalPrice, 0);
   };
 
-  const calculateDiscountAmount = () => {
+  const calculateFinancialDiscountAmount = () => {
     const subtotal = calculateSubtotal();
     const discount = (subtotal * (orderDetails.discount_percentage || 0)) / 100;
     // Arredondar para 2 casas decimais para evitar erros de ponto flutuante
     return Math.round(discount * 100) / 100;
   };
 
+  const calculateVolumeDiscountAmount = () => {
+    const subtotal = calculateSubtotal();
+    const discount = (subtotal * (orderDetails.discount_volume || 0)) / 100;
+    return Math.round(discount * 100) / 100;
+  };
+
   const calculateTotal = () => {
     const subtotal = calculateSubtotal();
-    const discount = calculateDiscountAmount();
-    const total = subtotal - discount;
+    const financialDiscount = calculateFinancialDiscountAmount();
+    const volumeDiscount = calculateVolumeDiscountAmount();
+    const shippingNet = Math.max(
+      0,
+      (orderDetails.shipping_value || 0) - (orderDetails.shipping_discount || 0),
+    );
+
+    const total = subtotal - financialDiscount - volumeDiscount + shippingNet;
     // Arredondar para 2 casas decimais
     return Math.round(total * 100) / 100;
   };
@@ -376,7 +391,11 @@ export default function NewOrderForm({
         priority: orderDetails.priority,
         subtotal: calculateSubtotal(),
         discount_percentage: orderDetails.discount_percentage || 0,
-        discount_amount: calculateDiscountAmount(),
+        discount_amount: calculateFinancialDiscountAmount(),
+        financial_discount: orderDetails.discount_percentage || 0,
+        volume_discount: orderDetails.discount_volume || 0,
+        shipping_value: orderDetails.shipping_value || 0,
+        shipping_discount: orderDetails.shipping_discount || 0,
         total_amount: calculateTotal(),
         scheduled_date: orderDetails.scheduledDate,
         delivery_date: orderDetails.deliveryDate || null,
@@ -431,6 +450,9 @@ export default function NewOrderForm({
       deliveryDate: "",
       notes: "",
       discount_percentage: 0,
+      discount_volume: 0,
+      shipping_value: 0,
+      shipping_discount: 0,
     });
     setShowNewCustomerForm(false);
     setCustomerSearch("");
@@ -997,34 +1019,88 @@ export default function NewOrderForm({
               </div>
             )}
 
-            {/* Campo de Desconto */}
-            <div>
-              <Label htmlFor="discount_percentage">
-                Desconto (%)
-                {selectedCustomer?.default_discount > 0 && (
-                  <span className="text-xs text-muted-foreground ml-2">
-                    (Padrão do cliente: {selectedCustomer.default_discount}%)
-                  </span>
-                )}
-              </Label>
-              <Input
-                id="discount_percentage"
-                type="number"
-                min="0"
-                max="100"
-                step="0.01"
-                value={orderDetails.discount_percentage}
-                onChange={(e) =>
-                  setOrderDetails({
-                    ...orderDetails,
-                    discount_percentage: parseFloat(e.target.value) || 0,
-                  })
-                }
-                placeholder="0.00"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Desconto aplicado sobre o valor total dos produtos
-              </p>
+            {/* Campos de Desconto e Frete */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="discount_percentage">
+                  Desconto Financeiro (%)
+                  {selectedCustomer?.default_discount > 0 && (
+                    <span className="text-xs text-muted-foreground ml-2">
+                      (Padrão do cliente: {selectedCustomer.default_discount}%)
+                    </span>
+                  )}
+                </Label>
+                <Input
+                  id="discount_percentage"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  value={orderDetails.discount_percentage}
+                  onChange={(e) =>
+                    setOrderDetails({
+                      ...orderDetails,
+                      discount_percentage: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                  placeholder="0.00"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="discount_volume">Desconto por Volume (%)</Label>
+                <Input
+                  id="discount_volume"
+                  type="number"
+                  min="0"
+                  max="100"
+                  step="0.01"
+                  value={orderDetails.discount_volume}
+                  onChange={(e) =>
+                    setOrderDetails({
+                      ...orderDetails,
+                      discount_volume: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                  placeholder="0.00"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="shipping_value">Valor do Frete (R$)</Label>
+                <Input
+                  id="shipping_value"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={orderDetails.shipping_value}
+                  onChange={(e) =>
+                    setOrderDetails({
+                      ...orderDetails,
+                      shipping_value: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                  placeholder="0.00"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="shipping_discount">Desconto no Frete (R$)</Label>
+                <Input
+                  id="shipping_discount"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value={orderDetails.shipping_discount}
+                  onChange={(e) =>
+                    setOrderDetails({
+                      ...orderDetails,
+                      shipping_discount: parseFloat(e.target.value) || 0,
+                    })
+                  }
+                  placeholder="0.00"
+                />
+              </div>
             </div>
 
             <div>
@@ -1102,12 +1178,26 @@ export default function NewOrderForm({
                     <span>Subtotal:</span>
                     <span>{formatCurrency(calculateSubtotal())}</span>
                   </div>
-                  {orderDetails.discount_percentage > 0 && (
+                  <div className="flex justify-between text-orange-600">
+                    <span>Desconto Financeiro ({orderDetails.discount_percentage}%):</span>
+                    <span>- {formatCurrency(calculateFinancialDiscountAmount())}</span>
+                  </div>
+                  {orderDetails.discount_volume > 0 && (
                     <div className="flex justify-between text-orange-600">
-                      <span>
-                        Desconto ({orderDetails.discount_percentage}%):
-                      </span>
-                      <span>- {formatCurrency(calculateDiscountAmount())}</span>
+                      <span>Desconto por Volume ({orderDetails.discount_volume}%):</span>
+                      <span>- {formatCurrency(calculateVolumeDiscountAmount())}</span>
+                    </div>
+                  )}
+                  {orderDetails.shipping_value > 0 && (
+                    <div className="flex justify-between">
+                      <span>Valor do Frete:</span>
+                      <span>{formatCurrency(orderDetails.shipping_value)}</span>
+                    </div>
+                  )}
+                  {orderDetails.shipping_discount > 0 && (
+                    <div className="flex justify-between text-orange-600">
+                      <span>Desconto no Frete:</span>
+                      <span>- {formatCurrency(Math.min(orderDetails.shipping_discount, orderDetails.shipping_value))}</span>
                     </div>
                   )}
                   <div className="flex justify-between text-lg font-bold border-t pt-2">
