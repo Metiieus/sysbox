@@ -891,7 +891,7 @@ export default function NewOrderForm({
                                     parseInt(e.target.value) || 1,
                                   )
                                 }
-                                className="w-16"
+                                className="w-16 text-right"
                               />
                             </TableCell>
                             <TableCell>
@@ -907,7 +907,7 @@ export default function NewOrderForm({
                                     parseFloat(e.target.value) || 0,
                                   )
                                 }
-                                className="w-24"
+                                className="w-24 text-right"
                               />
                             </TableCell>
                             <TableCell className="font-medium">
@@ -1002,6 +1002,7 @@ export default function NewOrderForm({
                     })
                   }
                   placeholder="0.00"
+                  className="text-right"
                 />
               </div>
 
@@ -1021,6 +1022,7 @@ export default function NewOrderForm({
                     })
                   }
                   placeholder="0.00"
+                  className="text-right"
                 />
               </div>
 
@@ -1039,6 +1041,7 @@ export default function NewOrderForm({
                     })
                   }
                   placeholder="0.00"
+                  className="text-right"
                 />
               </div>
 
@@ -1057,6 +1060,7 @@ export default function NewOrderForm({
                     })
                   }
                   placeholder="0.00"
+                  className="text-right"
                 />
               </div>
             </div>
