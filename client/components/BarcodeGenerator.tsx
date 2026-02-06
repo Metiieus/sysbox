@@ -51,9 +51,9 @@ export default function BarcodeGenerator({ items = [], onGenerate }: BarcodeGene
     },
     {
       id: '2',
-      code: 'ORD-2024-001',
+      code: 'PED-2024-001',
       type: 'order',
-      name: 'Pedido #ORD-2024-001',
+      name: 'Pedido #PED-2024-001',
       description: 'João Silva - 1x Cama Queen Luxo',
       generated: false
     },
@@ -75,9 +75,9 @@ export default function BarcodeGenerator({ items = [], onGenerate }: BarcodeGene
     },
     {
       id: '5',
-      code: 'ORD-2024-002',
+      code: 'PED-2024-002',
       type: 'order',
-      name: 'Pedido #ORD-2024-002',
+      name: 'Pedido #PED-2024-002',
       description: 'Móveis Premium Ltda - 3x Cama King',
       generated: false
     }

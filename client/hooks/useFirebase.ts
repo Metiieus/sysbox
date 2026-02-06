@@ -532,7 +532,7 @@ export function useFirebase() {
   ): Promise<Order | null> => {
     console.log("➕ [createOrder] Criando pedido:", orderData);
 
-    const orderNumber = `ORD-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 10000)).padStart(4, "0")}`;
+    const orderNumber = `PED-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 10000)).padStart(4, "0")}`;
     const dataToSave = {
       order_number: orderNumber,
       customer_id: orderData.customer_id!,

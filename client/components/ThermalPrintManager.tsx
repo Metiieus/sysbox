@@ -70,7 +70,7 @@ export default function ThermalPrintManager() {
     },
     {
       id: '2',
-      code: 'ORD-2024-001',
+      code: 'PED-2024-001',
       name: 'Pedido João Silva',
       description: 'Entrega: 20/12/2024',
       type: 'order',
@@ -410,4 +410,3 @@ export default function ThermalPrintManager() {
     </div>
   );
 }
-

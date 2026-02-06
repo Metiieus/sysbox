@@ -303,7 +303,7 @@ export default function NewOrderForm({
     const random = Math.floor(Math.random() * 10000)
       .toString()
       .padStart(4, "0");
-    return `ORD-${year}-${random}`;
+    return `PED-${year}-${random}`;
   };
 
   const handleCreateOrder = async () => {
