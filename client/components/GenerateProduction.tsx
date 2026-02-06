@@ -406,7 +406,7 @@ export default function GenerateProduction({
               <Button
                 onClick={handlePrintAll}
                 variant="outline"
-                className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
+                className="border-biobox-gold text-biobox-gold hover:bg-biobox-gold/5"
               >
                 <Printer className="h-4 w-4 mr-2" />
                 Imprimir Panorama Geral
@@ -793,7 +793,7 @@ export default function GenerateProduction({
                   <div className="flex items-center justify-between p-6">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <Package className="h-5 w-5 text-biobox-green" />
+                        <Package className="h-5 w-5 text-biobox-gold" />
                         <h3 className="font-bold text-lg">
                           {order.order_number}
                         </h3>
@@ -836,7 +836,7 @@ export default function GenerateProduction({
                         </div>
                         <div>
                           <p className="text-muted-foreground">Valor Total</p>
-                          <p className="font-bold text-biobox-green">
+                          <p className="font-bold text-biobox-gold">
                             R$ {order.total_amount.toFixed(2)}
                           </p>
                         </div>
@@ -880,7 +880,7 @@ export default function GenerateProduction({
 
                     <Button
                       onClick={() => handleSelectOrder(order)}
-                      className="ml-4 bg-biobox-green hover:bg-biobox-green-dark"
+                      className="ml-4 bg-biobox-gold hover:bg-biobox-gold-dark"
                     >
                       <span>Iniciar Produção</span>
                       <ChevronRight className="h-4 w-4 ml-2" />
@@ -914,7 +914,7 @@ export default function GenerateProduction({
             setSelectedProducts(new Set());
             setQuantidadesEnvio({});
           }}
-          className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
+          className="border-biobox-gold text-biobox-gold hover:bg-biobox-gold/5"
         >
           Voltar para Lista
         </Button>
@@ -972,7 +972,7 @@ export default function GenerateProduction({
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground mb-1">Valor Total</p>
-            <p className="font-bold text-biobox-green">
+            <p className="font-bold text-biobox-gold">
               R$ {selectedOrder.total_amount.toFixed(2)}
             </p>
           </CardContent>
@@ -995,7 +995,7 @@ export default function GenerateProduction({
             <Button
               onClick={handlePrint}
               variant="outline"
-              className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
+              className="border-biobox-gold text-biobox-gold hover:bg-biobox-gold/5"
             >
               <Printer className="h-4 w-4 mr-2" />
               Imprimir Panorama
@@ -1181,7 +1181,7 @@ export default function GenerateProduction({
                         key={product.id || index}
                         className={cn(
                           selectedProducts.has(String(index)) &&
-                            "bg-biobox-green/5"
+                            "bg-biobox-gold/5"
                         )}
                       >
                         <TableCell>
@@ -1192,7 +1192,7 @@ export default function GenerateProduction({
                             }
                           />
                         </TableCell>
-                        <TableCell className="font-bold text-biobox-green">
+                        <TableCell className="font-bold text-biobox-gold">
                           {selectedOrder.order_number}
                         </TableCell>
                         <TableCell className="font-medium">
@@ -1242,7 +1242,7 @@ export default function GenerateProduction({
                                   parseInt(e.target.value) || 0
                                 )
                               }
-                              className="w-16 h-8 px-2 py-1 border-biobox-green/50 text-center text-sm"
+                              className="w-16 h-8 px-2 py-1 border-biobox-gold/50 text-center text-sm"
                             />
                           ) : (
                             <span className="text-muted-foreground">-</span>
@@ -1251,13 +1251,13 @@ export default function GenerateProduction({
                         <TableCell className="text-right">
                           R$ {product.unit_price.toFixed(2)}
                         </TableCell>
-                        <TableCell className="text-right font-bold text-biobox-green">
+                        <TableCell className="text-right font-bold text-biobox-gold">
                           R$ {product.total_price.toFixed(2)}
                         </TableCell>
                         <TableCell className="text-center">
                           {selectedProducts.has(String(index)) ? (
                             <div className="flex flex-col items-center gap-1">
-                              <Badge className="bg-biobox-green text-white">
+                              <Badge className="bg-biobox-gold text-white">
                                 Selecionado
                               </Badge>
                               <span className="text-xs text-muted-foreground">
@@ -1278,8 +1278,8 @@ export default function GenerateProduction({
 
               {/* Resumo de Seleção */}
               {selectedProducts.size > 0 && (
-                <div className="mt-6 p-4 bg-biobox-green/5 border border-biobox-green/20 rounded-lg">
-                  <h3 className="font-bold text-biobox-green mb-3">
+                <div className="mt-6 p-4 bg-biobox-gold/5 border border-biobox-gold/20 rounded-lg">
+                  <h3 className="font-bold text-biobox-gold mb-3">
                     Resumo da Seleção
                   </h3>
                   <div className="space-y-2 text-sm">
@@ -1312,7 +1312,7 @@ export default function GenerateProduction({
                       <span className="text-muted-foreground">
                         Quantidade a enviar:
                       </span>
-                      <span className="font-bold text-biobox-green">
+                      <span className="font-bold text-biobox-gold">
                         {Array.from(selectedProducts).reduce((sum, idx) => {
                           return sum + (quantidadesEnvio[idx] || 0);
                         }, 0)}{" "}
@@ -1360,7 +1360,7 @@ export default function GenerateProduction({
                   )}
                   <div className="flex justify-between text-lg font-bold pt-2 border-t">
                     <span>Total:</span>
-                    <span className="text-biobox-green">
+                    <span className="text-biobox-gold">
                       R$ {selectedOrder.total_amount.toFixed(2)}
                     </span>
                   </div>
@@ -1381,7 +1381,7 @@ export default function GenerateProduction({
                 </Button>
                 <Button
                   onClick={handleStartProduction}
-                  className="bg-biobox-green hover:bg-biobox-green-dark"
+                  className="bg-biobox-gold hover:bg-biobox-gold-dark"
                 >
                   Enviar{" "}
                   {selectedProducts.size > 0

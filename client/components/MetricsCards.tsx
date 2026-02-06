@@ -25,7 +25,7 @@ interface MetricCardProps {
 }
 
 const metricColors = {
-  green: "bg-biobox-green/10 text-biobox-green",
+  green: "bg-biobox-gold/10 text-biobox-gold",
   blue: "bg-blue-500/10 text-blue-500",
   orange: "bg-orange-500/10 text-orange-500",
   red: "bg-red-500/10 text-red-500",
@@ -53,14 +53,14 @@ function MetricCard({
             {trend && trendValue && (
               <div className="mt-2 flex items-center space-x-1">
                 {trend === "up" ? (
-                  <TrendingUp className="h-3 w-3 text-biobox-green" />
+                  <TrendingUp className="h-3 w-3 text-biobox-gold" />
                 ) : trend === "down" ? (
                   <TrendingDown className="h-3 w-3 text-red-500" />
                 ) : null}
                 <span
                   className={`text-xs font-medium ${
                     trend === "up"
-                      ? "text-biobox-green"
+                      ? "text-biobox-gold"
                       : trend === "down"
                         ? "text-red-500"
                         : "text-muted-foreground"

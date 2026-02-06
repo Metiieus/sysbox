@@ -514,7 +514,7 @@ export default function ProductionDashboard({
         key={task.id}
         className={cn(
           "cursor-pointer border-border bg-card transition-colors hover:bg-muted/5",
-          selectedTask?.id === task.id && "ring-2 ring-biobox-green",
+          selectedTask?.id === task.id && "ring-2 ring-biobox-gold",
         )}
         onClick={() => setSelectedTask(task)}
       >
@@ -901,7 +901,7 @@ export default function ProductionDashboard({
         <Card className="border-border bg-card">
           <CardContent className="p-6">
             <div className="flex items-center">
-              <CheckCircle className="h-8 w-8 text-biobox-green" />
+              <CheckCircle className="h-8 w-8 text-biobox-gold" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">
                   Concluídas
