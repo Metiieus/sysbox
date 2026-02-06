@@ -976,48 +976,6 @@ export default function NewOrderForm({
               </div>
             </div>
 
-            {checkPermission("orders", "approve") && (
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="scheduledDate">Data de Produção</Label>
-                  <Input
-                    id="scheduledDate"
-                    type="date"
-                    value={orderDetails.scheduledDate}
-                    onChange={(e) =>
-                      setOrderDetails({
-                        ...orderDetails,
-                        scheduledDate: e.target.value,
-                      })
-                    }
-                    min={new Date().toISOString().split("T")[0]}
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    Deixe em branco para agendar depois na Agenda
-                  </p>
-                </div>
-                <div>
-                  <Label htmlFor="deliveryDate">
-                    Data de Entrega (Opcional)
-                  </Label>
-                  <Input
-                    id="deliveryDate"
-                    type="date"
-                    value={orderDetails.deliveryDate}
-                    onChange={(e) =>
-                      setOrderDetails({
-                        ...orderDetails,
-                        deliveryDate: e.target.value,
-                      })
-                    }
-                    min={
-                      orderDetails.scheduledDate ||
-                      new Date().toISOString().split("T")[0]
-                    }
-                  />
-                </div>
-              </div>
-            )}
 
             {/* Campos de Desconto e Frete */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
