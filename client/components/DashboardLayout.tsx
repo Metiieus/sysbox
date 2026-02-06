@@ -88,7 +88,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="flex items-center justify-center h-16 border-b border-border/40">
             {sidebarHovered ? (
               <img
-                src="/logobio.png"
+                src="https://cdn.builder.io/api/v1/image/assets%2Fff97f443178c49e2b117d226c09b1fea%2F11e91666cfe24945aef003b369135391?format=webp&width=800&height=1200"
                 alt="BioBox"
                 className="h-10 w-auto object-contain transition-all duration-300"
               />
