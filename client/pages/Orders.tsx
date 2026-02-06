@@ -83,9 +83,8 @@ const statusColors = {
 
 const priorityLabels = {
   low: "Baixa",
-  medium: "M��dia",
-  high: "Alta",
   medium: "Média",
+  high: "Alta",
   urgent: "Urgente",
 };
 
@@ -1498,143 +1497,29 @@ export default function Orders() {
                   )}
 
                 {/* Etapas de Produção */}
-                {selectedOrder.status !== "pending" &&
-                  selectedOrder.status !== "awaiting_approval" &&
-                  selectedOrder.status !== "cancelled" && (
-                    <ProductionStagesTracker
-                      orderId={selectedOrder.id}
-                      orderNumber={selectedOrder.order_number}
-                      stages={selectedOrder.production_stages || []}
-                      onUpdateStage={async (stageId, updates) => {
-                        const updatedStages = [
-                          ...(selectedOrder.production_stages || []),
-                        ];
-                        const stageIndex = updatedStages.findIndex(
-                          (s) => s.stage === stageId,
-                        );
-
-                        if (stageIndex >= 0) {
-                          updatedStages[stageIndex] = {
-                            ...updatedStages[stageIndex],
-                            ...updates,
-                          };
-                        } else {
-                          updatedStages.push({
-                            stage: stageId,
-                            ...updates,
-                          } as any);
-                        }
-
-                        await updateOrder(selectedOrder.id, {
-                          ...selectedOrder,
-                          production_stages: updatedStages,
-                        });
-
-                        // Recarregar a lista de pedidos
-                        const updatedOrders = await getOrders();
-                        setOrders(updatedOrders);
-
-                        // Atualizar o pedido selecionado
-                        const refreshedOrder = updatedOrders.find(
-                          (o) => o.id === selectedOrder.id,
-                        );
-                        if (refreshedOrder) {
-                          setSelectedOrder(refreshedOrder);
-                        }
-                      }}
-                      operators={[
-                        { id: "1", name: "João Silva" },
-                        { id: "2", name: "Maria Santos" },
-                        { id: "3", name: "Pedro Costa" },
-                      ]}
-                    />
-                  )}
-
-                {/* Observações */}
-                {selectedOrder.notes && (
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-base">Observações</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm whitespace-pre-wrap">
-                        {selectedOrder.notes}
-                      </p>
-                    </CardContent>
-                  </Card>
-                )}
-
-                {/* Resumo Financeiro */}
-                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center p-4 bg-biobox-green/10 border border-biobox-green/20 rounded-lg">
-                  <div>
-                    <p className="text-sm text-muted-foreground">
-                      Total do Pedido
-                    </p>
-                    <p className="text-2xl font-bold text-biobox-green">
-                      {formatCurrency(selectedOrder.total_amount)}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-sm text-muted-foreground">
-                      Quantidade Total
-                    </p>
-                    <p className="text-2xl font-bold">
-                      {selectedOrder.total_quantity}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Ações */}
-                <div className="flex justify-end gap-2 pt-4 border-t">
-                  <Button
-                    variant="outline"
-                    onClick={() => handlePrintOrder(selectedOrder)}
-                  >
-                    <Printer className="h-4 w-4 mr-2" />
-                    Imprimir
-                  </Button>
-
-                  {checkPermission("orders", "edit") && (
-                    <Button
-                      className="bg-biobox-green hover:bg-biobox-green-dark"
-                      onClick={() => handleEditOrder(selectedOrder)}
-                    >
-                      <Edit className="h-4 w-4 mr-2" />
-                      Editar Pedido
-                    </Button>
-                  )}
-
-                  {checkPermission("orders", "delete") && (
-                    <Button
-                      variant="destructive"
-                      onClick={() => {
-                        setShowOrderDetails(false);
-                        handleDeleteOrder(selectedOrder.id);
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Excluir Pedido
-                    </Button>
-                  )}
-                </div>
+                <ProductionStagesTracker
+                  orderId={selectedOrder.id}
+                  orderNumber={selectedOrder.order_number}
+                  stages={selectedOrder.production_stages || []}
+                  onUpdateStage={async (stageId, updates) => {
+                    const updatedStages = [
+                      ...(selectedOrder.production_stages || []),
+                    ];
+                    const idx = updatedStages.findIndex(
+                      (s) => s.stage === stageId,
+                    );
+                    if (idx >= 0) {
+                      updatedStages[idx] = { ...updatedStages[idx], ...updates };
+                    } else {
+                      updatedStages.push({ stage: stageId, ...updates } as any);
+                    }
+                    const updated = await updateOrder(selectedOrder.id, {
+                      production_stages: updatedStages,
+                    });
+                    if (updated) applyUpdate(updated);
+                  }}
+                />
               </div>
-            )}
-          </DialogContent>
-        </Dialog>
-
-        {/* Edit Order Dialog */}
-        <Dialog open={showEditForm} onOpenChange={setShowEditForm}>
-          <DialogContent className="w-full max-w-[min(100%,56rem)] md:max-w-5xl max-h-[95vh] overflow-hidden">
-            {editingOrder && (
-              <OrderEditForm
-                order={editingOrder}
-                onSave={handleSaveEditedOrder}
-                onCancel={() => {
-                  setShowEditForm(false);
-                  setEditingOrder(null);
-                }}
-                saving={false}
-              />
             )}
           </DialogContent>
         </Dialog>
@@ -1645,6 +1530,19 @@ export default function Orders() {
           onOpenChange={setShowNewOrderForm}
           onOrderCreated={handleOrderCreated}
         />
+
+        {/* Edit Order Form */}
+        <Dialog open={showEditForm} onOpenChange={setShowEditForm}>
+          <DialogContent className="w-full max-w-[min(100%,48rem)] md:max-w-4xl max-h-[95vh] overflow-y-auto">
+            {editingOrder && (
+              <OrderEditForm
+                order={editingOrder}
+                onSave={handleSaveEditedOrder}
+                onCancel={() => setShowEditForm(false)}
+              />
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );
