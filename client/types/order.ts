@@ -179,7 +179,7 @@ export const mockProducts: Product[] = [
 export const mockOrders: Order[] = [
   {
     id: "1",
-    orderNumber: "ORD-2024-001",
+    orderNumber: "PED-2024-001",
     customerId: "1",
     customerName: "João Silva",
     sellerId: "2",
@@ -217,7 +217,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: "2",
-    orderNumber: "ORD-2024-002",
+    orderNumber: "PED-2024-002",
     customerId: "2",
     customerName: "Móveis Premium Ltda",
     sellerId: "3",
@@ -260,7 +260,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: "3",
-    orderNumber: "ORD-2024-003",
+    orderNumber: "PED-2024-003",
     customerId: "3",
     customerName: "Maria Santos",
     sellerId: "2",
@@ -298,7 +298,7 @@ export const mockOrders: Order[] = [
   },
   {
     id: "4",
-    orderNumber: "ORD-2024-004",
+    orderNumber: "PED-2024-004",
     customerId: "5",
     customerName: "Casa & Decoração S.A.",
     sellerId: "3",

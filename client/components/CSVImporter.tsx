@@ -353,7 +353,7 @@ export default function CSVImporter({
                               </TableCell>
                               <TableCell className="text-sm font-medium">
                                 {item.preco ? (
-                                  <span className="text-biobox-green">
+                                  <span className="text-biobox-gold">
                                     R$ {item.preco}
                                   </span>
                                 ) : (
@@ -412,7 +412,7 @@ export default function CSVImporter({
                 Cancelar
               </Button>
               <Button
-                className="bg-biobox-green hover:bg-biobox-green-dark"
+                className="bg-biobox-gold hover:bg-biobox-gold-dark"
                 onClick={handleConfirmImport}
                 disabled={isImporting}
               >
@@ -428,7 +428,7 @@ export default function CSVImporter({
         {step === "confirming" && (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-biobox-green" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-biobox-gold" />
               <p className="text-muted-foreground">Processando importação...</p>
             </div>
           </div>
@@ -476,7 +476,7 @@ export default function CSVImporter({
                   </div>
                   <div className="flex justify-between py-2 border-b border-border">
                     <span>Preços de Cliente Definidos:</span>
-                    <span className="font-medium text-biobox-green">
+                    <span className="font-medium text-biobox-gold">
                       +{importResult.summary.customerPricesSet}
                     </span>
                   </div>
@@ -523,7 +523,7 @@ export default function CSVImporter({
             <div className="flex justify-end gap-3">
               <Button
                 onClick={handleClose}
-                className="bg-biobox-green hover:bg-biobox-green-dark"
+                className="bg-biobox-gold hover:bg-biobox-gold-dark"
               >
                 Concluir
               </Button>

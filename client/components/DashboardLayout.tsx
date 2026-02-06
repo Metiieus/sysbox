@@ -26,7 +26,12 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: Home },
   { name: "Clientes", href: "/customers", icon: Users },
   { name: "Pedidos", href: "/orders", icon: Calendar },
-  { name: "Agenda", href: "/agenda", icon: CalendarCheck, requiresPermission: { module: "orders", action: "approve" } },
+  {
+    name: "Agenda",
+    href: "/agenda",
+    icon: CalendarCheck,
+    requiresPermission: { module: "orders", action: "approve" },
+  },
   { name: "Produção", href: "/production", icon: BarChart3 },
   { name: "Produtos", href: "/products", icon: Package },
   { name: "Configurações", href: "/settings", icon: Settings },
@@ -49,13 +54,16 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   const filteredNavigation = navigation.filter((item) => {
     if (!user) return false;
-    
+
     // Verificar permissão específica se definida
-    if ('requiresPermission' in item && item.requiresPermission) {
-      const perm = item.requiresPermission as { module: string; action: string };
+    if ("requiresPermission" in item && item.requiresPermission) {
+      const perm = item.requiresPermission as {
+        module: string;
+        action: string;
+      };
       return checkPermission(perm.module, perm.action);
     }
-    
+
     const moduleMap: Record<string, string> = {
       "/": "dashboard",
       "/customers": "customers",
@@ -81,14 +89,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             sidebarOpen
               ? "translate-x-0 w-64"
               : "-translate-x-full lg:translate-x-0",
-            sidebarHovered ? "lg:w-64" : "lg:w-20"
+            sidebarHovered ? "lg:w-64" : "lg:w-20",
           )}
         >
           {/* Logo */}
           <div className="flex items-center justify-center h-16 border-b border-border/40">
             {sidebarHovered ? (
               <img
-                src="/logobio.png"
+                src="https://cdn.builder.io/api/v1/image/assets%2Fff97f443178c49e2b117d226c09b1fea%2F11e91666cfe24945aef003b369135391?format=webp&width=800&height=1200"
                 alt="BioBox"
                 className="h-10 w-auto object-contain transition-all duration-300"
               />
@@ -112,21 +120,23 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                       "group relative flex items-center gap-3 rounded-xl p-3 px-4 w-full transition-all duration-200 hover:bg-primary/10",
                       isActive
                         ? "bg-primary/15 text-primary shadow-sm border border-primary/30"
-                        : "text-muted-foreground"
+                        : "text-muted-foreground",
                     )}
                     title={item.name}
                   >
                     <item.icon
                       className={cn(
                         "h-5 w-5 transition-transform duration-200 group-hover:scale-110 flex-shrink-0",
-                        isActive && "text-primary"
+                        isActive && "text-primary",
                       )}
                     />
                     {sidebarHovered && (
-                      <span className={cn(
-                        "text-sm font-medium transition-colors whitespace-nowrap",
-                        isActive && "text-primary"
-                      )}>
+                      <span
+                        className={cn(
+                          "text-sm font-medium transition-colors whitespace-nowrap",
+                          isActive && "text-primary",
+                        )}
+                      >
                         {item.name}
                       </span>
                     )}
@@ -164,7 +174,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div
         className={cn(
           "flex-1 transition-all duration-300",
-          filteredNavigation.length > 0 && "lg:ml-20"
+          filteredNavigation.length > 0 && "lg:ml-20",
         )}
       >
         {/* Botão menu mobile */}

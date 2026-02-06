@@ -151,7 +151,7 @@ export default function OrderForm({
       ...formData,
       orderNumber:
         order?.orderNumber ||
-        `ORD-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`,
+        `PED-${new Date().getFullYear()}-${String(Date.now()).slice(-3)}`,
       totalAmount: calculateTotalAmount(),
       productionProgress: order?.productionProgress || 0,
       createdAt: order?.createdAt || new Date(),

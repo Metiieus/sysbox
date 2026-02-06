@@ -456,6 +456,7 @@ export default function OrderEditForm({
                       parseInt(e.target.value) || 0,
                     )
                   }
+                  className="text-right"
                 />
               </div>
             </div>
@@ -575,6 +576,7 @@ export default function OrderEditForm({
                           )
                         }
                         required
+                        className="text-right"
                       />
                     </div>
                     <div>
@@ -591,6 +593,7 @@ export default function OrderEditForm({
                             parseFloat(e.target.value) || 0,
                           )
                         }
+                        className="text-right"
                       />
                     </div>
                     <div>
@@ -598,6 +601,7 @@ export default function OrderEditForm({
                       <Input
                         value={formatCurrency(product.total_price)}
                         disabled
+                        className="text-right"
                       />
                     </div>
                   </div>
@@ -664,6 +668,7 @@ export default function OrderEditForm({
                           )
                         }
                         required
+                        className="text-right"
                       />
                     </div>
                     <div>
@@ -680,6 +685,7 @@ export default function OrderEditForm({
                             parseFloat(e.target.value) || 0,
                           )
                         }
+                        className="text-right"
                       />
                     </div>
                     <div>
@@ -696,6 +702,7 @@ export default function OrderEditForm({
                             parseInt(e.target.value) || 0,
                           )
                         }
+                        className="text-right"
                       />
                     </div>
                   </div>

@@ -11,6 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
 import { Order, OrderProduct } from "@/hooks/useFirebase";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -68,9 +69,11 @@ export default function GenerateProduction({
 }: GenerateProductionProps) {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
-    new Set()
+    new Set(),
   );
-  const [quantidadesEnvio, setQuantidadesEnvio] = useState<Record<string, number>>({});
+  const [quantidadesEnvio, setQuantidadesEnvio] = useState<
+    Record<string, number>
+  >({});
   const [successMessage, setSuccessMessage] = useState<string>("");
   const printRef = useRef<HTMLDivElement>(null);
   const printAllRef = useRef<HTMLDivElement>(null);
@@ -80,7 +83,7 @@ export default function GenerateProduction({
     (order) =>
       order.status === "pending" ||
       order.status === "awaiting_approval" ||
-      order.status === "confirmed"
+      order.status === "confirmed",
   );
 
   // Agrupar pedidos por cliente
@@ -109,15 +112,15 @@ export default function GenerateProduction({
       // Inicializar quantidade com o valor total
       const product = selectedOrder?.products?.[parseInt(productId)];
       if (product) {
-        setQuantidadesEnvio(prev => ({
+        setQuantidadesEnvio((prev) => ({
           ...prev,
-          [productId]: product.quantity
+          [productId]: product.quantity,
         }));
       }
     } else {
       newSelected.delete(productId);
       // Remover quantidade quando desselecionar
-      setQuantidadesEnvio(prev => {
+      setQuantidadesEnvio((prev) => {
         const novo = { ...prev };
         delete novo[productId];
         return novo;
@@ -134,9 +137,9 @@ export default function GenerateProduction({
     if (quantidade < 0) quantidade = 0;
     if (quantidade > product.quantity) quantidade = product.quantity;
 
-    setQuantidadesEnvio(prev => ({
+    setQuantidadesEnvio((prev) => ({
       ...prev,
-      [productId]: quantidade
+      [productId]: quantidade,
     }));
   };
 
@@ -144,7 +147,7 @@ export default function GenerateProduction({
     if (selectedOrder?.products) {
       if (checked) {
         const allIds = new Set(
-          selectedOrder.products.map((_, idx) => String(idx))
+          selectedOrder.products.map((_, idx) => String(idx)),
         );
         setSelectedProducts(allIds);
       } else {
@@ -173,7 +176,7 @@ export default function GenerateProduction({
               return {
                 ...product,
                 quantity: qtdEnvio, // Modificar a quantidade apenas para envio
-                total_price: (product.unit_price * qtdEnvio) // Recalcular preço total
+                total_price: product.unit_price * qtdEnvio, // Recalcular preço total
               };
             }
           }
@@ -182,33 +185,38 @@ export default function GenerateProduction({
         .filter(Boolean) as OrderProduct[];
     }
 
-    const quantidadeEnviada = productsToSend.reduce((sum, p) => sum + p.quantity, 0);
+    const quantidadeEnviada = productsToSend.reduce(
+      (sum, p) => sum + p.quantity,
+      0,
+    );
 
     // Decrementar a quantidade dos produtos selecionados
     if (updateOrder && productsToSend.length > 0) {
-      const updatedProducts = (selectedOrder.products || []).map((product, idx) => {
-        const produtoEnviado = productsToSend.find(
-          (p) => p.product_id === product.product_id && p.id === product.id
-        );
+      const updatedProducts = (selectedOrder.products || [])
+        .map((product, idx) => {
+          const produtoEnviado = productsToSend.find(
+            (p) => p.product_id === product.product_id && p.id === product.id,
+          );
 
-        if (produtoEnviado) {
-          // Subtrair a quantidade enviada
-          const novaQuantidade = product.quantity - produtoEnviado.quantity;
+          if (produtoEnviado) {
+            // Subtrair a quantidade enviada
+            const novaQuantidade = product.quantity - produtoEnviado.quantity;
 
-          if (novaQuantidade <= 0) {
-            // Se a quantidade fica 0 ou negativa, remover o produto
-            return null;
+            if (novaQuantidade <= 0) {
+              // Se a quantidade fica 0 ou negativa, remover o produto
+              return null;
+            }
+
+            // Atualizar o produto com a quantidade restante
+            return {
+              ...product,
+              quantity: novaQuantidade,
+              total_price: product.unit_price * novaQuantidade,
+            };
           }
-
-          // Atualizar o produto com a quantidade restante
-          return {
-            ...product,
-            quantity: novaQuantidade,
-            total_price: product.unit_price * novaQuantidade
-          };
-        }
-        return product;
-      }).filter(Boolean) as OrderProduct[];
+          return product;
+        })
+        .filter(Boolean) as OrderProduct[];
 
       // Atualizar o pedido com os produtos restantes
       await updateOrder(selectedOrder.id, {
@@ -218,7 +226,7 @@ export default function GenerateProduction({
 
       // Mostrar mensagem de sucesso
       setSuccessMessage(
-        `✅ ${quantidadeEnviada} unidade(s) de ${productsToSend.length} item(ns) enviada(s) para produção!`
+        `✅ ${quantidadeEnviada} unidade(s) de ${productsToSend.length} item(ns) enviada(s) para produção!`,
       );
 
       // Limpar mensagem após 3 segundos
@@ -405,7 +413,7 @@ export default function GenerateProduction({
               <Button
                 onClick={handlePrintAll}
                 variant="outline"
-                className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
+                className="border-biobox-gold text-biobox-gold hover:bg-biobox-gold/5"
               >
                 <Printer className="h-4 w-4 mr-2" />
                 Imprimir Panorama Geral
@@ -416,36 +424,56 @@ export default function GenerateProduction({
 
         {/* Conteúdo para impressão de todos os pedidos */}
         <div ref={printAllRef} className="hidden">
-          <div style={{ textAlign: "center", marginBottom: "15px", pageBreakInside: "avoid" }}>
-            <h1 style={{ fontSize: "16px", fontWeight: "bold", marginBottom: "10px", textTransform: "uppercase" }}>
+          <div
+            style={{
+              textAlign: "center",
+              marginBottom: "15px",
+              pageBreakInside: "avoid",
+            }}
+          >
+            <h1
+              style={{
+                fontSize: "16px",
+                fontWeight: "bold",
+                marginBottom: "10px",
+                textTransform: "uppercase",
+              }}
+            >
               PANORAMA GERAL - PEDIDOS DISPONÍVEIS PARA PRODUÇÃO
             </h1>
             <p style={{ fontSize: "11px", color: "#666" }}>
-              Gerado em: {format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+              Gerado em:{" "}
+              {format(new Date(), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
             </p>
           </div>
 
           {/* Agrupar por cliente */}
           {Array.from(
-            availableOrders.reduce((map, order) => {
-              const client = order.customer_name || "Sem Cliente";
-              if (!map.has(client)) map.set(client, []);
-              map.get(client)!.push(order);
-              return map;
-            }, new Map<string, Order[]>()).entries()
+            availableOrders
+              .reduce((map, order) => {
+                const client = order.customer_name || "Sem Cliente";
+                if (!map.has(client)) map.set(client, []);
+                map.get(client)!.push(order);
+                return map;
+              }, new Map<string, Order[]>())
+              .entries(),
           ).map(([clientName, clientOrders]) => {
             const clientTotalQty = clientOrders.reduce(
               (sum, order) =>
-                sum + (order.products?.reduce((s, p) => s + p.quantity, 0) || 0),
-              0
+                sum +
+                (order.products?.reduce((s, p) => s + p.quantity, 0) || 0),
+              0,
             );
             const clientTotalValue = clientOrders.reduce(
               (sum, order) => sum + (order.total_amount || 0),
-              0
+              0,
             );
 
             return (
-              <div key={clientName} style={{ marginBottom: "30px", pageBreakInside: "avoid" }}>
+              <div
+                key={clientName}
+                style={{ marginBottom: "30px", pageBreakInside: "avoid" }}
+              >
                 {/* Header do Cliente */}
                 <div
                   style={{
@@ -649,7 +677,7 @@ export default function GenerateProduction({
                             {format(
                               new Date(order.scheduled_date),
                               "dd/MM/yyyy",
-                              { locale: ptBR }
+                              { locale: ptBR },
                             )}
                           </td>
                           <td
@@ -664,7 +692,7 @@ export default function GenerateProduction({
                               ? format(
                                   new Date(order.delivery_date),
                                   "dd/MM/yyyy",
-                                  { locale: ptBR }
+                                  { locale: ptBR },
                                 )
                               : "A vista"}
                           </td>
@@ -689,7 +717,7 @@ export default function GenerateProduction({
                             R$ {product.total_price.toFixed(2)}
                           </td>
                         </tr>
-                      ))
+                      )),
                     )}
                     <tr
                       style={{
@@ -748,7 +776,9 @@ export default function GenerateProduction({
               fontWeight: "bold",
             }}
           >
-            <h3 style={{ marginBottom: "10px", fontSize: "13px" }}>RESUMO GERAL</h3>
+            <h3 style={{ marginBottom: "10px", fontSize: "13px" }}>
+              RESUMO GERAL
+            </h3>
             <p style={{ marginBottom: "5px" }}>
               Total de Clientes: {getOrdersByClient().size}
             </p>
@@ -759,8 +789,9 @@ export default function GenerateProduction({
               Total de Unidades:{" "}
               {availableOrders.reduce(
                 (sum, order) =>
-                  sum + (order.products?.reduce((s, p) => s + p.quantity, 0) || 0),
-                0
+                  sum +
+                  (order.products?.reduce((s, p) => s + p.quantity, 0) || 0),
+                0,
               )}
             </p>
             <p style={{ marginBottom: "0" }}>
@@ -792,7 +823,7 @@ export default function GenerateProduction({
                   <div className="flex items-center justify-between p-6">
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
-                        <Package className="h-5 w-5 text-biobox-green" />
+                        <Package className="h-5 w-5 text-biobox-gold" />
                         <h3 className="font-bold text-lg">
                           {order.order_number}
                         </h3>
@@ -802,7 +833,7 @@ export default function GenerateProduction({
                             "border",
                             statusColors[
                               order.status as keyof typeof statusColors
-                            ]
+                            ],
                           )}
                         >
                           {
@@ -816,7 +847,7 @@ export default function GenerateProduction({
                             "w-2 h-2 rounded-full ml-2",
                             priorityColors[
                               order.priority as keyof typeof priorityColors
-                            ]
+                            ],
                           )}
                         />
                         <span className="text-xs text-muted-foreground ml-1">
@@ -835,24 +866,24 @@ export default function GenerateProduction({
                         </div>
                         <div>
                           <p className="text-muted-foreground">Valor Total</p>
-                          <p className="font-bold text-biobox-green">
+                          <p className="font-bold text-biobox-gold">
                             R$ {order.total_amount.toFixed(2)}
                           </p>
                         </div>
                         <div>
-                          <p className="text-muted-foreground">
-                            Data Agendada
-                          </p>
+                          <p className="text-muted-foreground">Data Agendada</p>
                           <p className="font-medium">
                             {format(
                               new Date(order.scheduled_date),
                               "dd/MM/yyyy",
-                              { locale: ptBR }
+                              { locale: ptBR },
                             )}
                           </p>
                         </div>
                         <div>
-                          <p className="text-muted-foreground">Itens Restantes</p>
+                          <p className="text-muted-foreground">
+                            Itens Restantes
+                          </p>
                           <p className="font-bold">
                             {order.products?.length || 0}
                           </p>
@@ -863,8 +894,11 @@ export default function GenerateProduction({
                       {order.products && order.products.length > 0 && (
                         <div className="mb-3">
                           <p className="text-xs text-muted-foreground mb-1">
-                            Quantidade de unidades: {" "}
-                            {order.products.reduce((sum, p) => sum + p.quantity, 0)}
+                            Quantidade de unidades:{" "}
+                            {order.products.reduce(
+                              (sum, p) => sum + p.quantity,
+                              0,
+                            )}
                           </p>
                         </div>
                       )}
@@ -879,7 +913,7 @@ export default function GenerateProduction({
 
                     <Button
                       onClick={() => handleSelectOrder(order)}
-                      className="ml-4 bg-biobox-green hover:bg-biobox-green-dark"
+                      className="ml-4 bg-biobox-gold hover:bg-biobox-gold-dark"
                     >
                       <span>Iniciar Produção</span>
                       <ChevronRight className="h-4 w-4 ml-2" />
@@ -902,9 +936,7 @@ export default function GenerateProduction({
           <h2 className="text-2xl font-bold text-foreground">
             Produção: {selectedOrder.order_number}
           </h2>
-          <p className="text-muted-foreground">
-            {selectedOrder.customer_name}
-          </p>
+          <p className="text-muted-foreground">{selectedOrder.customer_name}</p>
         </div>
         <Button
           variant="outline"
@@ -913,7 +945,7 @@ export default function GenerateProduction({
             setSelectedProducts(new Set());
             setQuantidadesEnvio({});
           }}
-          className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
+          className="border-biobox-gold text-biobox-gold hover:bg-biobox-gold/5"
         >
           Voltar para Lista
         </Button>
@@ -928,16 +960,10 @@ export default function GenerateProduction({
               variant="outline"
               className={cn(
                 "border",
-                statusColors[
-                  selectedOrder.status as keyof typeof statusColors
-                ]
+                statusColors[selectedOrder.status as keyof typeof statusColors],
               )}
             >
-              {
-                statusLabels[
-                  selectedOrder.status as keyof typeof statusLabels
-                ]
-              }
+              {statusLabels[selectedOrder.status as keyof typeof statusLabels]}
             </Badge>
           </CardContent>
         </Card>
@@ -957,9 +983,7 @@ export default function GenerateProduction({
 
         <Card>
           <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground mb-1">
-              Data Agendada
-            </p>
+            <p className="text-sm text-muted-foreground mb-1">Data Agendada</p>
             <p className="font-bold">
               {format(new Date(selectedOrder.scheduled_date), "dd/MM/yyyy", {
                 locale: ptBR,
@@ -971,7 +995,7 @@ export default function GenerateProduction({
         <Card>
           <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground mb-1">Valor Total</p>
-            <p className="font-bold text-biobox-green">
+            <p className="font-bold text-biobox-gold">
               R$ {selectedOrder.total_amount.toFixed(2)}
             </p>
           </CardContent>
@@ -994,7 +1018,7 @@ export default function GenerateProduction({
             <Button
               onClick={handlePrint}
               variant="outline"
-              className="border-biobox-green text-biobox-green hover:bg-biobox-green/5"
+              className="border-biobox-gold text-biobox-gold hover:bg-biobox-gold/5"
             >
               <Printer className="h-4 w-4 mr-2" />
               Imprimir Panorama
@@ -1029,7 +1053,15 @@ export default function GenerateProduction({
                     PANORAMA DE PRODUÇÃO
                   </h1>
 
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", marginBottom: "10px", flexWrap: "wrap" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      fontSize: "11px",
+                      marginBottom: "10px",
+                      flexWrap: "wrap",
+                    }}
+                  >
                     <div>
                       <strong>OP:</strong> {selectedOrder.order_number}
                     </div>
@@ -1037,15 +1069,35 @@ export default function GenerateProduction({
                       <strong>Cliente:</strong> {selectedOrder.customer_name}
                     </div>
                     <div>
-                      <strong>Agendado:</strong> {format(new Date(selectedOrder.scheduled_date), "dd/MM/yyyy", { locale: ptBR })}
+                      <strong>Agendado:</strong>{" "}
+                      {format(
+                        new Date(selectedOrder.scheduled_date),
+                        "dd/MM/yyyy",
+                        { locale: ptBR },
+                      )}
                     </div>
                     <div>
-                      <strong>Prazo:</strong> {selectedOrder.delivery_date ? format(new Date(selectedOrder.delivery_date), "dd/MM/yyyy", { locale: ptBR }) : "A vista"}
+                      <strong>Prazo:</strong>{" "}
+                      {selectedOrder.delivery_date
+                        ? format(
+                            new Date(selectedOrder.delivery_date),
+                            "dd/MM/yyyy",
+                            { locale: ptBR },
+                          )
+                        : "A vista"}
                     </div>
                   </div>
 
                   {selectedOrder.notes && (
-                    <div style={{ fontSize: "11px", backgroundColor: "#f5f5f5", padding: "5px", marginBottom: "10px", textAlign: "left" }}>
+                    <div
+                      style={{
+                        fontSize: "11px",
+                        backgroundColor: "#f5f5f5",
+                        padding: "5px",
+                        marginBottom: "10px",
+                        textAlign: "left",
+                      }}
+                    >
                       <strong>Observações:</strong> {selectedOrder.notes}
                     </div>
                   )}
@@ -1061,81 +1113,317 @@ export default function GenerateProduction({
                 >
                   <thead>
                     <tr style={{ backgroundColor: "#10B981", color: "white" }}>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>OP</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Produto</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Tipo</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Tecido</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Cor</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Largura</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Comprimento</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Qtde</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Observações</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "left", fontSize: "10px" }}>Pedido</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "10px" }}>Prazo</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "10px" }}>R$ Unit.</th>
-                      <th style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "10px" }}>R$ Total</th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontSize: "10px",
+                        }}
+                      >
+                        OP
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Produto
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Tipo
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Tecido
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Cor
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Largura
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Comprimento
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Qtde
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Observações
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "left",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Pedido
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontSize: "10px",
+                        }}
+                      >
+                        Prazo
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "right",
+                          fontSize: "10px",
+                        }}
+                      >
+                        R$ Unit.
+                      </th>
+                      <th
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "right",
+                          fontSize: "10px",
+                        }}
+                      >
+                        R$ Total
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {selectedOrder.products.map((product, index) => (
                       <tr key={product.id || index}>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            textAlign: "center",
+                            fontSize: "11px",
+                          }}
+                        >
                           {selectedOrder.order_number}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            fontSize: "11px",
+                          }}
+                        >
                           {product.product_name}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            fontSize: "11px",
+                          }}
+                        >
                           {product.model || "-"}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            fontSize: "11px",
+                          }}
+                        >
                           {product.fabric || "-"}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            fontSize: "11px",
+                          }}
+                        >
                           {product.color || "-"}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            textAlign: "center",
+                            fontSize: "11px",
+                          }}
+                        >
                           {product.specifications?.Largura ||
-                           product.specifications?.largura ||
-                           (product as any).width ||
-                           "-"}
+                            product.specifications?.largura ||
+                            (product as any).width ||
+                            "-"}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            textAlign: "center",
+                            fontSize: "11px",
+                          }}
+                        >
                           {product.specifications?.Comprimento ||
-                           product.specifications?.comprimento ||
-                           (product as any).length ||
-                           "-"}
+                            product.specifications?.comprimento ||
+                            (product as any).length ||
+                            "-"}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            textAlign: "center",
+                            fontSize: "11px",
+                          }}
+                        >
                           {product.quantity}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            fontSize: "11px",
+                          }}
+                        >
                           {selectedOrder.notes || "-"}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            fontSize: "11px",
+                          }}
+                        >
                           {selectedOrder.customer_name || "-"}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            textAlign: "center",
+                            fontSize: "11px",
+                          }}
+                        >
                           {selectedOrder.delivery_date
-                            ? format(new Date(selectedOrder.delivery_date), "dd/MM/yyyy", { locale: ptBR })
+                            ? format(
+                                new Date(selectedOrder.delivery_date),
+                                "dd/MM/yyyy",
+                                { locale: ptBR },
+                              )
                             : "A vista"}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            textAlign: "right",
+                            fontSize: "11px",
+                          }}
+                        >
                           R$ {product.unit_price.toFixed(2)}
                         </td>
-                        <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
+                        <td
+                          style={{
+                            border: "1px solid #ddd",
+                            padding: "8px",
+                            textAlign: "right",
+                            fontSize: "11px",
+                          }}
+                        >
                           R$ {product.total_price.toFixed(2)}
                         </td>
                       </tr>
                     ))}
-                    <tr style={{ fontWeight: "bold", backgroundColor: "#f3f4f6" }}>
-                      <td colSpan={7} style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontSize: "11px" }}>
+                    <tr
+                      style={{ fontWeight: "bold", backgroundColor: "#f3f4f6" }}
+                    >
+                      <td
+                        colSpan={7}
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "right",
+                          fontSize: "11px",
+                        }}
+                      >
                         TOTAL GERAL
                       </td>
-                      <td style={{ border: "1px solid #ddd", padding: "8px", textAlign: "center", fontWeight: "bold", fontSize: "11px" }}>
-                        {selectedOrder.products.reduce((sum, p) => sum + p.quantity, 0)}
+                      <td
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "center",
+                          fontWeight: "bold",
+                          fontSize: "11px",
+                        }}
+                      >
+                        {selectedOrder.products.reduce(
+                          (sum, p) => sum + p.quantity,
+                          0,
+                        )}
                       </td>
-                      <td colSpan={4} style={{ border: "1px solid #ddd", padding: "8px", textAlign: "right", fontWeight: "bold", fontSize: "11px" }}>
+                      <td
+                        colSpan={4}
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          textAlign: "right",
+                          fontWeight: "bold",
+                          fontSize: "11px",
+                        }}
+                      >
                         R$ {selectedOrder.total_amount.toFixed(2)}
                       </td>
                     </tr>
@@ -1180,18 +1468,21 @@ export default function GenerateProduction({
                         key={product.id || index}
                         className={cn(
                           selectedProducts.has(String(index)) &&
-                            "bg-biobox-green/5"
+                            "bg-biobox-gold/5",
                         )}
                       >
                         <TableCell>
                           <Checkbox
                             checked={selectedProducts.has(String(index))}
                             onCheckedChange={(checked) =>
-                              toggleProductSelection(String(index), checked as boolean)
+                              toggleProductSelection(
+                                String(index),
+                                checked as boolean,
+                              )
                             }
                           />
                         </TableCell>
-                        <TableCell className="font-bold text-biobox-green">
+                        <TableCell className="font-bold text-biobox-gold">
                           {selectedOrder.order_number}
                         </TableCell>
                         <TableCell className="font-medium">
@@ -1215,33 +1506,36 @@ export default function GenerateProduction({
                         <TableCell>{product.fabric || "-"}</TableCell>
                         <TableCell className="text-center">
                           {product.specifications?.Largura ||
-                           product.specifications?.largura ||
-                           (product as any).width ||
-                           "-"}
+                            product.specifications?.largura ||
+                            (product as any).width ||
+                            "-"}
                         </TableCell>
                         <TableCell className="text-center">
                           {product.specifications?.Comprimento ||
-                           product.specifications?.comprimento ||
-                           (product as any).length ||
-                           "-"}
+                            product.specifications?.comprimento ||
+                            (product as any).length ||
+                            "-"}
                         </TableCell>
                         <TableCell className="text-center font-medium">
                           {product.quantity}
                         </TableCell>
                         <TableCell className="text-center">
                           {selectedProducts.has(String(index)) ? (
-                            <input
+                            <Input
                               type="number"
                               min="0"
                               max={product.quantity}
-                              value={quantidadesEnvio[String(index)] || product.quantity}
+                              value={
+                                quantidadesEnvio[String(index)] ||
+                                product.quantity
+                              }
                               onChange={(e) =>
                                 updateQuantidadeEnvio(
                                   String(index),
-                                  parseInt(e.target.value) || 0
+                                  parseInt(e.target.value) || 0,
                                 )
                               }
-                              className="w-16 px-2 py-1 border border-biobox-green/50 rounded text-center text-sm"
+                              className="w-16 h-8 px-2 py-1 border-biobox-gold/50 text-center text-sm"
                             />
                           ) : (
                             <span className="text-muted-foreground">-</span>
@@ -1250,21 +1544,26 @@ export default function GenerateProduction({
                         <TableCell className="text-right">
                           R$ {product.unit_price.toFixed(2)}
                         </TableCell>
-                        <TableCell className="text-right font-bold text-biobox-green">
+                        <TableCell className="text-right font-bold text-biobox-gold">
                           R$ {product.total_price.toFixed(2)}
                         </TableCell>
                         <TableCell className="text-center">
                           {selectedProducts.has(String(index)) ? (
                             <div className="flex flex-col items-center gap-1">
-                              <Badge className="bg-biobox-green text-white">
+                              <Badge className="bg-biobox-gold text-white">
                                 Selecionado
                               </Badge>
                               <span className="text-xs text-muted-foreground">
-                                Saldo: {product.quantity - (quantidadesEnvio[String(index)] || 0)}
+                                Saldo:{" "}
+                                {product.quantity -
+                                  (quantidadesEnvio[String(index)] || 0)}
                               </span>
                             </div>
                           ) : (
-                            <Badge variant="outline" className="text-muted-foreground">
+                            <Badge
+                              variant="outline"
+                              className="text-muted-foreground"
+                            >
                               Aguardando
                             </Badge>
                           )}
@@ -1277,23 +1576,32 @@ export default function GenerateProduction({
 
               {/* Resumo de Seleção */}
               {selectedProducts.size > 0 && (
-                <div className="mt-6 p-4 bg-biobox-green/5 border border-biobox-green/20 rounded-lg">
-                  <h3 className="font-bold text-biobox-green mb-3">
+                <div className="mt-6 p-4 bg-biobox-gold/5 border border-biobox-gold/20 rounded-lg">
+                  <h3 className="font-bold text-biobox-gold mb-3">
                     Resumo da Seleção
                   </h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Itens selecionados:</span>
+                      <span className="text-muted-foreground">
+                        Itens selecionados:
+                      </span>
                       <span className="font-bold">{selectedProducts.size}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Total de itens:</span>
-                      <span className="font-bold">{selectedOrder.products?.length || 0}</span>
+                      <span className="text-muted-foreground">
+                        Total de itens:
+                      </span>
+                      <span className="font-bold">
+                        {selectedOrder.products?.length || 0}
+                      </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Itens restantes:</span>
+                      <span className="text-muted-foreground">
+                        Itens restantes:
+                      </span>
                       <span className="font-bold">
-                        {(selectedOrder.products?.length || 0) - selectedProducts.size}
+                        {(selectedOrder.products?.length || 0) -
+                          selectedProducts.size}
                       </span>
                     </div>
                     <div className="flex justify-between pt-2 border-t">
@@ -1302,7 +1610,9 @@ export default function GenerateProduction({
                       </span>
                       <span className="font-bold">
                         {selectedOrder.products
-                          ?.filter((_, idx) => selectedProducts.has(String(idx)))
+                          ?.filter((_, idx) =>
+                            selectedProducts.has(String(idx)),
+                          )
                           .reduce((sum, p) => sum + p.quantity, 0) || 0}{" "}
                         unidades
                       </span>
@@ -1311,7 +1621,7 @@ export default function GenerateProduction({
                       <span className="text-muted-foreground">
                         Quantidade a enviar:
                       </span>
-                      <span className="font-bold text-biobox-green">
+                      <span className="font-bold text-biobox-gold">
                         {Array.from(selectedProducts).reduce((sum, idx) => {
                           return sum + (quantidadesEnvio[idx] || 0);
                         }, 0)}{" "}
@@ -1324,7 +1634,9 @@ export default function GenerateProduction({
                       </span>
                       <span className="font-bold">
                         {selectedOrder.products
-                          ?.filter((_, idx) => selectedProducts.has(String(idx)))
+                          ?.filter((_, idx) =>
+                            selectedProducts.has(String(idx)),
+                          )
                           .reduce((sum, p, _, arr) => {
                             const idx = selectedOrder.products?.indexOf(p) || 0;
                             const qtdEnvio = quantidadesEnvio[String(idx)] || 0;
@@ -1359,7 +1671,7 @@ export default function GenerateProduction({
                   )}
                   <div className="flex justify-between text-lg font-bold pt-2 border-t">
                     <span>Total:</span>
-                    <span className="text-biobox-green">
+                    <span className="text-biobox-gold">
                       R$ {selectedOrder.total_amount.toFixed(2)}
                     </span>
                   </div>
@@ -1380,7 +1692,7 @@ export default function GenerateProduction({
                 </Button>
                 <Button
                   onClick={handleStartProduction}
-                  className="bg-biobox-green hover:bg-biobox-green-dark"
+                  className="bg-biobox-gold hover:bg-biobox-gold-dark"
                 >
                   Enviar{" "}
                   {selectedProducts.size > 0
@@ -1404,7 +1716,9 @@ export default function GenerateProduction({
             <div className="space-y-6">
               {selectedOrder.products
                 .filter(
-                  (p) => p.specifications && Object.keys(p.specifications).length > 0
+                  (p) =>
+                    p.specifications &&
+                    Object.keys(p.specifications).length > 0,
                 )
                 .map((product, index) => (
                   <div
@@ -1427,7 +1741,7 @@ export default function GenerateProduction({
                                 : JSON.stringify(value)}
                             </p>
                           </div>
-                        )
+                        ),
                       )}
                     </div>
                   </div>

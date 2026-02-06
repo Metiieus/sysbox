@@ -95,7 +95,7 @@ export default function CustomerOrderHistory({
           try {
             const parsed = JSON.parse(cachedOrders);
             const customerOrders = parsed.filter(
-              (order: any) => order.customer_id === customerId
+              (order: any) => order.customer_id === customerId,
             );
             setOrders(customerOrders);
             console.log("Pedidos carregados do cache:", customerOrders.length);
@@ -106,14 +106,20 @@ export default function CustomerOrderHistory({
 
         // Try to get fresh data from Firebase with timeout
         const timeoutPromise = new Promise((_, reject) =>
-          setTimeout(() => reject(new Error("Timeout ao carregar pedidos do servidor")), 10000)
+          setTimeout(
+            () => reject(new Error("Timeout ao carregar pedidos do servidor")),
+            10000,
+          ),
         );
 
         const allOrdersPromise = getOrders();
-        const allOrders = await Promise.race([allOrdersPromise, timeoutPromise]) as any[];
+        const allOrders = (await Promise.race([
+          allOrdersPromise,
+          timeoutPromise,
+        ])) as any[];
 
         const customerOrders = allOrders.filter(
-          (order: any) => order.customer_id === customerId
+          (order: any) => order.customer_id === customerId,
         );
 
         console.log("Pedidos carregados do servidor:", customerOrders.length);
@@ -152,7 +158,9 @@ export default function CustomerOrderHistory({
   };
 
   const getStatusColor = (status: string) => {
-    return statusColors[status] || "bg-gray-500/10 text-gray-500 border-gray-500/20";
+    return (
+      statusColors[status] || "bg-gray-500/10 text-gray-500 border-gray-500/20"
+    );
   };
 
   const getStatusLabel = (status: string) => {
@@ -178,7 +186,7 @@ export default function CustomerOrderHistory({
         acc[status].push(order);
         return acc;
       },
-      {} as Record<string, Order[]>
+      {} as Record<string, Order[]>,
     );
   }, [orders]);
 
@@ -195,18 +203,19 @@ export default function CustomerOrderHistory({
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
-            <Package className="h-5 w-5 text-biobox-green" />
+            <Package className="h-5 w-5 text-biobox-gold" />
             <span>Histórico de Pedidos</span>
           </DialogTitle>
           <DialogDescription>
-            Todos os pedidos de <span className="font-semibold">{customerName}</span>
+            Todos os pedidos de{" "}
+            <span className="font-semibold">{customerName}</span>
           </DialogDescription>
         </DialogHeader>
 
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-biobox-green" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-biobox-gold" />
               <p className="text-muted-foreground">Carregando pedidos...</p>
             </div>
           </div>
@@ -215,7 +224,9 @@ export default function CustomerOrderHistory({
             <CardContent className="p-6 flex items-start space-x-3">
               <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-medium text-red-500">Erro ao carregar pedidos</p>
+                <p className="font-medium text-red-500">
+                  Erro ao carregar pedidos
+                </p>
                 <p className="text-sm text-red-500/70">{error}</p>
               </div>
             </CardContent>
@@ -250,7 +261,10 @@ export default function CustomerOrderHistory({
                   </p>
                   <p className="text-2xl font-bold text-foreground">
                     {formatCurrency(
-                      orders.reduce((sum, order) => sum + (order.total_amount || 0), 0)
+                      orders.reduce(
+                        (sum, order) => sum + (order.total_amount || 0),
+                        0,
+                      ),
                     )}
                   </p>
                 </CardContent>
@@ -270,7 +284,9 @@ export default function CustomerOrderHistory({
             {/* Orders Table */}
             <Card className="bg-card border-border">
               <CardHeader>
-                <CardTitle className="text-base">Detalhes dos Pedidos</CardTitle>
+                <CardTitle className="text-base">
+                  Detalhes dos Pedidos
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -327,7 +343,7 @@ export default function CustomerOrderHistory({
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-1 font-medium">
-                              <DollarSign className="h-4 w-4 text-biobox-green" />
+                              <DollarSign className="h-4 w-4 text-biobox-gold" />
                               <span>
                                 {formatCurrency(order.total_amount || 0)}
                               </span>
@@ -337,7 +353,7 @@ export default function CustomerOrderHistory({
                             <div className="flex items-center space-x-2">
                               <div className="w-16 h-2 bg-secondary rounded-full overflow-hidden">
                                 <div
-                                  className="h-full bg-biobox-green"
+                                  className="h-full bg-biobox-gold"
                                   style={{
                                     width: `${order.production_progress || 0}%`,
                                   }}
@@ -365,28 +381,32 @@ export default function CustomerOrderHistory({
             {Object.keys(ordersByStatus).length > 0 && (
               <Card className="bg-card border-border">
                 <CardHeader>
-                  <CardTitle className="text-base">Distribuição por Status</CardTitle>
+                  <CardTitle className="text-base">
+                    Distribuição por Status
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {Object.entries(ordersByStatus).map(([status, statusOrders]) => (
-                      <div
-                        key={status}
-                        className="flex items-center justify-between p-3 rounded-lg bg-secondary/50"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <Badge
-                            variant="outline"
-                            className={`${getStatusColor(status)}`}
-                          >
-                            {getStatusLabel(status)}
-                          </Badge>
+                    {Object.entries(ordersByStatus).map(
+                      ([status, statusOrders]) => (
+                        <div
+                          key={status}
+                          className="flex items-center justify-between p-3 rounded-lg bg-secondary/50"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <Badge
+                              variant="outline"
+                              className={`${getStatusColor(status)}`}
+                            >
+                              {getStatusLabel(status)}
+                            </Badge>
+                          </div>
+                          <span className="font-bold text-foreground">
+                            {statusOrders.length}
+                          </span>
                         </div>
-                        <span className="font-bold text-foreground">
-                          {statusOrders.length}
-                        </span>
-                      </div>
-                    ))}
+                      ),
+                    )}
                   </div>
                 </CardContent>
               </Card>

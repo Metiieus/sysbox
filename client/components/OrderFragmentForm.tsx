@@ -354,7 +354,7 @@ export default function OrderFragmentForm({
                   <p className="text-muted-foreground text-xs">
                     Já Fragmentado
                   </p>
-                  <p className="font-bold text-biobox-green">
+                  <p className="font-bold text-biobox-gold">
                     {alreadyFragmentedQuantity} un.
                   </p>
                 </div>
@@ -598,7 +598,7 @@ export default function OrderFragmentForm({
                 variant="outline"
                 className={cn(
                   isValid()
-                    ? "bg-biobox-green/10 text-biobox-green border-biobox-green/20"
+                    ? "bg-biobox-gold/10 text-biobox-gold border-biobox-gold/20"
                     : "bg-red-500/10 text-red-500 border-red-500/20",
                 )}
               >
@@ -615,7 +615,7 @@ export default function OrderFragmentForm({
                   <span className="font-bold">{productTotalQuantity} un.</span>
                 </div>
                 {alreadyFragmentedQuantity > 0 && (
-                  <div className="flex justify-between text-biobox-green mb-2">
+                  <div className="flex justify-between text-biobox-gold mb-2">
                     <span className="text-muted-foreground">
                       Já Fragmentado:
                     </span>
@@ -659,7 +659,7 @@ export default function OrderFragmentForm({
                       "font-bold",
                       availableQuantity - getTotalFragmentQuantity() > 0
                         ? "text-red-500"
-                        : "text-biobox-green",
+                        : "text-biobox-gold",
                     )}
                   >
                     {availableQuantity - getTotalFragmentQuantity()} un.
@@ -676,7 +676,7 @@ export default function OrderFragmentForm({
             <Button
               onClick={handleSave}
               disabled={!isValid()}
-              className="bg-biobox-green hover:bg-biobox-green-dark"
+              className="bg-biobox-gold hover:bg-biobox-gold-dark"
             >
               <Save className="h-4 w-4 mr-2" />
               Salvar Fragmentação

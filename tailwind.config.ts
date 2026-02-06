@@ -58,9 +58,9 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
         biobox: {
-          green: "hsl(var(--biobox-green))",
-          "green-dark": "hsl(var(--biobox-green-dark))",
-          "green-light": "hsl(var(--biobox-green-light))",
+          gold: "hsl(var(--biobox-gold))",
+          "gold-dark": "hsl(var(--biobox-gold-dark))",
+          "gold-light": "hsl(var(--biobox-gold-light))",
           dark: "hsl(var(--biobox-dark))",
           "dark-secondary": "hsl(var(--biobox-dark-secondary))",
           "dark-tertiary": "hsl(var(--biobox-dark-tertiary))",

@@ -3,14 +3,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
-import { 
-  Printer, 
-  Settings, 
-  Download, 
+import {
+  Printer,
+  Settings,
+  Download,
   Eye,
   RefreshCw,
   Package,
@@ -18,15 +24,15 @@ import {
   User,
   Wifi,
   Usb,
-  Bluetooth
+  Bluetooth,
 } from "lucide-react";
 
 interface ThermalPrintSettings {
-  printerType: 'thermal' | 'laser' | 'inkjet';
-  paperWidth: '58mm' | '80mm' | '110mm';
-  density: 'light' | 'medium' | 'dark';
-  speed: 'slow' | 'medium' | 'fast';
-  connection: 'usb' | 'bluetooth' | 'wifi' | 'ethernet';
+  printerType: "thermal" | "laser" | "inkjet";
+  paperWidth: "58mm" | "80mm" | "110mm";
+  density: "light" | "medium" | "dark";
+  speed: "slow" | "medium" | "fast";
+  connection: "usb" | "bluetooth" | "wifi" | "ethernet";
   copies: number;
   cutAfterPrint: boolean;
   includeDate: boolean;
@@ -38,79 +44,85 @@ interface PrintItem {
   code: string;
   name: string;
   description?: string;
-  type: 'product' | 'order' | 'material';
+  type: "product" | "order" | "material";
   quantity: number;
 }
 
 export default function ThermalPrintManager() {
   const [settings, setSettings] = useState<ThermalPrintSettings>({
-    printerType: 'thermal',
-    paperWidth: '80mm',
-    density: 'medium',
-    speed: 'medium',
-    connection: 'usb',
+    printerType: "thermal",
+    paperWidth: "80mm",
+    density: "medium",
+    speed: "medium",
+    connection: "usb",
     copies: 1,
     cutAfterPrint: true,
     includeDate: true,
-    includeCompanyLogo: true
+    includeCompanyLogo: true,
   });
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [customText, setCustomText] = useState('');
+  const [customText, setCustomText] = useState("");
   const [previewMode, setPreviewMode] = useState(false);
 
   const mockItems: PrintItem[] = [
     {
-      id: '1',
-      code: 'BED-LUX-001',
-      name: 'Cama Luxo Premium Queen',
-      description: 'Courino Branco, Cabeceira Estofada',
-      type: 'product',
-      quantity: 1
+      id: "1",
+      code: "BED-LUX-001",
+      name: "Cama Luxo Premium Queen",
+      description: "Courino Branco, Cabeceira Estofada",
+      type: "product",
+      quantity: 1,
     },
     {
-      id: '2',
-      code: 'ORD-2024-001',
-      name: 'Pedido João Silva',
-      description: 'Entrega: 20/12/2024',
-      type: 'order',
-      quantity: 1
+      id: "2",
+      code: "PED-2024-001",
+      name: "Pedido João Silva",
+      description: "Entrega: 20/12/2024",
+      type: "order",
+      quantity: 1,
     },
     {
-      id: '3',
-      code: 'MAT-MDF-18',
-      name: 'MDF 18mm Branco',
-      description: 'Lote: 2024-12-001',
-      type: 'material',
-      quantity: 5
-    }
+      id: "3",
+      code: "MAT-MDF-18",
+      name: "MDF 18mm Branco",
+      description: "Lote: 2024-12-001",
+      type: "material",
+      quantity: 5,
+    },
   ];
 
   const handleSettingChange = (key: keyof ThermalPrintSettings, value: any) => {
-    setSettings(prev => ({ ...prev, [key]: value }));
+    setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSelectItem = (itemId: string, checked: boolean) => {
     if (checked) {
-      setSelectedItems(prev => [...prev, itemId]);
+      setSelectedItems((prev) => [...prev, itemId]);
     } else {
-      setSelectedItems(prev => prev.filter(id => id !== itemId));
+      setSelectedItems((prev) => prev.filter((id) => id !== itemId));
     }
   };
 
   const generateThermalLabel = (item: PrintItem) => {
-    const width = settings.paperWidth === '58mm' ? 32 : settings.paperWidth === '80mm' ? 48 : 64;
-    
-    let label = '';
-    
+    const width =
+      settings.paperWidth === "58mm"
+        ? 32
+        : settings.paperWidth === "80mm"
+          ? 48
+          : 64;
+
+    let label = "";
+
     // Header with company info
     if (settings.includeCompanyLogo) {
-      label += '='.repeat(width) + '\\n';
-      label += ' '.repeat(Math.floor((width - 8) / 2)) + 'BIOBOX\\n';
-      label += ' '.repeat(Math.floor((width - 16) / 2)) + 'Sistema de Produção\\n';
-      label += '='.repeat(width) + '\\n\\n';
+      label += "=".repeat(width) + "\\n";
+      label += " ".repeat(Math.floor((width - 8) / 2)) + "BIOBOX\\n";
+      label +=
+        " ".repeat(Math.floor((width - 16) / 2)) + "Sistema de Produção\\n";
+      label += "=".repeat(width) + "\\n\\n";
     }
-    
+
     // Item info
     label += `CÓDIGO: ${item.code}\\n`;
     label += `ITEM: ${item.name}\\n`;
@@ -118,39 +130,44 @@ export default function ThermalPrintManager() {
       label += `DESC: ${item.description}\\n`;
     }
     label += `QTD: ${item.quantity}\\n`;
-    
+
     // Barcode simulation
-    label += '\\n';
-    label += '||||| || ||| | || ||||| | ||| || |||||\\n';
-    label += ' '.repeat(Math.floor((width - item.code.length) / 2)) + item.code + '\\n';
-    
+    label += "\\n";
+    label += "||||| || ||| | || ||||| | ||| || |||||\\n";
+    label +=
+      " ".repeat(Math.floor((width - item.code.length) / 2)) +
+      item.code +
+      "\\n";
+
     // Date and custom text
     if (settings.includeDate) {
-      const date = new Date().toLocaleDateString('pt-BR');
+      const date = new Date().toLocaleDateString("pt-BR");
       label += `\\nDATA: ${date}\\n`;
     }
-    
+
     if (customText.trim()) {
       label += `\\n${customText}\\n`;
     }
-    
-    label += '\\n' + '-'.repeat(width) + '\\n';
-    
+
+    label += "\\n" + "-".repeat(width) + "\\n";
+
     return label;
   };
 
   const handlePrint = async () => {
-    const selectedItemsData = mockItems.filter(item => selectedItems.includes(item.id));
-    
+    const selectedItemsData = mockItems.filter((item) =>
+      selectedItems.includes(item.id),
+    );
+
     if (selectedItemsData.length === 0) {
-      alert('Selecione pelo menos um item para imprimir');
+      alert("Selecione pelo menos um item para imprimir");
       return;
     }
 
     // Simulate printing process
-    console.log('Configurações de impressão:', settings);
-    console.log('Itens selecionados:', selectedItemsData);
-    
+    console.log("Configurações de impressão:", settings);
+    console.log("Itens selecionados:", selectedItemsData);
+
     for (let copy = 1; copy <= settings.copies; copy++) {
       for (const item of selectedItemsData) {
         const label = generateThermalLabel(item);
@@ -158,8 +175,10 @@ export default function ThermalPrintManager() {
         console.log(label);
       }
     }
-    
-    alert(`Enviado para impressão: ${selectedItemsData.length} etiqueta(s) x ${settings.copies} cópia(s)`);
+
+    alert(
+      `Enviado para impressão: ${selectedItemsData.length} etiqueta(s) x ${settings.copies} cópia(s)`,
+    );
   };
 
   const handlePreview = () => {
@@ -168,11 +187,11 @@ export default function ThermalPrintManager() {
 
   const getConnectionIcon = (connection: string) => {
     switch (connection) {
-      case 'wifi':
+      case "wifi":
         return <Wifi className="h-4 w-4" />;
-      case 'bluetooth':
+      case "bluetooth":
         return <Bluetooth className="h-4 w-4" />;
-      case 'usb':
+      case "usb":
         return <Usb className="h-4 w-4" />;
       default:
         return <Settings className="h-4 w-4" />;
@@ -193,9 +212,11 @@ export default function ThermalPrintManager() {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
             <div>
               <Label>Largura do Papel</Label>
-              <Select 
-                value={settings.paperWidth} 
-                onValueChange={(value: any) => handleSettingChange('paperWidth', value)}
+              <Select
+                value={settings.paperWidth}
+                onValueChange={(value: any) =>
+                  handleSettingChange("paperWidth", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -207,12 +228,14 @@ export default function ThermalPrintManager() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Label>Densidade</Label>
-              <Select 
-                value={settings.density} 
-                onValueChange={(value: any) => handleSettingChange('density', value)}
+              <Select
+                value={settings.density}
+                onValueChange={(value: any) =>
+                  handleSettingChange("density", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -224,12 +247,14 @@ export default function ThermalPrintManager() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Label>Velocidade</Label>
-              <Select 
-                value={settings.speed} 
-                onValueChange={(value: any) => handleSettingChange('speed', value)}
+              <Select
+                value={settings.speed}
+                onValueChange={(value: any) =>
+                  handleSettingChange("speed", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -241,12 +266,14 @@ export default function ThermalPrintManager() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Label>Conexão</Label>
-              <Select 
-                value={settings.connection} 
-                onValueChange={(value: any) => handleSettingChange('connection', value)}
+              <Select
+                value={settings.connection}
+                onValueChange={(value: any) =>
+                  handleSettingChange("connection", value)
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -273,7 +300,7 @@ export default function ThermalPrintManager() {
                 </SelectContent>
               </Select>
             </div>
-            
+
             <div>
               <Label>Cópias</Label>
               <Input
@@ -281,32 +308,40 @@ export default function ThermalPrintManager() {
                 min="1"
                 max="10"
                 value={settings.copies}
-                onChange={(e) => handleSettingChange('copies', parseInt(e.target.value) || 1)}
+                onChange={(e) =>
+                  handleSettingChange("copies", parseInt(e.target.value) || 1)
+                }
               />
             </div>
           </div>
-          
+
           <div className="flex flex-wrap gap-4 mt-4">
             <div className="flex items-center space-x-2">
-              <Checkbox 
+              <Checkbox
                 checked={settings.cutAfterPrint}
-                onCheckedChange={(checked) => handleSettingChange('cutAfterPrint', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("cutAfterPrint", checked)
+                }
               />
               <Label className="text-sm">Cortar após impressão</Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Checkbox 
+              <Checkbox
                 checked={settings.includeDate}
-                onCheckedChange={(checked) => handleSettingChange('includeDate', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("includeDate", checked)
+                }
               />
               <Label className="text-sm">Incluir data</Label>
             </div>
-            
+
             <div className="flex items-center space-x-2">
-              <Checkbox 
+              <Checkbox
                 checked={settings.includeCompanyLogo}
-                onCheckedChange={(checked) => handleSettingChange('includeCompanyLogo', checked)}
+                onCheckedChange={(checked) =>
+                  handleSettingChange("includeCompanyLogo", checked)
+                }
               />
               <Label className="text-sm">Incluir cabeçalho da empresa</Label>
             </div>
@@ -336,26 +371,35 @@ export default function ThermalPrintManager() {
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            {mockItems.map(item => (
-              <div 
-                key={item.id} 
+            {mockItems.map((item) => (
+              <div
+                key={item.id}
                 className="flex items-center justify-between p-3 border border-border rounded-lg"
               >
                 <div className="flex items-center space-x-3">
-                  <Checkbox 
+                  <Checkbox
                     checked={selectedItems.includes(item.id)}
-                    onCheckedChange={(checked) => handleSelectItem(item.id, !!checked)}
+                    onCheckedChange={(checked) =>
+                      handleSelectItem(item.id, !!checked)
+                    }
                   />
                   <div>
                     <div className="font-medium">{item.name}</div>
-                    <div className="text-sm text-muted-foreground">{item.description}</div>
-                    <div className="text-xs text-muted-foreground font-mono">{item.code}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {item.description}
+                    </div>
+                    <div className="text-xs text-muted-foreground font-mono">
+                      {item.code}
+                    </div>
                   </div>
                 </div>
                 <div className="text-right">
                   <Badge variant="outline">
-                    {item.type === 'product' ? 'Produto' : 
-                     item.type === 'order' ? 'Pedido' : 'Material'}
+                    {item.type === "product"
+                      ? "Produto"
+                      : item.type === "order"
+                        ? "Pedido"
+                        : "Material"}
                   </Badge>
                   <div className="text-sm text-muted-foreground mt-1">
                     Qtd: {item.quantity}
@@ -376,8 +420,8 @@ export default function ThermalPrintManager() {
           <CardContent>
             <div className="bg-white border-2 border-dashed border-gray-300 p-4 font-mono text-xs">
               {mockItems
-                .filter(item => selectedItems.includes(item.id))
-                .map(item => (
+                .filter((item) => selectedItems.includes(item.id))
+                .map((item) => (
                   <pre key={item.id} className="whitespace-pre-wrap mb-4">
                     {generateThermalLabel(item)}
                   </pre>
@@ -389,25 +433,25 @@ export default function ThermalPrintManager() {
 
       {/* Action Buttons */}
       <div className="flex items-center space-x-4">
-        <Button 
+        <Button
           onClick={handlePreview}
           variant="outline"
           disabled={selectedItems.length === 0}
         >
           <Eye className="h-4 w-4 mr-2" />
-          {previewMode ? 'Ocultar' : 'Visualizar'} Pré-visualização
+          {previewMode ? "Ocultar" : "Visualizar"} Pré-visualização
         </Button>
-        
-        <Button 
+
+        <Button
           onClick={handlePrint}
           disabled={selectedItems.length === 0}
           className="bg-biobox-green hover:bg-biobox-green-dark"
         >
           <Printer className="h-4 w-4 mr-2" />
-          Imprimir Etiquetas ({selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''})
+          Imprimir Etiquetas ({selectedItems.length} item
+          {selectedItems.length !== 1 ? "s" : ""})
         </Button>
       </div>
     </div>
   );
 }
-

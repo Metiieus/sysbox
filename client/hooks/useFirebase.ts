@@ -91,6 +91,10 @@ export interface Order {
   subtotal?: number; // Valor antes do desconto
   discount_percentage?: number; // Desconto em porcentagem (0-100)
   discount_amount?: number; // Valor do desconto em reais
+  financial_discount?: number; // Desconto financeiro em porcentagem
+  volume_discount?: number; // Desconto por volume em porcentagem
+  shipping_value?: number; // Valor do frete
+  shipping_discount?: number; // Desconto no frete
   total_amount: number; // Valor final após desconto
   scheduled_date: string;
   delivery_date?: string;
@@ -528,7 +532,7 @@ export function useFirebase() {
   ): Promise<Order | null> => {
     console.log("➕ [createOrder] Criando pedido:", orderData);
 
-    const orderNumber = `ORD-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 10000)).padStart(4, "0")}`;
+    const orderNumber = `PED-${new Date().getFullYear()}-${String(Math.floor(Math.random() * 10000)).padStart(4, "0")}`;
     const dataToSave = {
       order_number: orderNumber,
       customer_id: orderData.customer_id!,
@@ -538,6 +542,10 @@ export function useFirebase() {
       subtotal: orderData.subtotal || 0,
       discount_percentage: orderData.discount_percentage || 0,
       discount_amount: orderData.discount_amount || 0,
+      financial_discount: orderData.financial_discount || 0,
+      volume_discount: orderData.volume_discount || 0,
+      shipping_value: orderData.shipping_value || 0,
+      shipping_discount: orderData.shipping_discount || 0,
       total_amount: orderData.total_amount || 0,
       scheduled_date:
         orderData.scheduled_date || new Date().toISOString().slice(0, 10),

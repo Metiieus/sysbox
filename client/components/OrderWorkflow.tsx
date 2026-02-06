@@ -343,7 +343,7 @@ export default function OrderWorkflow({
                   <div
                     className={cn(
                       "w-10 h-10 rounded-full flex items-center justify-center transition-colors",
-                      isCompleted && "bg-biobox-green text-white",
+                      isCompleted && "bg-biobox-gold text-white",
                       isCurrent && "bg-blue-500 text-white animate-pulse",
                       isFuture && "bg-gray-300 text-gray-500",
                     )}
@@ -354,7 +354,7 @@ export default function OrderWorkflow({
                     <div
                       className={cn(
                         "w-0.5 h-20 mt-2",
-                        isCompleted ? "bg-biobox-green" : "bg-gray-300",
+                        isCompleted ? "bg-biobox-gold" : "bg-gray-300",
                       )}
                     />
                   )}

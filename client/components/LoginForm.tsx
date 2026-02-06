@@ -44,9 +44,9 @@ export default function LoginForm() {
       <Card className="w-full max-w-md bg-card border-border">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-6">
-            <img 
-              src="/logobio.png" 
-              alt="BioBox" 
+            <img
+              src="https://cdn.builder.io/api/v1/image/assets%2Fff97f443178c49e2b117d226c09b1fea%2F11e91666cfe24945aef003b369135391?format=webp&width=800&height=1200"
+              alt="BioBox"
               className="h-20 w-auto object-contain"
             />
           </div>
@@ -88,7 +88,7 @@ export default function LoginForm() {
 
             <Button
               type="submit"
-              className="w-full bg-biobox-green hover:bg-biobox-green-dark"
+              className="w-full bg-biobox-gold hover:bg-biobox-gold-dark"
               disabled={isLoading}
             >
               <LogIn className="h-4 w-4 mr-2" />

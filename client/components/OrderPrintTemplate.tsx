@@ -63,7 +63,7 @@ export default function OrderPrintTemplate({ order }: OrderPrintTemplateProps) {
       >
         <div>
           <img
-            src="/biobox-logo.png"
+            src="https://cdn.builder.io/api/v1/image/assets%2Fff97f443178c49e2b117d226c09b1fea%2F11e91666cfe24945aef003b369135391?format=webp&width=800&height=1200"
             alt="BioBox"
             style={{ height: "40px" }}
             onError={(e) => {
