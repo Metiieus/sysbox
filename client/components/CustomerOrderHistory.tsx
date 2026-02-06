@@ -195,7 +195,7 @@ export default function CustomerOrderHistory({
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">
-            <Package className="h-5 w-5 text-biobox-green" />
+            <Package className="h-5 w-5 text-biobox-gold" />
             <span>Histórico de Pedidos</span>
           </DialogTitle>
           <DialogDescription>
@@ -206,7 +206,7 @@ export default function CustomerOrderHistory({
         {loading ? (
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-biobox-green" />
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-biobox-gold" />
               <p className="text-muted-foreground">Carregando pedidos...</p>
             </div>
           </div>
@@ -327,7 +327,7 @@ export default function CustomerOrderHistory({
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-1 font-medium">
-                              <DollarSign className="h-4 w-4 text-biobox-green" />
+                              <DollarSign className="h-4 w-4 text-biobox-gold" />
                               <span>
                                 {formatCurrency(order.total_amount || 0)}
                               </span>
@@ -337,7 +337,7 @@ export default function CustomerOrderHistory({
                             <div className="flex items-center space-x-2">
                               <div className="w-16 h-2 bg-secondary rounded-full overflow-hidden">
                                 <div
-                                  className="h-full bg-biobox-green"
+                                  className="h-full bg-biobox-gold"
                                   style={{
                                     width: `${order.production_progress || 0}%`,
                                   }}

@@ -172,7 +172,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                       </div>
                       <div>
                         <p className="text-muted-foreground">Hoje</p>
-                        <p className="font-semibold text-biobox-green">
+                        <p className="font-semibold text-biobox-gold">
                           {orders.filter(o => {
                             const today = new Date();
                             return isSameDay(o.scheduledDate, today) || (o.deliveryDate && isSameDay(o.deliveryDate, today));
@@ -190,7 +190,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                 <h3 className="text-sm font-medium text-foreground mb-3">Legenda dos Marcadores</h3>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 rounded-full bg-biobox-green"></div>
+                    <div className="w-3 h-3 rounded-full bg-biobox-gold"></div>
                     <span>Normal</span>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -202,7 +202,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                     <span>Múltiplos</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 rounded-full ring-2 ring-biobox-green ring-offset-2 ring-offset-background"></div>
+                    <div className="w-3 h-3 rounded-full ring-2 ring-biobox-gold ring-offset-2 ring-offset-background"></div>
                     <span>Hoje</span>
                   </div>
                 </div>
@@ -277,7 +277,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                         const orderCount = dayOrders.length;
                         const isCurrentDay = isToday(date);
 
-                        let markerColor = "bg-biobox-green";
+                        let markerColor = "bg-biobox-gold";
                         if (hasUrgent) {
                           markerColor = "bg-red-500";
                         } else if (hasHigh) {
@@ -385,7 +385,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                 if (dayOrders.length === 0) return null;
 
                 return (
-                  <div key={date.toISOString()} className="border-l-4 border-biobox-green pl-4">
+                  <div key={date.toISOString()} className="border-l-4 border-biobox-gold pl-4">
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium">
                         {format(date, "EEEE, dd 'de' MMMM", { locale: ptBR })}
