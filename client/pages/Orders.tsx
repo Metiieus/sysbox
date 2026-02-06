@@ -1007,7 +1007,7 @@ export default function Orders() {
                       <TableHead>Pedido</TableHead>
                       <TableHead>Cliente</TableHead>
                       <TableHead>Vendedor</TableHead>
-                      <TableHead>Data Produção</TableHead>
+                      <TableHead>Data de Criação</TableHead>
                       <TableHead>Data Entrega</TableHead>
                       <TableHead>Progresso</TableHead>
                       <TableHead>Status</TableHead>
@@ -1039,9 +1039,7 @@ export default function Orders() {
                         return (
                           <TableRow
                             key={order.id}
-                            className={
-                              isOverdue ? "bg-red-50 dark:bg-red-950/20" : ""
-                            }
+                            className={""}
                           >
                             <TableCell>
                               <div className="flex items-center space-x-2">
@@ -1083,7 +1081,7 @@ export default function Orders() {
                             </TableCell>
                             <TableCell>
                               <div className="text-sm">
-                                {formatDate(order.scheduled_date)}
+                                {formatDate(order.created_at)}
                               </div>
                             </TableCell>
                             <TableCell>
