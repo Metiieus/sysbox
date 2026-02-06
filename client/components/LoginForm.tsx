@@ -88,7 +88,7 @@ export default function LoginForm() {
 
             <Button
               type="submit"
-              className="w-full bg-biobox-green hover:bg-biobox-green-dark"
+              className="w-full bg-biobox-gold hover:bg-biobox-gold-dark"
               disabled={isLoading}
             >
               <LogIn className="h-4 w-4 mr-2" />
