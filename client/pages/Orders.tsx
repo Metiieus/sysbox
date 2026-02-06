@@ -85,6 +85,7 @@ const priorityLabels = {
   low: "Baixa",
   medium: "M��dia",
   high: "Alta",
+  medium: "Média",
   urgent: "Urgente",
 };
 
