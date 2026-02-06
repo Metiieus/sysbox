@@ -487,7 +487,7 @@ export default function NewOrderForm({
       return (
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-biobox-green" />
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-biobox-gold" />
             <p className="text-muted-foreground">Carregando dados...</p>
           </div>
         </div>
@@ -667,7 +667,7 @@ export default function NewOrderForm({
                         key={customer.id}
                         className={`cursor-pointer transition-colors ${
                           selectedCustomer?.id === customer.id
-                            ? "border-biobox-green bg-biobox-green/5"
+                            ? "border-biobox-gold bg-biobox-gold/5"
                             : "hover:bg-muted/50"
                         }`}
                         onClick={() => handleSelectCustomer(customer)}
@@ -934,7 +934,7 @@ export default function NewOrderForm({
                     <CardContent className="p-4">
                       <div className="flex justify-between items-center">
                         <span className="font-medium">Total do Pedido:</span>
-                        <span className="text-lg font-bold text-biobox-green">
+                        <span className="text-lg font-bold text-biobox-gold">
                           {formatCurrency(calculateTotal())}
                         </span>
                       </div>
@@ -1120,7 +1120,7 @@ export default function NewOrderForm({
                 )}
                 <div className="flex justify-between">
                   <span>Vendedor:</span>
-                  <span className="font-medium text-biobox-green">
+                  <span className="font-medium text-biobox-gold">
                     {user?.name}
                   </span>
                 </div>
@@ -1164,7 +1164,7 @@ export default function NewOrderForm({
                   )}
                   <div className="flex justify-between text-lg font-bold border-t pt-2">
                     <span>Total:</span>
-                    <span className="text-biobox-green">
+                    <span className="text-biobox-gold">
                       {formatCurrency(calculateTotal())}
                     </span>
                   </div>
@@ -1197,7 +1197,7 @@ export default function NewOrderForm({
                 <div
                   className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                     step >= stepNumber
-                      ? "bg-biobox-green text-white"
+                      ? "bg-biobox-gold text-white"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -1217,7 +1217,7 @@ export default function NewOrderForm({
                 {stepNumber < 3 && (
                   <div
                     className={`w-8 h-0.5 mx-4 ${
-                      step > stepNumber ? "bg-biobox-green" : "bg-muted"
+                      step > stepNumber ? "bg-biobox-gold" : "bg-muted"
                     }`}
                   />
                 )}
@@ -1250,7 +1250,7 @@ export default function NewOrderForm({
                 <Button
                   onClick={handleCreateOrder}
                   disabled={!canProceedToNextStep() || saving}
-                  className="bg-biobox-green hover:bg-biobox-green-dark"
+                  className="bg-biobox-gold hover:bg-biobox-gold-dark"
                 >
                   {saving ? (
                     <>

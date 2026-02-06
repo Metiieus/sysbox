@@ -246,8 +246,8 @@ export default function Production() {
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="p-2 bg-biobox-green/10 rounded-lg">
-                          <Icon className="h-6 w-6 text-biobox-green" />
+                        <div className="p-2 bg-biobox-gold/10 rounded-lg">
+                          <Icon className="h-6 w-6 text-biobox-gold" />
                         </div>
                         <div>
                           <CardTitle className="text-xl">
@@ -259,7 +259,7 @@ export default function Production() {
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-2xl font-bold text-biobox-green">
+                        <p className="text-2xl font-bold text-biobox-gold">
                           {ordersInStage.length}
                         </p>
                         <p className="text-xs text-muted-foreground">Pedidos</p>

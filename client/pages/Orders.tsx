@@ -756,7 +756,7 @@ export default function Orders() {
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-biobox-green mx-auto mb-4"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-biobox-gold mx-auto mb-4"></div>
             <p>Carregando pedidos...</p>
           </div>
         </div>
@@ -806,7 +806,7 @@ export default function Orders() {
           </div>
           {checkPermission("orders", "create") && (
             <Button
-              className="bg-biobox-green hover:bg-biobox-green-dark"
+              className="bg-biobox-gold hover:bg-biobox-gold-dark"
               onClick={() => setShowNewOrderForm(true)}
             >
               <Plus className="h-4 w-4 mr-2" />
@@ -820,7 +820,7 @@ export default function Orders() {
           <Card className="bg-card border-border">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <Package className="h-8 w-8 text-biobox-green" />
+                <Package className="h-8 w-8 text-biobox-gold" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-muted-foreground">
                     Total de Pedidos
@@ -884,7 +884,7 @@ export default function Orders() {
           <Card className="bg-card border-border">
             <CardContent className="p-6">
               <div className="flex items-center">
-                <DollarSign className="h-8 w-8 text-biobox-green" />
+                <DollarSign className="h-8 w-8 text-biobox-gold" />
                 <div className="ml-4">
                   <p className="text-sm font-medium text-muted-foreground">
                     Receita Total
@@ -1071,7 +1071,7 @@ export default function Orders() {
                             </TableCell>
                             <TableCell>
                               <div>
-                                <div className="font-medium text-biobox-green">
+                                <div className="font-medium text-biobox-gold">
                                   {order.seller_name}
                                 </div>
                                 <div className="text-xs text-muted-foreground">
@@ -1108,7 +1108,7 @@ export default function Orders() {
                               <div className="flex items-center space-x-2">
                                 <div className="w-full bg-gray-200 rounded-full h-2">
                                   <div
-                                    className="bg-biobox-green h-2 rounded-full"
+                                    className="bg-biobox-gold h-2 rounded-full"
                                     style={{
                                       width: `${order.production_progress}%`,
                                     }}
@@ -1298,7 +1298,7 @@ export default function Orders() {
                             {selectedOrder.customer_name}
                           </p>
                           {selectedOrder.customer_trade_name && (
-                            <p className="text-sm text-biobox-green">
+                            <p className="text-sm text-biobox-gold">
                               {selectedOrder.customer_trade_name}
                             </p>
                           )}
