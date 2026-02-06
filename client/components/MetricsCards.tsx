@@ -188,11 +188,11 @@ export default function MetricsCards() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const loadingRef = useRef(false);
-  
+
   // Inicializa com dados do cache se existir
   const [metrics, setMetrics] = useState(() => {
     try {
-      const cached = localStorage.getItem('biobox_metrics_cache');
+      const cached = localStorage.getItem("biobox_metrics_cache");
       if (cached) {
         console.log("💾 [MetricsCards] Carregando do cache");
         return JSON.parse(cached);
@@ -235,17 +235,17 @@ export default function MetricsCards() {
       loadingRef.current = true;
       setLoading(true);
       setError(null);
-      
+
       console.log("🔍 [MetricsCards] Iniciando carregamento de métricas...");
-      
+
       const orders = await getOrders();
-      
+
       console.log("📦 [MetricsCards] Pedidos recebidos:", {
         total: orders?.length || 0,
         amostra: orders?.slice(0, 2),
         tipoOrders: typeof orders,
         isArray: Array.isArray(orders),
-        primeiroItem: orders?.[0]
+        primeiroItem: orders?.[0],
       });
 
       if (!orders || orders.length === 0) {
@@ -274,7 +274,7 @@ export default function MetricsCards() {
 
       console.log("📅 [MetricsCards] Datas de referência:", {
         hoje: today.toISOString(),
-        inicioMes: monthStart.toISOString()
+        inicioMes: monthStart.toISOString(),
       });
 
       const enrichedOrders: EnrichedOrder[] = orders.map((order) => {
@@ -296,7 +296,7 @@ export default function MetricsCards() {
 
       console.log("✅ [MetricsCards] Pedidos enriquecidos:", {
         total: enrichedOrders.length,
-        exemplo: enrichedOrders[0]
+        exemplo: enrichedOrders[0],
       });
 
       const activeOrders = enrichedOrders.filter(({ status }) =>
@@ -318,7 +318,7 @@ export default function MetricsCards() {
       const inProductionOrders = enrichedOrders.filter(
         ({ status }) => status === "in_production",
       ).length;
-      
+
       const readyOrders = enrichedOrders.filter(
         ({ status }) => status === "ready",
       ).length;
@@ -378,7 +378,10 @@ export default function MetricsCards() {
 
       // Salvar no cache para persistir entre recarregamentos
       try {
-        localStorage.setItem('biobox_metrics_cache', JSON.stringify(calculatedMetrics));
+        localStorage.setItem(
+          "biobox_metrics_cache",
+          JSON.stringify(calculatedMetrics),
+        );
         console.log("💾 [MetricsCards] Métricas salvas no cache");
       } catch (err) {
         console.warn("⚠️ [MetricsCards] Erro ao salvar cache:", err);
@@ -388,7 +391,8 @@ export default function MetricsCards() {
         setMetrics(calculatedMetrics);
       }
     } catch (error) {
-      const errorMsg = error instanceof Error ? error.message : "Erro desconhecido";
+      const errorMsg =
+        error instanceof Error ? error.message : "Erro desconhecido";
       console.error("❌ [MetricsCards] Erro ao carregar métricas:", error);
       console.error("Stack:", error instanceof Error ? error.stack : "N/A");
       if (isMountedRef.current) {
@@ -404,7 +408,9 @@ export default function MetricsCards() {
     loadMetrics();
 
     const onOrdersChanged = () => {
-      console.log("🔄 [MetricsCards] Evento de mudança detectado, recarregando...");
+      console.log(
+        "🔄 [MetricsCards] Evento de mudança detectado, recarregando...",
+      );
       loadMetrics();
     };
 

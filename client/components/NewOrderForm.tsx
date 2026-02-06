@@ -283,7 +283,8 @@ export default function NewOrderForm({
     const volumeDiscount = calculateVolumeDiscountAmount();
     const shippingNet = Math.max(
       0,
-      (orderDetails.shipping_value || 0) - (orderDetails.shipping_discount || 0),
+      (orderDetails.shipping_value || 0) -
+        (orderDetails.shipping_discount || 0),
     );
 
     const total = subtotal - financialDiscount - volumeDiscount + shippingNet;
@@ -976,7 +977,6 @@ export default function NewOrderForm({
               </div>
             </div>
 
-
             {/* Campos de Desconto e Frete */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -1046,7 +1046,9 @@ export default function NewOrderForm({
               </div>
 
               <div>
-                <Label htmlFor="shipping_discount">Desconto no Frete (R$)</Label>
+                <Label htmlFor="shipping_discount">
+                  Desconto no Frete (R$)
+                </Label>
                 <Input
                   id="shipping_discount"
                   type="number"
@@ -1141,13 +1143,21 @@ export default function NewOrderForm({
                     <span>{formatCurrency(calculateSubtotal())}</span>
                   </div>
                   <div className="flex justify-between text-orange-600">
-                    <span>Desconto Financeiro ({orderDetails.discount_percentage}%):</span>
-                    <span>- {formatCurrency(calculateFinancialDiscountAmount())}</span>
+                    <span>
+                      Desconto Financeiro ({orderDetails.discount_percentage}%):
+                    </span>
+                    <span>
+                      - {formatCurrency(calculateFinancialDiscountAmount())}
+                    </span>
                   </div>
                   {orderDetails.discount_volume > 0 && (
                     <div className="flex justify-between text-orange-600">
-                      <span>Desconto por Volume ({orderDetails.discount_volume}%):</span>
-                      <span>- {formatCurrency(calculateVolumeDiscountAmount())}</span>
+                      <span>
+                        Desconto por Volume ({orderDetails.discount_volume}%):
+                      </span>
+                      <span>
+                        - {formatCurrency(calculateVolumeDiscountAmount())}
+                      </span>
                     </div>
                   )}
                   {orderDetails.shipping_value > 0 && (
@@ -1159,7 +1169,15 @@ export default function NewOrderForm({
                   {orderDetails.shipping_discount > 0 && (
                     <div className="flex justify-between text-orange-600">
                       <span>Desconto no Frete:</span>
-                      <span>- {formatCurrency(Math.min(orderDetails.shipping_discount, orderDetails.shipping_value))}</span>
+                      <span>
+                        -{" "}
+                        {formatCurrency(
+                          Math.min(
+                            orderDetails.shipping_discount,
+                            orderDetails.shipping_value,
+                          ),
+                        )}
+                      </span>
                     </div>
                   )}
                   <div className="flex justify-between text-lg font-bold border-t pt-2">

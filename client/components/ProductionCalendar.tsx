@@ -3,16 +3,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
-import { 
-  ChevronLeft, 
-  ChevronRight, 
+import {
+  ChevronLeft,
+  ChevronRight,
   Calendar as CalendarIcon,
   Clock,
   Package,
-  User
+  User,
 } from "lucide-react";
 import { Order, mockOrders, statusColors, statusLabels } from "@/types/order";
-import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from "date-fns";
+import {
+  format,
+  startOfMonth,
+  endOfMonth,
+  eachDayOfInterval,
+  isSameDay,
+  isToday,
+} from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
@@ -21,19 +28,25 @@ interface ProductionCalendarProps {
   onOrderClick?: (order: Order) => void;
 }
 
-export default function ProductionCalendar({ orders, onOrderClick }: ProductionCalendarProps) {
+export default function ProductionCalendar({
+  orders,
+  onOrderClick,
+}: ProductionCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [viewMode, setViewMode] = useState<'calendar' | 'schedule'>('calendar');
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  const [viewMode, setViewMode] = useState<"calendar" | "schedule">("calendar");
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    new Date(),
+  );
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const daysInMonth = eachDayOfInterval({ start: monthStart, end: monthEnd });
 
   const getOrdersForDate = (date: Date) => {
-    return orders.filter(order => 
-      isSameDay(order.scheduledDate, date) || 
-      isSameDay(order.deliveryDate || new Date(), date)
+    return orders.filter(
+      (order) =>
+        isSameDay(order.scheduledDate, date) ||
+        isSameDay(order.deliveryDate || new Date(), date),
     );
   };
 
@@ -43,9 +56,9 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
   };
 
   const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
+    return new Intl.NumberFormat("pt-BR", {
+      style: "currency",
+      currency: "BRL",
     }).format(value);
   };
 
@@ -54,7 +67,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
       urgent: "bg-red-500",
       high: "bg-orange-500",
       medium: "bg-blue-500",
-      low: "bg-gray-500"
+      low: "bg-gray-500",
     };
 
     return (
@@ -64,10 +77,17 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
       >
         <div className="flex items-start justify-between mb-2">
           <div className="flex items-center space-x-2">
-            <div className={cn("w-2 h-2 rounded-full", priorityIndicator[order.priority])} />
+            <div
+              className={cn(
+                "w-2 h-2 rounded-full",
+                priorityIndicator[order.priority],
+              )}
+            />
             <div>
               <div className="font-medium text-sm">{order.orderNumber}</div>
-              <div className="text-xs text-muted-foreground truncate">{order.customerName}</div>
+              <div className="text-xs text-muted-foreground truncate">
+                {order.customerName}
+              </div>
             </div>
           </div>
           <Badge
@@ -84,15 +104,22 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
               <Package className="h-3 w-3 mr-1" />
               <span>{order.products.length} item(s)</span>
             </div>
-            <div className="font-medium">{formatCurrency(order.totalAmount)}</div>
+            <div className="font-medium">
+              {formatCurrency(order.totalAmount)}
+            </div>
           </div>
 
           <div className="flex items-center text-xs text-muted-foreground">
             <Clock className="h-3 w-3 mr-1" />
             <span>
-              {isSameDay(order.scheduledDate, selectedDate || new Date()) && "Produção "}
-              {order.deliveryDate && isSameDay(order.deliveryDate, selectedDate || new Date()) && "Entrega "}
-              {format(order.deliveryDate || order.scheduledDate, "dd/MM", { locale: ptBR })}
+              {isSameDay(order.scheduledDate, selectedDate || new Date()) &&
+                "Produção "}
+              {order.deliveryDate &&
+                isSameDay(order.deliveryDate, selectedDate || new Date()) &&
+                "Entrega "}
+              {format(order.deliveryDate || order.scheduledDate, "dd/MM", {
+                locale: ptBR,
+              })}
             </span>
           </div>
 
@@ -119,14 +146,28 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
             <Button
               variant="outline"
               size="icon"
-              onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1))}
+              onClick={() =>
+                setCurrentDate(
+                  new Date(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth() - 1,
+                  ),
+                )
+              }
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               size="icon"
-              onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1))}
+              onClick={() =>
+                setCurrentDate(
+                  new Date(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth() + 1,
+                  ),
+                )
+              }
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -134,17 +175,17 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
         </div>
         <div className="flex items-center space-x-2">
           <Button
-            variant={viewMode === 'calendar' ? 'default' : 'outline'}
+            variant={viewMode === "calendar" ? "default" : "outline"}
             size="sm"
-            onClick={() => setViewMode('calendar')}
+            onClick={() => setViewMode("calendar")}
           >
             <CalendarIcon className="h-4 w-4 mr-1" />
             Calendário
           </Button>
           <Button
-            variant={viewMode === 'schedule' ? 'default' : 'outline'}
+            variant={viewMode === "schedule" ? "default" : "outline"}
             size="sm"
-            onClick={() => setViewMode('schedule')}
+            onClick={() => setViewMode("schedule")}
           >
             <Clock className="h-4 w-4 mr-1" />
             Agenda
@@ -152,7 +193,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
         </div>
       </div>
 
-      {viewMode === 'calendar' ? (
+      {viewMode === "calendar" ? (
         <div className="space-y-6">
           {/* Calendar Statistics and Legend */}
           <div className="grid gap-4 md:grid-cols-2">
@@ -160,23 +201,35 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-sm font-medium text-foreground mb-1">Estatísticas do Mês</h3>
+                    <h3 className="text-sm font-medium text-foreground mb-1">
+                      Estatísticas do Mês
+                    </h3>
                     <div className="grid grid-cols-3 gap-4 text-sm">
                       <div>
                         <p className="text-muted-foreground">Total</p>
-                        <p className="font-semibold text-foreground">{orders.length}</p>
+                        <p className="font-semibold text-foreground">
+                          {orders.length}
+                        </p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">Urgentes</p>
-                        <p className="font-semibold text-red-500">{orders.filter(o => o.priority === 'urgent').length}</p>
+                        <p className="font-semibold text-red-500">
+                          {orders.filter((o) => o.priority === "urgent").length}
+                        </p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">Hoje</p>
                         <p className="font-semibold text-biobox-gold">
-                          {orders.filter(o => {
-                            const today = new Date();
-                            return isSameDay(o.scheduledDate, today) || (o.deliveryDate && isSameDay(o.deliveryDate, today));
-                          }).length}
+                          {
+                            orders.filter((o) => {
+                              const today = new Date();
+                              return (
+                                isSameDay(o.scheduledDate, today) ||
+                                (o.deliveryDate &&
+                                  isSameDay(o.deliveryDate, today))
+                              );
+                            }).length
+                          }
                         </p>
                       </div>
                     </div>
@@ -187,7 +240,9 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
 
             <Card className="bg-card border-border">
               <CardContent className="p-4">
-                <h3 className="text-sm font-medium text-foreground mb-3">Legenda dos Marcadores</h3>
+                <h3 className="text-sm font-medium text-foreground mb-3">
+                  Legenda dos Marcadores
+                </h3>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div className="flex items-center space-x-2">
                     <div className="w-3 h-3 rounded-full bg-biobox-gold"></div>
@@ -222,9 +277,23 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                       </CardTitle>
                       <div className="flex items-center space-x-4 mt-1 text-sm text-muted-foreground">
                         <span>📦 {orders.length} pedidos</span>
-                        <span>🔥 {orders.filter(o => o.priority === 'urgent').length} urgentes</span>
-                        <span>⏱️ {orders.filter(o => o.status === 'in_production').length} produzindo</span>
-                        <span>✅ {orders.filter(o => o.status === 'ready').length} prontos</span>
+                        <span>
+                          🔥{" "}
+                          {orders.filter((o) => o.priority === "urgent").length}{" "}
+                          urgentes
+                        </span>
+                        <span>
+                          ⏱️{" "}
+                          {
+                            orders.filter((o) => o.status === "in_production")
+                              .length
+                          }{" "}
+                          produzindo
+                        </span>
+                        <span>
+                          ✅ {orders.filter((o) => o.status === "ready").length}{" "}
+                          prontos
+                        </span>
                       </div>
                     </div>
                     <div className="text-right">
@@ -247,33 +316,42 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                     locale={ptBR}
                     className="rounded-md border-0 w-full"
                     classNames={{
-                      months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+                      months:
+                        "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
                       month: "space-y-4 w-full",
                       caption: "flex justify-center pt-1 relative items-center",
                       caption_label: "text-sm font-medium",
                       nav: "space-x-1 flex items-center",
-                      nav_button: "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
+                      nav_button:
+                        "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100",
                       nav_button_previous: "absolute left-1",
                       nav_button_next: "absolute right-1",
                       table: "w-full border-collapse space-y-1",
                       head_row: "flex w-full",
-                      head_cell: "text-muted-foreground rounded-md w-full font-normal text-[0.8rem]",
+                      head_cell:
+                        "text-muted-foreground rounded-md w-full font-normal text-[0.8rem]",
                       row: "flex w-full mt-2",
                       cell: "relative p-0 text-center text-sm focus-within:relative focus-within:z-20 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md",
                       day: "h-14 w-full p-0 font-normal aria-selected:opacity-100 hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-                      day_selected: "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
+                      day_selected:
+                        "bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
                       day_today: "bg-accent text-accent-foreground font-bold",
                       day_outside: "text-muted-foreground opacity-50",
                       day_disabled: "text-muted-foreground opacity-50",
-                      day_range_middle: "aria-selected:bg-accent aria-selected:text-accent-foreground",
-                      day_hidden: "invisible"
+                      day_range_middle:
+                        "aria-selected:bg-accent aria-selected:text-accent-foreground",
+                      day_hidden: "invisible",
                     }}
                     components={{
                       DayContent: ({ date }) => {
                         const dayOrders = getOrdersForDate(date);
                         const hasOrders = dayOrders.length > 0;
-                        const hasUrgent = dayOrders.some(o => o.priority === 'urgent');
-                        const hasHigh = dayOrders.some(o => o.priority === 'high');
+                        const hasUrgent = dayOrders.some(
+                          (o) => o.priority === "urgent",
+                        );
+                        const hasHigh = dayOrders.some(
+                          (o) => o.priority === "high",
+                        );
                         const orderCount = dayOrders.length;
                         const isCurrentDay = isToday(date);
 
@@ -288,11 +366,14 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
 
                         return (
                           <div className="relative w-full h-full flex flex-col items-center justify-center p-1">
-                            <span className={cn(
-                              "text-sm mb-1",
-                              isCurrentDay && "font-bold",
-                              isSameDay(date, selectedDate || new Date()) && "text-primary-foreground"
-                            )}>
+                            <span
+                              className={cn(
+                                "text-sm mb-1",
+                                isCurrentDay && "font-bold",
+                                isSameDay(date, selectedDate || new Date()) &&
+                                  "text-primary-foreground",
+                              )}
+                            >
                               {format(date, "d")}
                             </span>
 
@@ -300,11 +381,14 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                             <div className="flex flex-col items-center space-y-1">
                               {hasOrders && (
                                 <div className="flex items-center space-x-1">
-                                  <div className={cn(
-                                    "w-2 h-2 rounded-full",
-                                    markerColor,
-                                    isCurrentDay && "ring-2 ring-background ring-offset-1 ring-offset-accent"
-                                  )} />
+                                  <div
+                                    className={cn(
+                                      "w-2 h-2 rounded-full",
+                                      markerColor,
+                                      isCurrentDay &&
+                                        "ring-2 ring-background ring-offset-1 ring-offset-accent",
+                                    )}
+                                  />
                                   {orderCount > 1 && (
                                     <span className="text-xs font-semibold text-muted-foreground">
                                       {orderCount}
@@ -314,16 +398,28 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                               )}
 
                               {/* Production/Delivery indicators */}
-                              {dayOrders.some(o => isSameDay(o.scheduledDate, date)) && (
-                                <div className="w-1 h-1 rounded-full bg-blue-500" title="Produção agendada" />
+                              {dayOrders.some((o) =>
+                                isSameDay(o.scheduledDate, date),
+                              ) && (
+                                <div
+                                  className="w-1 h-1 rounded-full bg-blue-500"
+                                  title="Produção agendada"
+                                />
                               )}
-                              {dayOrders.some(o => o.deliveryDate && isSameDay(o.deliveryDate, date)) && (
-                                <div className="w-1 h-1 rounded-full bg-green-500" title="Entrega agendada" />
+                              {dayOrders.some(
+                                (o) =>
+                                  o.deliveryDate &&
+                                  isSameDay(o.deliveryDate, date),
+                              ) && (
+                                <div
+                                  className="w-1 h-1 rounded-full bg-green-500"
+                                  title="Entrega agendada"
+                                />
                               )}
                             </div>
                           </div>
                         );
-                      }
+                      },
                     }}
                   />
                 </CardContent>
@@ -339,8 +435,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                     <span>
                       {selectedDate
                         ? format(selectedDate, "dd/MM", { locale: ptBR })
-                        : "Selecione"
-                      }
+                        : "Selecione"}
                     </span>
                   </CardTitle>
                   {selectedDate && (
@@ -352,7 +447,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                 <CardContent>
                   <div className="space-y-3 max-h-96 overflow-y-auto">
                     {getSelectedDateOrders().length > 0 ? (
-                      getSelectedDateOrders().map(order => (
+                      getSelectedDateOrders().map((order) => (
                         <OrderCard key={order.id} order={order} />
                       ))
                     ) : (
@@ -361,8 +456,7 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                         <p className="text-sm text-muted-foreground">
                           {selectedDate
                             ? "Nenhum pedido para esta data"
-                            : "Selecione uma data para ver os pedidos"
-                          }
+                            : "Selecione uma data para ver os pedidos"}
                         </p>
                       </div>
                     )}
@@ -380,12 +474,15 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {daysInMonth.map(date => {
+              {daysInMonth.map((date) => {
                 const dayOrders = getOrdersForDate(date);
                 if (dayOrders.length === 0) return null;
 
                 return (
-                  <div key={date.toISOString()} className="border-l-4 border-biobox-gold pl-4">
+                  <div
+                    key={date.toISOString()}
+                    className="border-l-4 border-biobox-gold pl-4"
+                  >
                     <div className="flex items-center justify-between mb-2">
                       <h4 className="font-medium">
                         {format(date, "EEEE, dd 'de' MMMM", { locale: ptBR })}
@@ -395,14 +492,14 @@ export default function ProductionCalendar({ orders, onOrderClick }: ProductionC
                       </Badge>
                     </div>
                     <div className="grid gap-2 md:grid-cols-2">
-                      {dayOrders.map(order => (
+                      {dayOrders.map((order) => (
                         <OrderCard key={order.id} order={order} />
                       ))}
                     </div>
                   </div>
                 );
               })}
-              {orders.filter(order => {
+              {orders.filter((order) => {
                 const orderDate = order.scheduledDate;
                 return orderDate >= monthStart && orderDate <= monthEnd;
               }).length === 0 && (

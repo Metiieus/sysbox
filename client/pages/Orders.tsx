@@ -1037,10 +1037,7 @@ export default function Orders() {
                           !["delivered", "cancelled"].includes(order.status);
 
                         return (
-                          <TableRow
-                            key={order.id}
-                            className={""}
-                          >
+                          <TableRow key={order.id} className={""}>
                             <TableCell>
                               <div className="flex items-center space-x-2">
                                 <div
@@ -1509,7 +1506,10 @@ export default function Orders() {
                       (s) => s.stage === stageId,
                     );
                     if (idx >= 0) {
-                      updatedStages[idx] = { ...updatedStages[idx], ...updates };
+                      updatedStages[idx] = {
+                        ...updatedStages[idx],
+                        ...updates,
+                      };
                     } else {
                       updatedStages.push({ stage: stageId, ...updates } as any);
                     }
